@@ -1,10 +1,11 @@
-import { Divider, Grid, Grid2, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
+import { Button, Divider, Grid, Grid2, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
 import { useState,useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Company } from "../../app/models/company";
 import axios from "axios";
 import agent from "../../app/api/agent";
 import NotFound from "../../app/errors/NotFound";
+import LoadingComponent from "../../app/layout/LoadingComponent";
 
 export default function CompanyDetail() {
   const {id} = useParams<{id:string}>();
@@ -18,12 +19,13 @@ export default function CompanyDetail() {
     .finally(() => setLoading(false));
   },[id])
 
-  if(loading) return <Typography variant="h2" component="h2" sx={{textAlign: 'center'}}>
-    Loading...
-  </Typography>
+ 
+
+  if (loading) return <LoadingComponent message="Loading company..."/>
+
+  if (!company) return <NotFound/>
 
 
-  if(!company) return <NotFound/>
   
   return(
     <Grid2 container spacing={6}>
@@ -51,6 +53,7 @@ export default function CompanyDetail() {
                     </TableRow>
                  </TableBody>
               </Table>
+              <Button fullWidth component={Link} to='/catalog'>Go back</Button>
           </TableContainer>
       </Grid2>
     </Grid2>
