@@ -3,6 +3,8 @@ import { useState,useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Company } from "../../app/models/company";
 import axios from "axios";
+import agent from "../../app/api/agent";
+import NotFound from "../../app/errors/NotFound";
 
 export default function CompanyDetail() {
   const {id} = useParams<{id:string}>();
@@ -10,9 +12,9 @@ export default function CompanyDetail() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get(`https://localhost:7179/api/Company/${id}`)
-    .then(response => { setCompany(response.data);})
-    .catch(error => console.log(error))
+    agent.Catalog.details(parseInt(id))
+    .then(response => { setCompany(response);})
+    .catch(error => console.log(error.response))
     .finally(() => setLoading(false));
   },[id])
 
@@ -21,10 +23,8 @@ export default function CompanyDetail() {
   </Typography>
 
 
-  if(!company) return <Typography variant="h2" component="h2" sx={{textAlign: 'center'}}>
-    Company Not Found
-  </Typography>
-
+  if(!company) return <NotFound/>
+  
   return(
     <Grid2 container spacing={6}>
       <Grid2 item xs={6}>

@@ -3,9 +3,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { NavLink } from "react-router-dom";
 
 const midLinks=[
-  {title: 'catalog', path: '/catalog'},
-  {title: 'about', path: '/about'},
-  {title: 'contact', path: '/contact'}
+  {title: 'create', path: '/catalog'},
+  {title: 'delete', path: '/about'},
+  {title: 'other', path: '/contact'},
 ]
 
 
