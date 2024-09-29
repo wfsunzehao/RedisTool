@@ -40,7 +40,7 @@ const request = {
     delete: (url: string) => axios.delete(url).then(responseBody)
 }
 
-const Catalog = {
+const Create = {
     list: () => request.get('Company'),
     details: (id: number) => request.get(`Company/${id}`),
 }
@@ -56,7 +56,7 @@ const TestErrors = {
 
 
 const agent = {
-    Catalog,
+    Create,
     TestErrors
 }
 
