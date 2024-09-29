@@ -1,12 +1,16 @@
 import { Avatar, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Typography } from "@mui/material";
 import { Company } from "../../app/models/company";
 import { Link } from "react-router-dom";
+import { LoadingButton } from "@mui/lab";
+import { useState } from "react";
 
 interface Props{
     company: Company
 }
 
 export default function CompanyCard({company}: Props) {
+  const [loading, setLoading] = useState(false)
+
   return(
     <Card sx={{ maxWidth: 345 }}>
       <CardHeader 
@@ -35,7 +39,9 @@ export default function CompanyCard({company}: Props) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Share</Button>
+        <LoadingButton loading={loading} 
+                       onClick={() => setLoading(!loading)} 
+                       size="small">Share</LoadingButton>
         <Button component={Link}  to={`/catalog/${company.id}`} size="small">Learn More</Button>
       </CardActions>
     </Card>

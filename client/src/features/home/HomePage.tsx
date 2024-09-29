@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Grid, AppBar, Toolbar, IconButton, Button } from '@mui/material';
 import { styled } from '@mui/system';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 const Hero = styled(Box)({
   height: '70vh',
@@ -132,7 +132,7 @@ const HomePage: React.FC = () => {
           onClick={handlePrev}
           sx={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: '#fff' }}
         >
-          <ArrowBackIcon fontSize="large" />
+          <ArrowBackIosIcon fontSize="large" />
         </IconButton>
 
         {/* 右箭头 */}
@@ -140,13 +140,18 @@ const HomePage: React.FC = () => {
           onClick={handleNext}
           sx={{ position: 'absolute', right: 16, top: '50%', transform: 'translateY(-50%)', color: '#fff' }}
         >
-          <ArrowForwardIcon fontSize="large" />
+          <ArrowForwardIosIcon fontSize="large" />
         </IconButton>
 
         {/* 指示器 */}
         <Indicator>
           {images.map((_, index) => (
-            <IndicatorDot key={index} active={index === currentIndex} />
+            <IndicatorDot
+               key={index}
+                active={index === currentIndex}
+                onClick={() => setCurrentIndex(index)} // 点击指示器时切换图片
+                sx={{ cursor: 'pointer' }} // 鼠标悬停时显示手形光标
+             />
           ))}
         </Indicator>
       </Hero>
