@@ -1,7 +1,12 @@
 import React from "react";
-import { Container, Typography, Grid, Card, CardContent, Button, Box } from "@mui/material";
+import { Container, Typography, Grid, Card, CardContent, Button, Box, ButtonGroup } from "@mui/material";
+import { CounterState, DECREMENT_COUNTER, INCREMENT_COUNTER } from "./counterReducer";
+import { useDispatch, useSelector } from "react-redux";
 
 const HomePage: React.FC = () => {
+  const dispatch = useDispatch();
+  const{data,title}=useSelector((state:CounterState) => state);
+
   return (
     <Container maxWidth="lg" sx={{ padding: 4 }}>
       <Typography
@@ -9,8 +14,13 @@ const HomePage: React.FC = () => {
         component="h1"
         sx={{ textAlign: 'center', marginBottom: 4, color: 'primary.main' }}
       >
-        Build Your Cloud with Azure
+        {title}
+        {data}
       </Typography>
+      <ButtonGroup sx={{position: 'absolute', top: 400, left: '50%', transform: 'translateX(-50%)'}}>
+        <Button variant="contained" color="error" onClick={() => dispatch({ type: DECREMENT_COUNTER })}>Decrement</Button>
+        <Button variant="contained" color="success" onClick={() => dispatch({ type: INCREMENT_COUNTER })}>Increment</Button>
+      </ButtonGroup>
 
       <Grid container spacing={4}>
         {/* Card 1 */}

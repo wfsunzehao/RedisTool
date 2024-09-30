@@ -63,7 +63,10 @@ const HomePage: React.FC = () => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
     }, 3000); // 每3秒切换
 
-    return () => clearInterval(interval);
+    return () => {
+      if (interval!=null) {
+        clearInterval(interval)
+      }};
   }, [isHovering]);
 
   const handlePrev = () => {

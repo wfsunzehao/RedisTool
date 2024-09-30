@@ -8,7 +8,7 @@ export default function CompanyList({data}: Props) {
   return(
     <Grid2 container spacing={4}>
         {data.map((company) => (
-            <Grid2 xs={4} key={company.id}>
+            <Grid2 xs={3} key={company.id}>
                 <CompanyCard  company={company}/>  
             </Grid2>           
         ))}
