@@ -1,11 +1,11 @@
 import React from "react";
 import { Container, Typography, Grid, Card, CardContent, Button, Box, ButtonGroup } from "@mui/material";
-import { CounterState, DECREMENT_COUNTER, INCREMENT_COUNTER } from "./counterReducer";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { decrement, increment } from "./counterSlice";
 
 const HomePage: React.FC = () => {
-  const dispatch = useDispatch();
-  const{data,title}=useSelector((state:CounterState) => state);
+  const dispatch = useAppDispatch();
+  const{data,title}=useAppSelector((state) => state.counter);
 
   return (
     <Container maxWidth="lg" sx={{ padding: 4 }}>
@@ -18,8 +18,9 @@ const HomePage: React.FC = () => {
         {data}
       </Typography>
       <ButtonGroup sx={{position: 'absolute', top: 400, left: '50%', transform: 'translateX(-50%)'}}>
-        <Button variant="contained" color="error" onClick={() => dispatch({ type: DECREMENT_COUNTER })}>Decrement</Button>
-        <Button variant="contained" color="success" onClick={() => dispatch({ type: INCREMENT_COUNTER })}>Increment</Button>
+        <Button variant="contained" color="error" onClick={() => dispatch(decrement(1))}>Decrement</Button>
+        <Button variant="contained" color="success" onClick={() => dispatch(increment(1))}>Increment</Button>
+        <Button variant="contained" color="primary" onClick={() => dispatch(increment(5))}>Decrement</Button>
       </ButtonGroup>
 
       <Grid container spacing={4}>

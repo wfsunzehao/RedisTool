@@ -4,7 +4,14 @@ import { Company } from "../../app/models/company"
 import CompanyList from "./CompanyList"
 import agent from "../../app/api/agent";
 import LoadingComponent from "../../app/layout/LoadingComponent";
-import { Grid2, Paper, TextField } from "@mui/material";
+import { Checkbox, Container, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, Paper, Radio, RadioGroup, TextField } from "@mui/material";
+
+const sortOptions = [
+    { value: 'name', label: 'Name' },
+    { value: 'date', label: 'Date' },
+    { value: 'price', label: 'Price' },
+    // Add more sort options as needed
+  ];
 export default function Create() {
     const [data, setData] = useState<Company[]>([]);
     const [loading, setLoading] = useState(true);
@@ -19,18 +26,35 @@ export default function Create() {
     if(loading) return <LoadingComponent message="Loading companies..."/>
 
     return(
-        <Grid2 container spacing={4}>
-            <Grid2 item xs={3}>
+        <Grid container spacing={4}>
+            <Grid item xs={3}>
                 <Paper sx={{mb:2}}>
                     <TextField 
                     label="Company Name" 
                     variant="outlined" 
                     fullWidth />
-                </Paper>                
-            </Grid2> 
-            <Grid2 item xs={9}>
+                </Paper>  
+                <Paper sx={{mb:2,p:2}}>
+                    <FormControl component="fieldset">
+                    <RadioGroup>
+                        {sortOptions.map(({value,label}) => (
+                            <FormControlLabel value={value} control={<Radio />} label={label} />
+                        ))}
+                    </RadioGroup>
+                    </FormControl>
+
+                </Paper> 
+                <Paper sx={{mb:2,p:2}}>
+                <FormGroup>
+                    <FormControlLabel control={<Checkbox defaultChecked />} label="Label" />
+                    <FormControlLabel required control={<Checkbox />} label="Required" />
+                    <FormControlLabel disabled control={<Checkbox />} label="Disabled" />
+                </FormGroup> 
+                </Paper> 
+            </Grid> 
+            <Grid item xs={9}>
                 <CompanyList data={data}/>
-            </Grid2>  
-        </Grid2>
+            </Grid>  
+        </Grid>
     )   
 }

@@ -7,10 +7,10 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { router } from './app/router/Routes.tsx';
-import { configureStore } from './app/store/configureStore.ts';
 import { Provider } from 'react-redux';
+import { store } from './app/store/configureStore.ts';
 
-const store=configureStore();
+
 
 
 
