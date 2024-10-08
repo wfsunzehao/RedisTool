@@ -1,6 +1,7 @@
 import { AppBar, Badge, Box, Button, IconButton, List, ListItem, SvgIcon, SvgIconProps, Switch, Toolbar, Typography } from "@mui/material"
 import MenuIcon from '@mui/icons-material/Menu';
 import { NavLink } from "react-router-dom";
+import ChatIcon from '@mui/icons-material/Chat';
 
 const midLinks=[
   {title: 'create', path: '/catalog'},
@@ -81,7 +82,7 @@ export default function Header({darkMode, handleThemeChange}: Props) {
           <Box display='flex' alignItems='center'>
           <IconButton size='large' edge='start' color="inherit" sx={{mr: 2}}>
             <Badge badgeContent={3} color="secondary">
-            <HomeIcon />
+            <ChatIcon />
             </Badge>
           </IconButton>
           <List sx={{display: 'flex'}}>
