@@ -3,10 +3,16 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { NavLink } from "react-router-dom";
 import ChatIcon from '@mui/icons-material/Chat';
 
+// const midLinks=[
+//   {title: 'catalog', path: '/catalog'},
+//   {title: 'about', path: '/about'},
+//   {title: 'contact', path: '/contact'},
+// ]
+
 const midLinks=[
-  {title: 'create', path: '/catalog'},
-  {title: 'delete', path: '/about'},
-  {title: 'other', path: '/contact'},
+  {title: 'create', path: '/create'},
+  {title: 'delete', path: '/delete'},
+  {title: 'other', path: '/other'},
 ]
 
 

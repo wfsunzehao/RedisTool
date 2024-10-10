@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { router } from "../router/Routes";
+import { Group } from "@mui/icons-material";
 
 const sleep = () => new Promise(resolve => setTimeout(resolve, 500));
 
@@ -35,14 +36,24 @@ axios.interceptors.response.use(async response => {
 
 const request = {
     get: (url: string) => axios.get(url).then(responseBody),
+    getByParam: (url: string, params: string) => axios.get(url, {params}).then(responseBody),
     post: (url: string, body: object) => axios.post(url, body).then(responseBody),
     put: (url: string, body: object) => axios.put(url, body).then(responseBody),
     delete: (url: string) => axios.delete(url).then(responseBody)
 }
 
-const Create = {
+const Company = {
     list: () => request.get('Company'),
     details: (id: number) => request.get(`Company/${id}`),
+}
+
+// const Create = (params: string) => ({
+//     group: () => request.getByParam(`/subscriptions/${id}`, params),
+// });
+
+const Create = {
+    getGroup: (subscriptionid: string) => request.get(`subscriptions/${subscriptionid}`),
+    // group: () => request.getByParam(`/subscriptions`, params),
 }
 
 
@@ -56,6 +67,7 @@ const TestErrors = {
 
 
 const agent = {
+    Company,
     Create,
     TestErrors
 }

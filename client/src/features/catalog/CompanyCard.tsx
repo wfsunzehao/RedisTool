@@ -1,5 +1,5 @@
 import { Avatar, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Typography } from "@mui/material";
-import { Company } from "../../app/models/company";
+import { Company } from "../../common/models/company";
 import { Link } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 import { useState } from "react";

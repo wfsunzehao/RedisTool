@@ -1,9 +1,9 @@
 
 import { useState, useEffect } from "react";
-import { Company } from "../../app/models/company"
+import { Company } from "../../common/models/company"
 import CompanyList from "./CompanyList"
 import agent from "../../app/api/agent";
-import LoadingComponent from "../../app/layout/LoadingComponent";
+import LoadingComponent from "../../common/components/LoadingComponent";
 import { Checkbox, Container, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, Paper, Radio, RadioGroup, TextField } from "@mui/material";
 
 const sortOptions = [
@@ -17,7 +17,7 @@ export default function Create() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-       agent.Create.list()
+       agent.Company.list()
        .then(data=> setData(data))
        .catch(error => console.log(error))
        .finally(() => setLoading(false)) 

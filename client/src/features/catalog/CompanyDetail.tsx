@@ -1,11 +1,10 @@
 import { Button, Divider, Grid, Grid2, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
 import { useState,useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Company } from "../../app/models/company";
-import axios from "axios";
+import { Company } from "../../common/models/company";
 import agent from "../../app/api/agent";
 import NotFound from "../../app/errors/NotFound";
-import LoadingComponent from "../../app/layout/LoadingComponent";
+import LoadingComponent from "../../common/components/LoadingComponent";
 
 export default function CompanyDetail() {
   const {id} = useParams<{id:string}>();
@@ -13,7 +12,7 @@ export default function CompanyDetail() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    agent.Catalog.details(parseInt(id))
+    agent.Company.details(Number(id))
     .then(response => { setCompany(response);})
     .catch(error => console.log(error.response))
     .finally(() => setLoading(false));

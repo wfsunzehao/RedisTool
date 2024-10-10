@@ -1,4 +1,4 @@
-import { Company } from "../../app/models/company";
+import { Company } from "../../common/models/company";
 import CompanyCard from "./CompanyCard";
 import { Grid2 } from "@mui/material";
 interface Props{
