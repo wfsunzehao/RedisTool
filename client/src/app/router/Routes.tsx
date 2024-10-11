@@ -7,10 +7,9 @@ import AboutPage from "../../features/about/AboutPage";
 import ContactPage from "../../features/contact/ContactPage";
 import ServerError from "../errors/ServerError";
 import NotFound from "../errors/NotFound";
-import Test from "../../features/test/Test";
 //import CreatePage from "../../features/test/CreatePage";
 import CreatePage from "../../features/create/CreatePage";
-import ResponsiveDrawer from "../../features/delete/Delete";
+import Delete from "../../features/delete/Delete";
 
 export const router = createBrowserRouter([
     {
@@ -19,7 +18,7 @@ export const router = createBrowserRouter([
         children:[
             {path: '',element: <HomePage/>},
             {path: 'create',element: <CreatePage/>},
-            {path: 'delete',element: <ResponsiveDrawer/>},
+            {path: 'delete',element: <Delete/>},
             {path: 'catalog',element: <Catalog/>},
             {path: 'catalog/:id',element: <CompanyDetail/>},
             {path: 'about',element: <AboutPage/>},

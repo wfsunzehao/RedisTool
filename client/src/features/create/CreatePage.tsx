@@ -1,4 +1,24 @@
-import { Box, Button, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Drawer, FormControlLabel, List, ListItemButton, MenuItem, Paper, Radio, RadioGroup, Snackbar, TextField, ThemeProvider, Typography, useTheme } from "@mui/material";
+import 
+{ Box, 
+  Button, 
+  Container, 
+  Dialog, 
+  DialogActions, 
+  DialogContent, 
+  DialogContentText, 
+  DialogTitle, 
+  Divider, 
+  Drawer, 
+  FormControlLabel, 
+  List,
+  MenuItem, 
+  Paper, 
+  Radio, 
+  RadioGroup, 
+  Snackbar, 
+  TextField, 
+  ThemeProvider, 
+  Typography } from "@mui/material";
 import { StyledButton, StyledListItem, StyledListItemText, StyledPaper } from "./StyledComponents";
 import { subscriptionList, theme } from "./constants";
 import { useState } from "react";
@@ -24,6 +44,7 @@ const CreatePage: React.FC = () => {
 
       const handleSubmit = () => {
         if (nextTimeDontPrompt === 'yes') {
+          // 如果用户选择了“下次不再提示”，则执行相应的操作
           handleConfirm();
         } else {
           setOpenDialog(true);
@@ -53,6 +74,9 @@ const CreatePage: React.FC = () => {
         agent.Create.getGroup(subscriptionid)
         .then(response => { setGroupList(response);})
         .catch(error => console.log(error.response))
+      }
+      const sendJson=(params:string)=>{
+        
       }
 
     //   useEffect(() => {
@@ -100,12 +124,16 @@ const CreatePage: React.FC = () => {
                 </List>
                 </Drawer>
                 {selectedItem && (
-            <Box sx={{ textAlign: 'center',left:'50%'}} >
-              <Typography variant="h5" gutterBottom>提交信息: <span style={{ color: '#1976d2' }}>{selectedItem}</span></Typography>
+            <Box  sx={{ textAlign: 'center',left:'50%'}} >
+              <Paper elevation={2} style={{ padding: '10px', backgroundColor: '#fff3cd', borderRadius: '2px' }}>
+                <Typography variant="body1" color="warning.main">
+                   注意事项：请确保填写的信息准确无误。
+                </Typography>
+             </Paper>
+              <Typography variant="h5" gutterBottom>创建cache: <span style={{ color: '#1976d2' }}>{selectedItem}</span></Typography>
               <TextField
                 select
                 label="订阅"
-                helperText="请选择你需要的订阅"
                 value={subscription}
                 onChange={(e)=>handleSubChange(e.target.value)}//(e) => setSubscription(e.target.value)
                 margin="normal"
@@ -120,6 +148,7 @@ const CreatePage: React.FC = () => {
                     </MenuItem>
                 ))}
                </TextField> 
+               <br/>
               <TextField
                 select
                 label="组"
