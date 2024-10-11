@@ -52,7 +52,7 @@ const Company = {
 // });
 
 const Create = {
-    getGroup: (subscriptionid: string) => request.get(`subscriptions/${subscriptionid}`),
+    getGroup: (subscriptionid: string) => request.get(`Subscription/${subscriptionid}`),
     // group: () => request.getByParam(`/subscriptions`, params),
 }
 

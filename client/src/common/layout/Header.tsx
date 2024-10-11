@@ -1,7 +1,8 @@
-import { AppBar, Badge, Box, Button, IconButton, List, ListItem, SvgIcon, SvgIconProps, Switch, Toolbar, Typography } from "@mui/material"
+import { AppBar, Badge, Box, Button, IconButton, List, ListItem, styled, SvgIcon, SvgIconProps, Switch, Toolbar, Typography } from "@mui/material"
 import MenuIcon from '@mui/icons-material/Menu';
 import { NavLink } from "react-router-dom";
 import ChatIcon from '@mui/icons-material/Chat';
+import { useTheme } from "../../app/context/ThemeContext";
 
 // const midLinks=[
 //   {title: 'catalog', path: '/catalog'},
@@ -33,10 +34,7 @@ const navStyles = {
   }
 }
 
-interface Props {
-  darkMode: boolean;
-  handleThemeChange: () => void;
-}
+
 
 function HomeIcon(props: SvgIconProps) {
   return (
@@ -46,10 +44,15 @@ function HomeIcon(props: SvgIconProps) {
   );
 }
 
-export default function Header({darkMode, handleThemeChange}: Props) {
+const StyledAppBar = styled(AppBar)(({ theme }) => ({
+  zIndex: theme.zIndex.drawer + 1, // 确保在其他组件之上
+}));
+
+export default function Header() {
+  const { toggleTheme, isDarkMode } = useTheme();
   return(
     
-      <AppBar position="sticky" sx={{mb:4}}>
+      <StyledAppBar position="sticky" sx={{mb:4}}>
         <Toolbar sx={{display:'flex', justifyContent:'space-between',alignItems:'center'}}>
         <Box display='flex' alignItems='center'>
           <IconButton
@@ -68,7 +71,7 @@ export default function Header({darkMode, handleThemeChange}: Props) {
             >
               Redis
           </Typography>
-          <Switch checked={darkMode} onChange={handleThemeChange} />
+          <Switch checked={isDarkMode} onChange={toggleTheme} />
 
         </Box>
           {/* <Button color="inherit">Login</Button> */}
@@ -105,7 +108,7 @@ export default function Header({darkMode, handleThemeChange}: Props) {
           </Box>
 
         </Toolbar>
-      </AppBar>
+      </StyledAppBar>
     
 
   )

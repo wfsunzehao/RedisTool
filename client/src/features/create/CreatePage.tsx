@@ -1,14 +1,14 @@
-import { Box, Button, Container, createTheme, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Drawer, FormControlLabel, List, ListItemButton, MenuItem, Paper, Radio, RadioGroup, Snackbar, TextField, ThemeProvider, Typography } from "@mui/material";
+import { Box, Button, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Drawer, FormControlLabel, List, ListItemButton, MenuItem, Paper, Radio, RadioGroup, Snackbar, TextField, ThemeProvider, Typography, useTheme } from "@mui/material";
 import { StyledButton, StyledListItem, StyledListItemText, StyledPaper } from "./StyledComponents";
 import { subscriptionList, theme } from "./constants";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CheckCircleOutline } from "@mui/icons-material";
-import { DataModel } from "../../common/models/DataModel";
 import agent from "../../app/api/agent";
 
 
 
 const CreatePage: React.FC = () => {
+
     const [selectedItem, setSelectedItem] = useState('BVT');
     const [subscription, setSubscription] = useState('');
     const [group, setGroup] = useState('');
@@ -17,7 +17,6 @@ const CreatePage: React.FC = () => {
     const [nextTimeDontPrompt, setNextTimeDontPrompt] = useState('no'); // 使用单选框
 
     const [groupList,setGroupList] = useState<string[]>([]);
-    const [data, setData] = useState<DataModel>();
     
     const handleSelectItem = (item: string) => {
         setSelectedItem(item);
@@ -51,7 +50,6 @@ const CreatePage: React.FC = () => {
 
       const handleSubChange=(subscriptionid:string)=>{
         setSubscription(subscriptionid);
-
         agent.Create.getGroup(subscriptionid)
         .then(response => { setGroupList(response);})
         .catch(error => console.log(error.response))
@@ -65,10 +63,10 @@ const CreatePage: React.FC = () => {
 
   return(
     <ThemeProvider theme={theme} >
-        <StyledPaper elevation={3} style={{ width: '100%', marginRight: 20,height:'100%',flex:1 }}>
+        <StyledPaper>
         <Box
             sx={{
-                display: 'flex', // 让 Box 以 flex 布局展现其内容
+                //display: 'flex', // 让 Box 以 flex 布局展现其内容
                 height: '100vh', // 设置 Box 高度为 100vh，确保填满整个视口
                 position: 'relative', // 设置为相对定位，以便 Drawer 的绝对定位得以正确应用
             }}
@@ -78,10 +76,10 @@ const CreatePage: React.FC = () => {
                 <Drawer
                 variant="permanent" // 设置抽屉的类型为永久抽屉
                 sx={{
-                display: { xs: 'none', sm: 'block' }, // 隐藏在小屏幕下，在大屏幕上显示
+                ///isplay: { xs: 'none', sm: 'block' }, // 隐藏在小屏幕下，在大屏幕上显示
                 '& .MuiDrawer-paper': { // 选择抽屉的纸张部分进行样式设置
                     height: '100%', // 使抽屉高度跟随 Box 高度
-                    width: '20%', // 设定抽屉宽度为 Box 宽度的 20%
+                    width: '15%', // 设定抽屉宽度为 Box 宽度的 20%
                     position: 'absolute', // 让抽屉的定位方式为绝对定位
                 },
                 }}
@@ -123,6 +121,7 @@ const CreatePage: React.FC = () => {
                 ))}
                </TextField> 
               <TextField
+                select
                 label="组"
                 value={group}
                 onChange={(e) => setGroup(e.target.value)}
@@ -132,7 +131,13 @@ const CreatePage: React.FC = () => {
                 InputLabelProps={{ style: { color: '#555' } }}
                 inputProps={{ style: { color: '#333' } }}
                 sx={{width: '300px'}}
-              />
+              >
+                {groupList.map((item) => (
+                    <MenuItem key={item} value={item}>
+                        {item}
+                    </MenuItem>
+                ))}
+              </TextField> 
               <Box marginTop={2} display="flex" justifyContent="center">
                 <StyledButton
                   variant="contained"
