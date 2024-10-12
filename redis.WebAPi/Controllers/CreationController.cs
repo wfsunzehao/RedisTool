@@ -21,7 +21,7 @@ namespace redis.WebAPi.Controllers
         }
 
 
-        [HttpGet()]
+        [HttpPost()]
         public async Task<IActionResult> CreateCache([FromBody] RedisRequestModel redisReques)
         {
             RedisOption opt = new RedisOption() 
