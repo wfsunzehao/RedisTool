@@ -1,230 +1,181 @@
-import 
-{ Box, 
-  Button, 
-  Container, 
-  Dialog, 
-  DialogActions, 
-  DialogContent, 
-  DialogContentText, 
-  DialogTitle, 
-  Divider, 
-  Drawer, 
-  FormControlLabel, 
-  List,
-  MenuItem, 
-  Paper, 
-  Radio, 
-  RadioGroup, 
-  Snackbar, 
-  TextField, 
-  ThemeProvider, 
-  Typography } from "@mui/material";
-import { StyledButton, StyledListItem, StyledListItemText, StyledPaper } from "./StyledComponents";
-import { subscriptionList, theme } from "./constants";
-import { useState } from "react";
-import { CheckCircleOutline } from "@mui/icons-material";
-import agent from "../../app/api/agent";
-
-
+import React, { useState } from 'react';
+import { Paper, Box, Divider, Button, List, ListItem, ListItemText, FormControl, InputLabel, TextField, Typography, MenuItem } from '@mui/material';
+import { subscriptionList } from './constants';
+import agent from '../../app/api/agent';
 
 const CreatePage: React.FC = () => {
+  const leftPanelWidth = 15; // 左边区域占15%
+  const rightPanelWidth = 85; // 右边区域占85%
 
-    const [selectedItem, setSelectedItem] = useState('BVT');
-    const [subscription, setSubscription] = useState('');
-    const [group, setGroup] = useState('');
-    const [openSnackbar, setOpenSnackbar] = useState(false);
-    const [openDialog, setOpenDialog] = useState(false);
-    const [nextTimeDontPrompt, setNextTimeDontPrompt] = useState('no'); // 使用单选框
+  const [subscription, setSubscription] = useState('');
+  const [group, setGroup] = useState('');
+  const [name, setName] = useState(''); // 用于 BVT 的 name
+  const [quantity, setQuantity] = useState(''); // 用于 MAN 的数量
+  const [time, setTime] = useState(''); // 用于 PERF 的时间
+  const [selectedForm, setSelectedForm] = useState('bvt'); // 将初始值设为 'bvt'
 
-    const [groupList,setGroupList] = useState<string[]>([]);
-    
-    const handleSelectItem = (item: string) => {
-        setSelectedItem(item);
-      };
+  const [groupList,setGroupList] = useState<string[]>([]);
 
-      const handleSubmit = () => {
-        if (nextTimeDontPrompt === 'yes') {
-          // 如果用户选择了“下次不再提示”，则执行相应的操作
-          handleConfirm();
-        } else {
-          setOpenDialog(true);
-        }
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
 
+    console.log('Submitted:', { subscription, group, name, quantity, time });
+    // 提交逻辑
+  };
 
-      };
-    
-      const handleConfirm = () => {
-        setOpenSnackbar(true);
-        setOpenDialog(false);
-        resetFields();
-      };
-    
-      const resetFields = () => {
-        setSelectedItem('');
-        setSubscription('');
-        setGroup('');
-      };
-    
-      const handleCloseSnackbar = () => {
-        setOpenSnackbar(false);
-      };
+  const handleCancel = () => {
+    setSubscription('');
+    setGroup('');
+    setName('');
+    setQuantity('');
+    setTime('');
+  };
 
-      const handleSubChange=(subscriptionid:string)=>{
-        setSubscription(subscriptionid);
-        agent.Create.getGroup(subscriptionid)
-        .then(response => { setGroupList(response);})
-        .catch(error => console.log(error.response))
-      }
-      const sendJson=(params:string)=>{
-        
-      }
+  // 处理列表项点击事件
+  const handleListItemClick = (formName: string) => {
+    setSelectedForm(formName);
+    // 重置输入框，当选择不同表单时
+    setSubscription('');
+    setGroup('');
+    setName('');
+    setQuantity('');
+    setTime('');
+  };
 
-    //   useEffect(() => {
-    //     agent.Create.getGroup(Number(subscription))
-    //     .then(response => { setGroupList(response);})
-    //     .catch(error => console.log(error.response))
-    //   },[subscription])
+  const handleSubChange=(subscriptionid:string)=>{
+    setSubscription(subscriptionid);
+    agent.Create.getGroup(subscriptionid)
+    .then(response => { setGroupList(response);})
+    .catch(error => console.log(error.response))
+  }
 
-  return(
-    <ThemeProvider theme={theme} >
-        <StyledPaper>
-        <Box
-            sx={{
-                //display: 'flex', // 让 Box 以 flex 布局展现其内容
-                height: '100vh', // 设置 Box 高度为 100vh，确保填满整个视口
-                position: 'relative', // 设置为相对定位，以便 Drawer 的绝对定位得以正确应用
-            }}
-        >
-            <Container >
-                
-                <Drawer
-                variant="permanent" // 设置抽屉的类型为永久抽屉
-                sx={{
-                ///isplay: { xs: 'none', sm: 'block' }, // 隐藏在小屏幕下，在大屏幕上显示
-                '& .MuiDrawer-paper': { // 选择抽屉的纸张部分进行样式设置
-                    height: '100%', // 使抽屉高度跟随 Box 高度
-                    width: '15%', // 设定抽屉宽度为 Box 宽度的 20%
-                    position: 'absolute', // 让抽屉的定位方式为绝对定位
-                },
-                }}
-                 open // 控制抽屉的打开状态，设置为 true 则始终打开
-             >
-                {/* 这里可以放置具体的导航内容，例如菜单列表 */}
-                <List>
-                    {['BVT', 'MAN', 'PERF'].map((item) => (
-                    <StyledListItem
-                        button
-                        key={item}
-                        onClick={() => handleSelectItem(item)}
-                        selected={selectedItem === item}
-                    >
-                        <StyledListItemText primary={<Typography variant="body1">{item}</Typography>} />
-                    </StyledListItem>
-                    ))}
-                </List>
-                </Drawer>
-                {selectedItem && (
-            <Box  sx={{ textAlign: 'center',left:'50%'}} >
-              <Paper elevation={2} style={{ padding: '10px', backgroundColor: '#fff3cd', borderRadius: '2px' }}>
-                <Typography variant="body1" color="warning.main">
+  return (
+    <Paper elevation={10} sx={{ height: '90vh', display: 'flex', overflow: 'hidden' }}>
+      {/* 左边区域 */}
+      <Box sx={{ width: `${leftPanelWidth}%`, height: '100%', overflow: 'auto' }}>
+        <Paper sx={{ height: '100%', p: 2,display: 'flex', flexDirection: 'column', alignItems: 'center' }} elevation={0}>
+          <List>
+            <ListItem button onClick={() => handleListItemClick('bvt')}>
+              <ListItemText primary="BVT" />
+            </ListItem>
+            <ListItem button onClick={() => handleListItemClick('man')}>
+              <ListItemText primary="MAN" />
+            </ListItem>
+            <ListItem button onClick={() => handleListItemClick('perf')}>
+              <ListItemText primary="PERF" />
+            </ListItem>
+          </List>
+        </Paper>
+      </Box>
+
+      {/* 透明的分隔线 */}
+      <Divider
+        orientation="vertical"
+        flexItem
+        sx={{ bgcolor: 'transparent', width: '1px', mx: 1 }}
+      />
+
+      {/* 右边区域 */}
+      <Box sx={{ width: `${rightPanelWidth}%`, height: '100%', overflow: 'auto' }}>
+        <Paper sx={{ width: '100%', height: '100%', p: 2, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }} elevation={0}>
+          <Paper  elevation={0} sx={{height: '100%',marginTop:1, display: 'flex', flexDirection: 'column', alignItems: 'center',paddingRight:30}}>
+              <Typography variant="body1" color="warning.main">
                    注意事项：请确保填写的信息准确无误。
-                </Typography>
-             </Paper>
-              <Typography variant="h5" gutterBottom>创建cache: <span style={{ color: '#1976d2' }}>{selectedItem}</span></Typography>
-              <TextField
-                select
-                label="订阅"
-                value={subscription}
-                onChange={(e)=>handleSubChange(e.target.value)}//(e) => setSubscription(e.target.value)
-                margin="normal"
-                variant="outlined"//"filled"
-                InputLabelProps={{ style: { color: '#555' } }}
-                inputProps={{ style: { color: '#333' } }}
-                sx={{width: '300px'}}
-              >
-                {subscriptionList.map((option) => (
+              </Typography>
+              
+ 
+            {selectedForm && <p style={{ color: '#1976d2', fontSize: '30px' }}>创建：{selectedForm.toUpperCase()} Cache</p>}
+            <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: 400 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+                <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
+                  <TextField
+                    select
+                    label={`订阅`}
+                    value={subscription}
+                    onChange={(e)=>handleSubChange(e.target.value)}
+                    variant="outlined"
+                    fullWidth
+                  >
+                    {subscriptionList.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                         {option.label}
                     </MenuItem>
                 ))}
-               </TextField> 
-               <br/>
-              <TextField
-                select
-                label="组"
-                value={group}
-                onChange={(e) => setGroup(e.target.value)}
-                fullWidth
-                margin="normal"
-                variant="outlined"
-                InputLabelProps={{ style: { color: '#555' } }}
-                inputProps={{ style: { color: '#333' } }}
-                sx={{width: '300px'}}
-              >
-                {groupList.map((item) => (
+
+                  </TextField>
+                </FormControl>
+
+                <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
+                  <TextField
+                    select
+                    label="Group"
+                    value={group}
+                    onChange={(e) => setGroup(e.target.value)}
+                    variant="outlined"
+                    fullWidth
+                  >
+                    {groupList.map((item) => (
                     <MenuItem key={item} value={item}>
                         {item}
                     </MenuItem>
                 ))}
-              </TextField> 
-              <Box marginTop={2} display="flex" justifyContent="center">
-                <StyledButton
-                  variant="contained"
-                  color="primary"
-                  onClick={handleSubmit}
-                  style={{ marginRight: 10 }}
-                >
-                  提交
-                </StyledButton>
-                <StyledButton
-                  variant="outlined"
-                  onClick={resetFields}
-                >
-                  取消
-                </StyledButton>
+
+                  </TextField>
+                </FormControl>
+
+                {/* {selectedForm === 'bvt' && (
+                  <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
+                    <TextField
+                      label="Name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      variant="outlined"
+                      fullWidth
+                    />
+                  </FormControl>
+                )}
+
+                {selectedForm === 'man' && (
+                  <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
+                    <TextField
+                      label="数量"
+                      value={quantity}
+                      onChange={(e) => setQuantity(e.target.value)}
+                      variant="outlined"
+                      fullWidth
+                    />
+                  </FormControl>
+                )}
+
+                {selectedForm === 'perf' && (
+                  <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
+                    <TextField
+                      label="时间"
+                      value={time}
+                      onChange={(e) => setTime(e.target.value)}
+                      variant="outlined"
+                      fullWidth
+                    />
+                  </FormControl>
+                )} */}
               </Box>
-            </Box>
-          )}
-            </Container>
-            
-         </Box>
-         {/* 提交确认对话框 */}
-        <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-          <DialogTitle>确认提交</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              确认提交吗？是否下次不再提示？
-            </DialogContentText>
-            <RadioGroup
-              value={nextTimeDontPrompt}
-              onChange={(e) => setNextTimeDontPrompt(e.target.value)}
-            >
-              <FormControlLabel value="yes" control={<Radio />} label="下次不提示" />
-              <FormControlLabel value="no" control={<Radio />} label="继续提示" />
-            </RadioGroup>
-          </DialogContent>
-          <DialogActions style={{ justifyContent: 'center' }}>
-            <Button onClick={() => setOpenDialog(false)} color="primary" startIcon={<CheckCircleOutline />}>
-              取消
-            </Button>
-            <Button onClick={handleConfirm} color="primary" startIcon={<CheckCircleOutline />}>
-              确认
-            </Button>
-          </DialogActions>
-        </Dialog>
+              {/* 其他相关表单字段 */}
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                <Button type="submit" variant="contained" color="primary" sx={{ mx: 1 }}>
+                  提交
+                </Button>
+                <Button type="button" variant="outlined" color="secondary" onClick={handleCancel} sx={{ mx: 1 }}>
+                  取消
+                </Button>
+              </Box>
+            </form>
 
-        <Snackbar
-          open={openSnackbar}
-          onClose={handleCloseSnackbar}
-          message={`提交成功: ${selectedItem} | 订阅: ${subscription} | 组: ${group}`}
-          autoHideDuration={4000}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} // 设置提示框位置为右下角
-        />
-      </StyledPaper>
-
-      
-    </ThemeProvider>
-  )
-}
+          </Paper>
+          
+        </Paper>
+      </Box>
+    </Paper>
+  );
+};
 
 export default CreatePage;

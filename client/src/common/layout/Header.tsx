@@ -69,7 +69,7 @@ export default function Header() {
               to="/" 
               sx={navStyles}
             >
-              Redis
+              Home
           </Typography>
           <Switch checked={isDarkMode} onChange={toggleTheme} />
 
