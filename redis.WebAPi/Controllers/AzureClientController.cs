@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using redis.WebAPi.Service.AzureShared;
 using redis.WebAPi.Service.IService;
 
-namespace youjun.NETDemo.WebAPi.Controllers
+namespace redis.WebAPi.Controllers
 {
     [ApiController]
     [Route("[controller]")]

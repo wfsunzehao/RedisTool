@@ -1,10 +1,11 @@
 ﻿using Azure.ResourceManager.Redis;
+using redis.WebAPi.Service.AzureShared;
 
 namespace redis.WebAPi.Service.IService
 {
     public interface IRedisCollection
     {
-        RedisCollection GetRedisCollection(ISubscriptionResourceService subR, string groupName);
+        void CreateCache(string cacheName, RedisOption opt, string group);
 
     }
 }

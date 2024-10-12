@@ -20,6 +20,10 @@ namespace redis.WebAPi.Service
 
         public SubscriptionResource GetSubscription()
         {
+            if (_subscriptionResource == null)
+            {
+                throw new InvalidOperationException("Subscription resource is not set.");
+            }
             return _subscriptionResource;
         }
 
@@ -29,6 +33,10 @@ namespace redis.WebAPi.Service
             _subscriptionResource = _armClient.GetSubscriptionResource(new ResourceIdentifier("/subscriptions/" + subscriptionId));
         }
 
+        public RedisCollection GetRedisCollection(SubscriptionResource sub , string group)
+        {
+            return sub.GetResourceGroup(group).Value.GetAllRedis();
+        }
 
     }
 }

@@ -2,20 +2,30 @@
 using Azure.ResourceManager.Redis;
 using redis.WebAPi.Service.IService;
 using Azure.ResourceManager.Resources;
+using redis.WebAPi.Service.AzureShared.CreationFunction;
+using redis.WebAPi.Service.AzureShared;
 
 namespace redis.WebAPi.Service
 {
     public class RedisCollectionService : IRedisCollection
     {
-        public RedisCollection redisResources { get; set; }
 
-        public RedisCollectionService() { }
+        private ISubscriptionResourceService _subscriptionResourceService { get; set; }
 
-        public RedisCollection GetRedisCollection(ISubscriptionResourceService subR, string groupName)
+        public RedisCollectionService(ISubscriptionResourceService subscriptionResourceService)
         {
-            var redisCollection = subR.GetSubscription().GetResourceGroup(groupName).Value.GetAllRedis();
+            _subscriptionResourceService = subscriptionResourceService;
+        }
+        public RedisCollection GetRedisCollection(string groupName)
+        {
+            var redisCollection = _subscriptionResourceService.GetSubscription().GetResourceGroup(groupName).Value.GetAllRedis();
             return redisCollection;
+        }
 
+        async void IRedisCollection.CreateCache(string cacheName, RedisOption opt , string group)
+        {
+            var redisCollection = GetRedisCollection( group);
+            await BaseCreation.CreateRedisResource(cacheName,opt, redisCollection);
         }
 
     }
