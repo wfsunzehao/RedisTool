@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Paper, Box, Divider, Button, List, ListItem, ListItemText, FormControl, InputLabel, TextField, Typography, MenuItem } from '@mui/material';
 import { subscriptionList } from './constants';
 import agent from '../../app/api/agent';
@@ -16,6 +16,15 @@ const CreatePage: React.FC = () => {
   const [selectedForm, setSelectedForm] = useState('bvt'); // 将初始值设为 'bvt'
 
   const [groupList,setGroupList] = useState<string[]>([]);
+
+  //初始化
+  useEffect(() => {
+    //默认显示Cache Team - Vendor CTI Testing 2
+    setSubscription("1e57c478-0901-4c02-8d35-49db234b78d2");
+    agent.Create.getGroup("1e57c478-0901-4c02-8d35-49db234b78d2")
+    .then(response => { setGroupList(response);})
+    .catch(error => console.log(error.response))
+  },[selectedForm])
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();//组织浏览器自动刷新(阻止浏览器执行与某个事件相关的默认行为)
