@@ -1,40 +1,32 @@
-import { AppBar, Badge, Box, Button, IconButton, List, ListItem, styled, SvgIcon, SvgIconProps, Switch, Toolbar, Typography } from "@mui/material"
+import { AppBar, Badge, Box, IconButton, List, ListItem, styled, SvgIcon, SvgIconProps, Switch, Toolbar, Typography } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import { NavLink } from "react-router-dom";
 import ChatIcon from '@mui/icons-material/Chat';
 import { useTheme } from "../../app/context/ThemeContext";
+import logo from '../../../public/images/wicrecend3.png';
 
-// const midLinks=[
-//   {title: 'catalog', path: '/catalog'},
-//   {title: 'about', path: '/about'},
-//   {title: 'contact', path: '/contact'},
-// ]
+const midLinks = [
+  { title: 'create', path: '/create' },
+  { title: 'delete', path: '/delete' },
+  { title: 'other', path: '/other' },
+];
 
-const midLinks=[
-  {title: 'create', path: '/create'},
-  {title: 'delete', path: '/delete'},
-  {title: 'other', path: '/other'},
-]
-
-
-const rightLinks=[
-  {title: 'login', path: '/login'},
-  {title: 'register', path: '/register'}
-]
+const rightLinks = [
+  { title: 'login', path: '/login' },
+  { title: 'register', path: '/register' },
+];
 
 const navStyles = {
-  color:'inherit',
-  textDecoration:'none',
-  typography:'h6',
-  '&:hover':{
-    color:'grey.500'
+  color: 'inherit',
+  textDecoration: 'none',
+  typography: 'h6',
+  '&:hover': {
+    color: 'grey.500',
   },
-  '&.active':{
-    color:'text.secondary'
-  }
-}
-
-
+  '&.active': {
+    color: 'text.secondary',
+  },
+};
 
 function HomeIcon(props: SvgIconProps) {
   return (
@@ -50,68 +42,63 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 
 export default function Header() {
   const { toggleTheme, isDarkMode } = useTheme();
-  return(
-    
-      <StyledAppBar position="sticky" sx={{mb:4}}>
-        <Toolbar sx={{display:'flex', justifyContent:'space-between',alignItems:'center'}}>
+  return (
+    <StyledAppBar position="sticky" sx={{ mb: 4 }}>
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Box display='flex' alignItems='center'>
           <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2 }}
-            >
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+          >
             <MenuIcon />
           </IconButton>
-         <Typography variant="h6" 
-              component={NavLink} 
-              to="/" 
+          {/* 使用maxHeight来控制图片大小 */}
+          <img src={logo} alt="Logo" style={{ maxHeight: 40, marginRight: 16, objectFit: 'contain',filter: 'invert(100%) sepia(100%) saturate(0%) hue-rotate(180deg)',}} />
+          <Switch checked={isDarkMode} onChange={toggleTheme} />
+        </Box>
+          <List sx={{ display: 'flex' }}>
+          <ListItem 
+              component={NavLink}
+              to="/"
               sx={navStyles}
             >
-              Home
-          </Typography>
-          <Switch checked={isDarkMode} onChange={toggleTheme} />
-
-        </Box>
-          {/* <Button color="inherit">Login</Button> */}
-          <List sx={{display: 'flex'}}>
-            {midLinks.map(({title, path})=>(
-              <ListItem 
+              HOME
+            </ListItem>
+            {midLinks.map(({ title, path }) => (
+              <ListItem
                 component={NavLink}
                 to={path}
-                key={path} 
+                key={path}
                 sx={navStyles}
               >
                 {title.toUpperCase()}
               </ListItem>
-            )) }
+            ))}
           </List>
 
-          <Box display='flex' alignItems='center'>
-          <IconButton size='large' edge='start' color="inherit" sx={{mr: 2}}>
+        <Box display='flex' alignItems='center'>
+          <IconButton size='large' edge='start' color="inherit" sx={{ mr: 2 }}>
             <Badge badgeContent={3} color="secondary">
-            <ChatIcon />
+              <ChatIcon />
             </Badge>
           </IconButton>
-          <List sx={{display: 'flex'}}>
-            {rightLinks.map(({title, path})=>(
-              <ListItem 
+          <List sx={{ display: 'flex' }}>
+            {rightLinks.map(({ title, path }) => (
+              <ListItem
                 component={NavLink}
                 to={path}
-                key={path} 
-                sx={navStyles}>
+                key={path}
+                sx={navStyles}
+              >
                 {title.toUpperCase()}
               </ListItem>
-            )) }
+            ))}
           </List>
-          </Box>
-
-        </Toolbar>
-      </StyledAppBar>
-    
-
-  )
-     
-  
+        </Box>
+      </Toolbar>
+    </StyledAppBar>
+  );
 }

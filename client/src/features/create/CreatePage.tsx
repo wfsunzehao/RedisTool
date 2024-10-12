@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Paper, Box, Divider, Button, List, ListItem, ListItemText, FormControl, InputLabel, TextField, Typography, MenuItem } from '@mui/material';
 import { subscriptionList } from './constants';
 import agent from '../../app/api/agent';
+import { DataModel } from '../../common/models/DataModel';
 
 const CreatePage: React.FC = () => {
   const leftPanelWidth = 15; // 左边区域占15%
@@ -17,10 +18,21 @@ const CreatePage: React.FC = () => {
   const [groupList,setGroupList] = useState<string[]>([]);
 
   const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-
+    event.preventDefault();//组织浏览器自动刷新(阻止浏览器执行与某个事件相关的默认行为)
+    
     console.log('Submitted:', { subscription, group, name, quantity, time });
     // 提交逻辑
+    const data: DataModel = {
+      name,
+      region: 'EUS', // 这里替换为实际的region值
+      subscription,
+      group,
+      // 添加其他字段的值
+    };
+    agent.Create.sendJson(data)
+    .then(response => { console.log(response)})
+    .catch(error => console.log(error.response))
+
   };
 
   const handleCancel = () => {

@@ -47,13 +47,10 @@ const Company = {
     details: (id: number) => request.get(`Company/${id}`),
 }
 
-// const Create = (params: string) => ({
-//     group: () => request.getByParam(`/subscriptions/${id}`, params),
-// });
 
 const Create = {
     getGroup: (subscriptionid: string) => request.get(`Subscription/${subscriptionid}`),
-    // group: () => request.getByParam(`/subscriptions`, params),
+    sendJson:(body: object)=>request.post(`/Subscription/test`,body),
 }
 
 

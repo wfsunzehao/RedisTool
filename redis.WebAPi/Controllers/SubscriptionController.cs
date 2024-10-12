@@ -41,6 +41,22 @@ namespace redis.WebAPi.Controllers
             }
         }
 
+        [HttpPost("test")]
+        public IActionResult Test([FromBody] MyRequestModel model)
+        {
+            // 处理接收到的参数
+            return Ok(new { subscription = model.subscription, group = model.group });
+        }
+
+        public class MyRequestModel
+        {
+            public string name { get; set; }
+            public string region { get; set; }
+            public string subscription { get; set; }
+            public string group { get; set; }
+
+        }
+
         // 示例：获取 SubscriptionResource 并进行某种操作
         [HttpGet("getSubscriptionResource")]
         public IActionResult GetSubscriptionResource()
