@@ -1,27 +1,44 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Typography, Grid, AppBar, Toolbar, IconButton, Button } from '@mui/material';
-import { styled } from '@mui/system';
+import React, { useEffect, useState, useRef } from 'react';
+import { Box, Typography, IconButton, Grid, Button, Container, Paper } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import './HomePage.css'
-import { Hero, images, ImageWrapper, Indicator, IndicatorDot } from './constants';
+import './HomePage.css';
+import { Hero, images, ImageWrapper, Indicator, IndicatorDot, services } from './constants';
+
 
 const HomePage: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [overlayVisible, setOverlayVisible] = useState(true);
   const [isHovering, setIsHovering] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const cardsRef = useRef<HTMLDivElement | null>(null);
 
-  // 自动轮转
   useEffect(() => {
     const interval = isHovering ? null : setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 3000); // 每3秒切换
+    }, 3000);
 
     return () => {
-      if (interval!=null) {
-        clearInterval(interval)
-      }};
+      if (interval != null) {
+        clearInterval(interval);
+      }
+    };
   }, [isHovering]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (cardsRef.current) {
+        const rect = cardsRef.current.getBoundingClientRect();
+        if (rect.top <= window.innerHeight) {
+          setIsVisible(true);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
@@ -34,14 +51,8 @@ const HomePage: React.FC = () => {
   return (
     <div>
       <Hero
-        onMouseEnter={() => {
-          setOverlayVisible(false);
-          setIsHovering(true);
-        }}
-        onMouseLeave={() => {
-          setOverlayVisible(true);
-          setIsHovering(false);
-        }}
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
       >
         <ImageWrapper shift={-1}>
           <img
@@ -92,15 +103,74 @@ const HomePage: React.FC = () => {
         <Indicator>
           {images.map((_, index) => (
             <IndicatorDot
-               key={index}
-                active={index === currentIndex}
-                onClick={() => setCurrentIndex(index)} // 点击指示器时切换图片
-                sx={{ cursor: 'pointer' }} // 鼠标悬停时显示手形光标
-             />
+              key={index}
+              active={index === currentIndex}
+              onClick={() => setCurrentIndex(index)}
+              sx={{ cursor: 'pointer' }}
+            />
           ))}
         </Indicator>
       </Hero>
 
+      {/* 关于我们的区域 */}
+      <Paper>
+        <Box
+        className="about-section"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold', textAlign: 'center' }}>
+          About Us
+        </Typography>
+        <Typography variant="body1" sx={{ mb: 2, fontSize: '1.1rem', lineHeight: 1.5 }}>
+          We are committed to providing the best possible service
+        </Typography>
+        <Typography variant="body1" sx={{ mb: 2, fontSize: '1.1rem', lineHeight: 1.5 }}>
+          More professional
+        </Typography>
+        <Typography variant="body1" sx={{ mb: 2, fontSize: '1.1rem', lineHeight: 1.5 }}>
+          More accurate
+        </Typography>
+        <Typography variant="body1" sx={{ mb: 2, fontSize: '1.1rem', lineHeight: 1.5 }}>
+          More efficient
+        </Typography>
+      </Box>
+
+      </Paper>
+      
+
+
+      {/* 卡片区域使用 Grid */}
+      <Paper >
+        <Container>
+          <Box ref={cardsRef} className={`cards-section ${isVisible ? 'visible' : ''}`} sx={{ display: 'flex', justifyContent: 'center', my: 0 }}>
+          <Grid container spacing={2} justifyContent="center">
+            {services.map((service, index) => (
+              <Grid item md={4} key={index}>
+                <Box className="card" sx={{ textAlign: 'center', padding: 2, border: '1px solid #ccc', borderRadius: 2 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+                    {/* {service.icon} */}
+                  </Box>
+                  <Typography variant="h6">{service.title}</Typography>
+                  <Typography variant="body2">{service.description}</Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href={service.link}
+                    sx={{ mt: 2 }}
+                  >
+                    Learn More
+                  </Button>
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      </Container>
+    </Paper>  
     </div>
   );
 };

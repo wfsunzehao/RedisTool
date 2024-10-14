@@ -1,9 +1,50 @@
 import { styled } from '@mui/system';
 import { Box } from "@mui/material";
+import ChatIcon from '@mui/icons-material/Chat';
 
+//主页轮换图
 export const images = [
     '../../../public/images/wicrecend.jpg',
     '../../../public/images/wicrecend2.jpg',
+  ];
+
+export const services = [
+    {
+      title: 'Manual Test',
+      description: 'Azure Portal Functional Testing',
+      //icon: <ChatIcon />,
+      link: '/Manual',
+    },
+    {
+      title: 'Performance Test',
+      description: 'Stress testing for Azure cache',
+      //icon: <ChatIcon />,
+      link: '/Performance',
+    },
+    {
+      title: 'Automation Test',
+      description: 'Automated Testing of Azure Functions',
+      //icon: <ChatIcon />,
+      link: '/Automation',
+    },
+    {
+      title: 'ALT Test ',
+      description: 'ALT',
+      //icon: <ChatIcon />,
+      link: '/ALT',
+    },
+    {
+      title: 'BVT Test',
+      description: 'Azure Portal Page Display Testing',
+      //icon: <ChatIcon />,
+      link: '/BVT',
+    },
+    {
+      title: 'AOF Test',
+      description: 'AOF',
+      //icon: <ChatIcon />,
+      link: '/AOF',
+    },
   ];
 
 export const Hero = styled(Box)({
