@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Paper, Box, Divider, Button, List, ListItem, ListItemText, FormControl, InputLabel, TextField, Typography, MenuItem } from '@mui/material';
+import { Paper, Box, Divider, Button, List, ListItem, ListItemText, FormControl, InputLabel, TextField, Typography, MenuItem, Container } from '@mui/material';
 import { subscriptionList } from './constants';
 import agent from '../../app/api/agent';
 import { DataModel } from '../../common/models/DataModel';
@@ -71,7 +71,8 @@ const CreatePage: React.FC = () => {
   }
 
   return (
-    <Paper elevation={10} sx={{ height: '90vh', display: 'flex', overflow: 'hidden' }}>
+    <Container sx={{marginTop: '20px' }}>
+      <Paper elevation={10} sx={{ height: '90vh', display: 'flex', overflow: 'hidden' }}>
       {/* 左边区域 */}
       <Box sx={{ width: `${leftPanelWidth}%`, height: '100%', overflow: 'auto' }}>
         <Paper sx={{ height: '100%', p: 2,display: 'flex', flexDirection: 'column', alignItems: 'center' }} elevation={0}>
@@ -196,6 +197,9 @@ const CreatePage: React.FC = () => {
         </Paper>
       </Box>
     </Paper>
+
+    </Container>
+    
   );
 };
 

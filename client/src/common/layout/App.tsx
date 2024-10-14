@@ -15,9 +15,9 @@ function App() {
         <ToastContainer position='bottom-right' hideProgressBar theme="colored"/>
         <CssBaseline/>
         <Header />
-        <Container>
-          <Outlet/> {/* This is a placeholder for the child components */}
-        </Container>   
+        
+        <Outlet/> {/* This is a placeholder for the child components */}
+         
       </ThemeProvider>     
   )
 }

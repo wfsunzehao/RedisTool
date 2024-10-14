@@ -43,7 +43,7 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 export default function Header() {
   const { toggleTheme, isDarkMode } = useTheme();
   return (
-    <StyledAppBar position="sticky" sx={{ mb: 4 }}>
+    <StyledAppBar position="sticky" sx={{ mb: 0 }}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Box display='flex' alignItems='center'>
           <IconButton

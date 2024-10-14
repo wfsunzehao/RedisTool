@@ -5,7 +5,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 const Hero = styled(Box)({
-  height: '70vh',
+  height: '92vh',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -159,50 +159,6 @@ const HomePage: React.FC = () => {
         </Indicator>
       </Hero>
 
-      <Box p={3}>
-        <Typography variant="h4" gutterBottom>
-          About us
-        </Typography>
-        <Typography variant="body1" paragraph>
-        Redis team
-        </Typography>
-
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={4}>
-            <Box p={2} border={1} borderRadius={8}>
-              <Typography variant="h6">Feature 1</Typography>
-              <Typography variant="body2">
-                Description of feature 1 goes here. It's engaging and useful.
-              </Typography>
-              <Button variant="contained" color="primary">
-                Learn More
-              </Button>
-            </Box>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Box p={2} border={1} borderRadius={8}>
-              <Typography variant="h6">Feature 2</Typography>
-              <Typography variant="body2">
-                Description of feature 2 goes here. It's interactive and interesting.
-              </Typography>
-              <Button variant="contained" color="primary">
-                Learn More
-              </Button>
-            </Box>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Box p={2} border={1} borderRadius={8}>
-              <Typography variant="h6">Feature 3</Typography>
-              <Typography variant="body2">
-                Description of feature 3 goes here. It's designed to help users.
-              </Typography>
-              <Button variant="contained" color="primary">
-                Learn More
-              </Button>
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
     </div>
   );
 };
