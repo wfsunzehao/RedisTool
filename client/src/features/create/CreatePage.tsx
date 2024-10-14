@@ -3,6 +3,7 @@ import { Paper, Box, Divider, Button, List, ListItem, ListItemText, FormControl,
 import { subscriptionList } from './constants';
 import agent from '../../app/api/agent';
 import { DataModel } from '../../common/models/DataModel';
+import DialogComponent from '../../common/components/DialogComponent';
 
 const CreatePage: React.FC = () => {
   const leftPanelWidth = 15; // 左边区域占15%
@@ -16,6 +17,8 @@ const CreatePage: React.FC = () => {
   const [selectedForm, setSelectedForm] = useState('bvt'); // 将初始值设为 'bvt'
 
   const [groupList,setGroupList] = useState<string[]>([]);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [nextTime, setNextTime] = useState('no'); // 
 
   //初始化
   useEffect(() => {
@@ -28,22 +31,15 @@ const CreatePage: React.FC = () => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();//组织浏览器自动刷新(阻止浏览器执行与某个事件相关的默认行为)
-    
-    console.log('Submitted:', { subscription, group, name, quantity, time });
-    // 提交逻辑
-    const data: DataModel = {
-      name,
-      region: 'EUS', // 这里替换为实际的region值
-      subscription,
-      group,
-      // 添加其他字段的值
-    };
-    agent.Create.sendJson(data)
-    .then(response => { console.log(response)})
-    .catch(error => console.log(error.response))
-
+    //判断打开提示框
+    if (nextTime === 'yes') {
+      // 如果用户选择了“下次不再提示”，则执行相应的操作
+      handleConfirm();
+    } else {
+      setOpenDialog(true);
+    }
   };
-
+  // 处理取消按钮点击事件
   const handleCancel = () => {
     setSubscription('');
     setGroup('');
@@ -62,12 +58,33 @@ const CreatePage: React.FC = () => {
     setQuantity('');
     setTime('');
   };
-
+  // 处理下拉框改变事件
   const handleSubChange=(subscriptionid:string)=>{
     setSubscription(subscriptionid);
     agent.Create.getGroup(subscriptionid)
     .then(response => { setGroupList(response);})
     .catch(error => console.log(error.response))
+  }
+  //处理下拉框改变事件
+  const handleDiaClose=()=>{
+    setOpenDialog(false);
+  }
+  //处理提示框提交逻辑
+  const handleConfirm=()=>{
+    //关闭提示框
+    setOpenDialog(false);
+    console.log('Submitted:', { subscription, group, name, quantity, time });
+    // 提交逻辑
+    const data: DataModel = {
+      name,
+      region: 'EUS', // 这里替换为实际的region值
+      subscription,
+      group,
+      // 添加其他字段的值
+    };
+    agent.Create.sendJson(data)
+    .then(response => { console.log(response)})
+    .catch(error => console.log(error.response))   
   }
 
   return (
@@ -197,7 +214,14 @@ const CreatePage: React.FC = () => {
         </Paper>
       </Box>
     </Paper>
-
+    {/* 提交确认对话框 */}
+      <DialogComponent 
+          openDialog={openDialog} 
+          nextTime={nextTime}
+          handleDiaClose={handleDiaClose}
+          setNextTime={setNextTime}
+          handleConfirm={handleConfirm}/>
+          
     </Container>
     
   );

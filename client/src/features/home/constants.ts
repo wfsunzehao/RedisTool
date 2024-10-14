@@ -1,6 +1,5 @@
 import { styled } from '@mui/system';
 import { Box } from "@mui/material";
-import ChatIcon from '@mui/icons-material/Chat';
 
 //主页轮换图
 export const images = [
@@ -48,7 +47,7 @@ export const services = [
   ];
 
 export const Hero = styled(Box)({
-    height: '92vh',
+    height: '93vh',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
