@@ -3,54 +3,8 @@ import { Box, Typography, Grid, AppBar, Toolbar, IconButton, Button } from '@mui
 import { styled } from '@mui/system';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-
-const Hero = styled(Box)({
-  height: '92vh',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  position: 'relative',
-  overflow: 'hidden',
-});
-
-const Overlay = styled(Box)<{ visible: boolean }>(({ visible }) => ({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  backgroundColor: visible ? 'rgba(0, 0, 0, 0.5)' : 'transparent',
-  transition: 'background-color 0.3s ease',
-}));
-
-const images = [
-  '../../../public/images/wicrecend.jpg',
-  '../../../public/images/wicrecend2.jpg',
-];
-
-const ImageWrapper = styled(Box)<{ shift: number }>(({ shift }) => ({
-  position: 'absolute',
-  width: '100%',
-  height: '100%',
-  transition: 'transform 0.5s ease',
-  transform: `translateX(${shift * 100}%)`,
-}));
-
-const Indicator = styled(Box)({
-  position: 'absolute',
-  bottom: 16,
-  left: '50%',
-  transform: 'translateX(-50%)',
-  display: 'flex',
-});
-
-const IndicatorDot = styled(Box)<{ active: boolean }>(({ active }) => ({
-  width: 10,
-  height: 10,
-  borderRadius: '50%',
-  backgroundColor: active ? '#fff' : 'rgba(255, 255, 255, 0.5)',
-  margin: '0 5px',
-}));
+import './HomePage.css'
+import { Hero, images, ImageWrapper, Indicator, IndicatorDot } from './constants';
 
 const HomePage: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -93,11 +47,7 @@ const HomePage: React.FC = () => {
           <img
             src={images[(currentIndex - 1 + images.length) % images.length]}
             alt="Previous"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-            }}
+            className="image"
           />
         </ImageWrapper>
 
@@ -105,11 +55,7 @@ const HomePage: React.FC = () => {
           <img
             src={images[currentIndex]}
             alt="Current"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-            }}
+            className="image"
           />
         </ImageWrapper>
 
@@ -117,11 +63,7 @@ const HomePage: React.FC = () => {
           <img
             src={images[(currentIndex + 1) % images.length]}
             alt="Next"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-            }}
+            className="image"
           />
         </ImageWrapper>
 
