@@ -4,6 +4,7 @@ import { subscriptionList } from './constants';
 import agent from '../../app/api/agent';
 import { DataModel } from '../../common/models/DataModel';
 import swal from 'sweetalert';
+import './CreatePage.css'; 
 
 
 const CreatePage: React.FC = () => {
@@ -49,10 +50,9 @@ const CreatePage: React.FC = () => {
       return; // 如果有错误，停止提交
     }
     swal({
-      title: "Are you sure?",
+      title: "Confirm the operation",
       text: "Once started, the cache used in BVT will be created!",
-      icon: "warning",
-      buttons: ["No", "Yes"],
+      buttons: ["No", "Yes!"],
       dangerMode: true,
       closeOnClickOutside: false, // 防止点击外部关闭
     }).then((willSubmit) => {
@@ -152,12 +152,12 @@ const CreatePage: React.FC = () => {
       {/* 右边区域 */}
       <Box sx={{ width: `${rightPanelWidth}%`, height: '100%', overflow: 'auto' }}>
         <Paper sx={{ width: '100%', height: '100%', p: 2, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }} elevation={0}>
-          <Paper  elevation={0} sx={{height: '100%',marginTop:1, display: 'flex', flexDirection: 'column', alignItems: 'center',paddingRight:30}}>
+          <Paper  elevation={0} sx={{height: '100%',marginTop:1, display: 'flex', flexDirection: 'column', alignItems: 'center',paddingRight:22}}>
               <Typography variant="body1" color="warning.main">
                    注意事项：请确保填写的信息准确无误。
               </Typography>
             {selectedForm && <p style={{ color: '#1976d2', fontSize: '30px' }}>创建：{selectedForm.toUpperCase()} Cache</p>}
-            <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: 400 }}>
+            <form className="submit-box" onSubmit={handleSubmit}>
               <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
                 <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
                   <TextField
