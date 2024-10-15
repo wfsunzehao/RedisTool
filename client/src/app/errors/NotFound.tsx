@@ -6,7 +6,7 @@ export default function NotFound() {
     <Container component={Paper} sx={{height:400}}>
        <Typography gutterBottom variant="h3">we could not find what you are looking for</Typography>
         <Divider/>
-        <Button fullWidth component={Link} to='/catalog'>Go back</Button>
+        <Button fullWidth component={Link} to='/'>Go back</Button>
     </Container>
   )
 }

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Company } from "../../common/models/company"
 import CompanyList from "./CompanyList"
 import agent from "../../app/api/agent";
-import LoadingComponent from "../../common/components/LoadingComponent";
+import LoadingComponent from "../../common/components/CustomLoading";
 import { Checkbox, Container, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, Paper, Radio, RadioGroup, TextField } from "@mui/material";
 
 const sortOptions = [

@@ -78,6 +78,58 @@ const CreatePage: React.FC = () => {
       const sendJson=(params:string)=>{
         
       }
+  //       //处理下拉框改变事件
+  // const handleDiaClose=()=>{
+  //   setOpenDialog(false);
+  // }
+  // //处理关闭弹出
+  // const handleCloseSnackbar = () => {
+  //   setOpenSnackbar(false);
+  // };
+  // //处理提示框提交逻辑
+  // const handleConfirm=()=>{
+  //   //关闭提示框
+  //   setOpenDialog(false);
+  //   //打开弹出信息
+  //   setOpenSnackbar(true);
+  //   console.log('Submitted:', { subscription, group, name, quantity, time });
+  //   // 提交逻辑
+  //   const data: DataModel = {
+  //     name,
+  //     region: 'EUS', // 这里替换为实际的region值
+  //     subscription,
+  //     group,
+  //     // 添加其他字段的值
+  //   };
+  //   agent.Create.sendJson(data)
+  //   .then(response => { console.log(response)})
+  //   .catch(error => console.log(error.response))   
+
+  //   swal({
+  //     title: "Good job!",
+  //     text: "You clicked the button!",
+  //     icon: "success",
+  //     button: "Aww yiss!",
+  //   });
+  // }
+  // const showName=(value: string)=>{
+  //   const subscription = subscriptionList.find(sub => sub.value === value);
+  //   return subscription ? subscription.label : undefined;  
+  //   }
+      // const handleSubmit = (event: React.FormEvent) => {
+      //   event.preventDefault();//组织浏览器自动刷新(阻止浏览器执行与某个事件相关的默认行为)
+      //   // 校验表单
+      //   if (!CheckForm()) {
+      //     return; // 如果有错误，停止提交
+      //   }
+      //   //判断打开提示框
+      //   if (nextTime === 'yes') {
+      //     // 如果用户选择了“下次不再提示”，则执行相应的操作
+      //     handleConfirm();
+      //   } else {
+      //     setOpenDialog(true);
+      //   }
+      // };
 
     //   useEffect(() => {
     //     agent.Create.getGroup(Number(subscription))
@@ -220,6 +272,62 @@ const CreatePage: React.FC = () => {
           autoHideDuration={4000}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} // 设置提示框位置为右下角
         />
+         {/* {selectedForm === 'bvt' && (
+                  <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
+                    <TextField
+                      label="Name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      variant="outlined"
+                      fullWidth
+                    />
+                  </FormControl>
+                )}
+
+                {selectedForm === 'man' && (
+                  <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
+                    <TextField
+                      label="数量"
+                      value={quantity}
+                      onChange={(e) => setQuantity(e.target.value)}
+                      variant="outlined"
+                      fullWidth
+                    />
+                  </FormControl>
+                )}
+
+                {selectedForm === 'perf' && (
+                  <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
+                    <TextField
+                      label="时间"
+                      value={time}
+                      onChange={(e) => setTime(e.target.value)}
+                      variant="outlined"
+                      fullWidth
+                    />
+                  </FormControl>
+                )} */}
+                {/* 提交确认对话框 */}
+      {/* <DialogComponent 
+          openDialog={openDialog} 
+          nextTime={nextTime}
+          handleDiaClose={handleDiaClose}
+          setNextTime={setNextTime}
+          handleConfirm={handleConfirm}
+        /> */}
+        {/* 其他组件 */}
+        {/* <CustomDia
+          open={openSnackbar}
+          onClose={handleCloseSnackbar}
+          message={
+            <List>
+              <ListItem>提交成功: {selectedForm}</ListItem>
+              <ListItem>订阅: {showName(subscription)}</ListItem>
+              <ListItem>组: {group}</ListItem>
+            </List>
+          }
+        />   */}
+                
       </StyledPaper>
 
       

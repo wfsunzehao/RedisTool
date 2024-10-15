@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { Company } from "../../common/models/company";
 import agent from "../../app/api/agent";
 import NotFound from "../../app/errors/NotFound";
-import LoadingComponent from "../../common/components/LoadingComponent";
+import LoadingComponent from "../../common/components/CustomLoading";
 
 export default function CompanyDetail() {
   const {id} = useParams<{id:string}>();
