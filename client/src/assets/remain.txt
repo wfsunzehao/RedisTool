@@ -1,3 +1,6 @@
 npx tailwindcss -i ./src/assets/styles/main.css -o ./src/assets/styles/output.css --watch
 
 这个及其重要 每次安装新的组件时 一定每次都要运行这个
+
+1.cd client
+2.npx tailwindcss -i ./src/assets/styles/main.css -o ./src/assets/styles/output.css --watch
