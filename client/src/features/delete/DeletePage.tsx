@@ -8,7 +8,10 @@ export default function DeletePage() {
       <Paper elevation={10} sx={{ height: '90vh', display: 'flex', overflow: 'hidden',border: '1px solid #ccc' }} >
           <div>
           <Button color="primary" >
-            Button
+            Button1
+          </Button>
+          <Button color="primary" >
+            Button2
           </Button>
           </div>
       </Paper>  
