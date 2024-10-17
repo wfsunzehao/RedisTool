@@ -33,6 +33,8 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 
     containerBuilder.RegisterType<RedisCollectionService>().As<IRedisCollection>().SingleInstance();
 
+    containerBuilder.RegisterType<StackExchangeService>().As<IStackExchangeService>().SingleInstance();
+
 });
 
 var app = builder.Build();
