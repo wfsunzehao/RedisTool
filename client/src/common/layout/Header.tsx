@@ -1,9 +1,10 @@
-import { AppBar, Badge, Box, IconButton, List, ListItem, styled, SvgIcon, SvgIconProps, Switch, Toolbar, Typography } from "@mui/material";
+import { AppBar, Badge, Box, IconButton, InputAdornment, List, ListItem, styled, SvgIcon, SvgIconProps, Switch, TextField, Toolbar, Typography } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import { NavLink } from "react-router-dom";
 import ChatIcon from '@mui/icons-material/Chat';
 import { useTheme } from "../../app/context/ThemeContext";
 import logo from '../../../public/images/wicrecend3.png';
+import SearchIcon from '@mui/icons-material/Search'; 
 
 const midLinks = [
   { title: 'create', path: '/create' },
@@ -59,6 +60,7 @@ export default function Header() {
           <img src={logo} alt="Logo" style={{ maxHeight: 40, marginRight: 16, objectFit: 'contain',filter: 'invert(100%) sepia(100%) saturate(0%) hue-rotate(180deg)',}} />
           <Switch checked={isDarkMode} onChange={toggleTheme} />
         </Box>
+        <Box display='flex' alignItems='center'>
           <List sx={{ display: 'flex' }}>
           <ListItem 
               component={NavLink}
@@ -78,8 +80,6 @@ export default function Header() {
               </ListItem>
             ))}
           </List>
-
-        <Box display='flex' alignItems='center'>
           <IconButton size='large' edge='start' color="inherit" sx={{ mr: 2 }}>
             <Badge badgeContent={3} color="secondary">
               <ChatIcon />

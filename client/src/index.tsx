@@ -13,9 +13,6 @@ import { ThemeProvider } from './app/context/ThemeContext.tsx';
 import { NextUIProvider } from '@nextui-org/react';
 
 
-
-
-
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <NextUIProvider>
@@ -23,6 +20,5 @@ createRoot(document.getElementById('root')!).render(
         <RouterProvider router={router}/>
       </ThemeProvider>   
     </NextUIProvider>
-    
   </StrictMode>
 )

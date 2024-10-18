@@ -5,7 +5,7 @@ import {Button} from "@nextui-org/button";
 export default function DeletePage() {
   return (
     <Container sx={{marginTop: '20px'}}>
-      <Paper elevation={10} sx={{ height: '90vh', display: 'flex', overflow: 'hidden',border: '1px solid #ccc' }} >
+      <Paper elevation={10} sx={{ height: '100vh', display: 'flex', overflow: 'hidden',border: '1px solid #ccc' }} >
           <div>
           <Button color="primary" >
             Button1

@@ -10,6 +10,10 @@ import NotFound from "../errors/NotFound";
 import Delete from "../../features/delete/DeletePage";
 import CreatePage from "../../features/create/CreatePage";
 import OtherPage from "../../features/other/OtherPage";
+import BvtPage from "../../features/create/bvt/BvtPage";
+import ManPage from "../../features/create/man/ManPage";
+import PerfPage from "../../features/create/perf/PerfPage";
+import DeletePage from "../../features/delete/DeletePage";
 
 export const router = createBrowserRouter([
     {
@@ -17,8 +21,17 @@ export const router = createBrowserRouter([
         element: <App />,
         children:[
             {path: '',element: <HomePage/>},
-            {path: 'create',element: <CreatePage/>},
-            {path: 'delete',element: <Delete/>},
+            {
+                path: 'create',
+                element: <CreatePage/>,
+                children:[
+                    {path: 'bvt',element: <BvtPage/>},
+                    {path: 'man',element: <ManPage/>},
+                    {path: 'perf',element: <PerfPage/>},
+                ]
+                
+            },
+            {path: 'delete',element: <DeletePage/>,},
             {path: 'other',element: <OtherPage/>},
             {path: 'catalog',element: <Catalog/>},
             {path: 'catalog/:id',element: <CompanyDetail/>},
