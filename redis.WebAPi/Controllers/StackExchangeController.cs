@@ -14,13 +14,13 @@ namespace redis.WebAPi.Controllers
         private readonly ISubscriptionResourceService _subscriptionResourceService;
         private readonly IStackExchangeService _stackExchangeService;
 
-        // 注入 SubscriptionResourceService
+        // Injecting SubscriptionResourceService
         public StackExchangeController(ISubscriptionResourceService subscriptionResourceService, IStackExchangeService stackExchangeService)
         {
             _subscriptionResourceService = subscriptionResourceService;
             this._stackExchangeService = stackExchangeService;
         }
-        //添加数据
+        //Add data interface
         [HttpPost("AddDataToRedis")]
         public async Task<IActionResult> AddDataToRedis([FromBody] RedisRequestModel redisRequest)
         {

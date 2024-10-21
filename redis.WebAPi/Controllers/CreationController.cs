@@ -41,7 +41,8 @@ namespace redis.WebAPi.Controllers
         }
 
         [HttpPost("CreateBVTCache")]
-        //目前PrivateEndpointBladeTest和CacheCreationTest以及EnterpriseTest需手动验证创建，不包括在此功能内
+        //Currently, PrivateEndpointBladeTest, CacheCreationTest, and EnterpriseTest 
+        //need to be manually verified and created, and are not included in this feature.
         public async Task<IActionResult> CreateBVTCache([FromBody] RedisRequestModel redisReques)
         {
 
@@ -108,7 +109,8 @@ namespace redis.WebAPi.Controllers
         }
 
         [HttpPost("CreateBVTCacheByCase")]
-        //目前PrivateEndpointBladeTest和CacheCreationTest以及EnterpriseTest需手动验证创建，不包括在此功能内
+        //Currently, PrivateEndpointBladeTest, CacheCreationTest, and EnterpriseTest 
+        //need to be manually verified and created, and are not included in this feature.
         public async Task<IActionResult> CreateBVTCacheByCase([FromBody] RedisRequestModel redisReques)
         {
             if (redisReques.Cases == null || redisReques.Cases.Length == 0)

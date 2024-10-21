@@ -10,7 +10,7 @@ namespace redis.WebAPi.Service.AzureShared
             bool ssl = false,
             int syncTimeoutSeconds = 10)
         {
-            //根据传入端口校正ssl配置
+            //Correct ssl configuration according to incoming port value
             ssl = (port == "6380");
 
             var keys = await RedisCache.GetKeysAsync();

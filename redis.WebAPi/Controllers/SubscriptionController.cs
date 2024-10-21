@@ -12,20 +12,20 @@ namespace redis.WebAPi.Controllers
 
         private readonly ISubscriptionResourceService _subscriptionResourceService;
 
-        // 注入 SubscriptionResourceService
+        // Injecting SubscriptionResourceService
         public SubscriptionController(ISubscriptionResourceService subscriptionResourceService)
         {
             _subscriptionResourceService = subscriptionResourceService;
         }
 
-        // 接收前端传递的 subscriptionId 并生成 SubscriptionResource
+        // Receive the subscriptionId passed by the front end and generate SubscriptionResource
         [HttpGet]
         [HttpGet("{subscriptionId}")]
         public IActionResult SetSubscription(string subscriptionId)
         {
             try
             {
-                // 根据前端传入的 subscriptionId 生成 SubscriptionResource
+                // Generate SubscriptionResource based on the subscriptionId passed in by the front end
                 _subscriptionResourceService.SetSubscriptionResource(subscriptionId);
                 List<string> groupNameList = new List<string>();
                 foreach (var s in _subscriptionResourceService.GetSubscription().GetResourceGroups().GetAll())
@@ -44,10 +44,10 @@ namespace redis.WebAPi.Controllers
         [HttpPost("test")]
         public async Task<IActionResult> Test([FromBody] MyRequestModel model)
         {
-            // 延迟 10 秒
-            await Task.Delay(10000); // 10000 毫秒 = 10 秒
+            // Delay 10 seconds
+            await Task.Delay(10000); // 10000 milliseconds = 10 seconds
 
-            // 处理接收到的参数
+            // Processing received parameters
             return Ok(new { subscription = model.subscription, group = model.group });
         }
 
@@ -61,7 +61,7 @@ namespace redis.WebAPi.Controllers
 
         }
 
-        // 示例：获取 SubscriptionResource 并进行某种操作
+        // Example: Get a SubscriptionResource and perform some operation
         [HttpGet("getSubscriptionResource")]
         public IActionResult GetSubscriptionResource()
         {
