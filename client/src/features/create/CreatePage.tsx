@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { Box, Paper, List, ListItem, ListItemText, ListItemIcon, Typography, Alert } from '@mui/material';
-import { Assignment } from '@mui/icons-material'; // 示例图标
-
+import { Box, Paper, List, ListItem, ListItemText, ListItemIcon, Typography, Alert, Button } from '@mui/material';
+import { Assignment } from '@mui/icons-material';
 
 const leftLinks = [
   { title: 'BVT', path: '/create/bvt', icon: <Assignment /> },
@@ -13,11 +12,20 @@ const leftLinks = [
 const CreatePage: React.FC = () => {
   const location = useLocation();
   const currentTab = location.pathname.split('/').pop();
+  const [defaultPath] = useState('/create/bvt'); // 默认路径
+
+  // 默认渲染BVT页面
+  useEffect(() => {
+    if (currentTab === 'create') {
+      window.location.href = defaultPath; // 重定向到默认路径
+    }
+  }, [currentTab, defaultPath]);
+  
 
   return (
     <Paper elevation={10} sx={{ height: '100vh', display: 'flex', border: '1px solid #ccc' }}>
       <Box sx={{ width: '200px', borderRight: '1px solid #ccc', display: 'flex', flexDirection: 'column', position: 'fixed', height: '100%', overflowY: 'auto' }}>
-        <List sx={{ paddingTop: '20px' }}> {/* 添加顶部内边距，避免被Header覆盖 */}
+        <List sx={{ paddingTop: '20px' }}>
           {leftLinks.map(({ title, path, icon }) => (
             <ListItem 
               button 
@@ -27,20 +35,18 @@ const CreatePage: React.FC = () => {
               key={title}
             >
               <ListItemIcon>
-                {icon} {/* 在这里渲染图标 */}
+                {icon}
               </ListItemIcon>
               <ListItemText primary={title} />
             </ListItem>
           ))}
         </List>
       </Box>
-      <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: '20px'}}>
-        {/* <Typography variant="body1" color="warning.main" textAlign="center">
-          注意事项：请确保填写的信息准确无误。
-        </Typography> */}
-        <Alert severity="info">现在BVT已经可以创建.</Alert>
-        <Box sx={{ width: '40%', padding: '20px'}}> {/* 确保 Outlet 区域的宽度更大 */}
-          <Outlet /> {/* 这里将渲染子路由组件 */}
+      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: '20px' }}>
+        
+        <Alert severity="info">现在BVT已经可以创建</Alert>
+        <Box sx={{ width: '40%', padding: '20px' }}>
+          <Outlet /> {/* 渲染子路由组件 */}
         </Box>
       </Box>
     </Paper>
