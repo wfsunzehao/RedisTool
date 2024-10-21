@@ -60,7 +60,7 @@ const PerfPage: React.FC = () => {
           // 添加其他字段的值
         };
   
-        agent.Create.sendJson(data)
+        agent.Create.sendPerfJson(data)
           .then(response => {
             console.log(response);
             swal({
