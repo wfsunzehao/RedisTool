@@ -50,7 +50,7 @@ const Company = {
 
 const Create = {
     getGroup: (subscriptionid: string) => request.get(`Subscription/${subscriptionid}`),
-    sendJson:(body: object)=>request.post(`/Subscription/test`,body),
+    sendJson:(body: object)=>request.post(`/Creation/CreateBVTCache`,body),
 }
 
 

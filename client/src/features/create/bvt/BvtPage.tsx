@@ -53,9 +53,10 @@ const BvtPage: React.FC = () => {
         // 提交逻辑
         const data: DataModel = {
           name,
-          region: 'EUS', // 这里替换为实际的region值
+          region: 'Central US EUAP', // 这里替换为实际的region值
           subscription,
           group,
+          port:'6379'
           // 添加其他字段的值
         };
   

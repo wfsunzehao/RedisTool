@@ -13,7 +13,7 @@ namespace redis.WebAPi.Controllers
 {
 
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class CreationController : ControllerBase
     {
         private readonly IRedisCollection _redisCollection;
