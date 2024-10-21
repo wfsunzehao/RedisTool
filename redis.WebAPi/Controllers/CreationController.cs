@@ -107,5 +107,75 @@ namespace redis.WebAPi.Controllers
             return Ok();
         }
 
+        [HttpPost("CreateBVTCacheByCase")]
+        //目前PrivateEndpointBladeTest和CacheCreationTest以及EnterpriseTest需手动验证创建，不包括在此功能内
+        public async Task<IActionResult> CreateBVTCacheByCase([FromBody] RedisRequestModel redisReques)
+        {
+            if (redisReques.Cases == null || redisReques.Cases.Length == 0)
+            {
+                throw new InvalidOperationException("ListOfCases cannot be null or empty.");
+            }
+            _subscriptionResourceService.SetSubscriptionResource(redisReques.subscription);
+
+            for (int i = 0; i < redisReques.Cases.Length; i++) {
+                
+                string currentTestCase = redisReques.Cases[i];
+                string currentDate = DateTime.Now.ToString("MMdd");
+
+                RedisOption opt = new RedisOption();
+                
+                if (currentTestCase == "RebootBladeTest")
+                {
+                    opt = new RedisOption()
+                    {
+                        SkuName = "Premium",
+                        RegionName = "Central US EUAP",
+                        Cluster = true,
+                        MaxShards = 2,
+                        NonSSL = true,
+                    };
+                    _redisCollection.CreateCache("BVT-" + currentTestCase + "-" + currentDate, opt, redisReques.group);
+                }
+                else if (currentTestCase == "DataPersistenceBladeTest-NotPremium")
+                {
+                    opt = new RedisOption()
+                    {
+                        SkuName = "Basic",
+                        RegionName = "Central US EUAP",
+                        NonSSL = true,
+                    };
+                    _redisCollection.CreateCache("BVT-" + currentTestCase + "-" + currentDate, opt, redisReques.group);
+                }
+                else if (currentTestCase == "GeoreplicationBladeTest")
+                {
+                    opt = new RedisOption()
+                    {
+                        SkuName = "Premium",
+                        RegionName = "Central US EUAP",
+                        NonSSL = true,
+                    };
+                    _redisCollection.CreateCache("BVT-" + currentTestCase + "-CUSE-"+ currentDate, opt, redisReques.group);
+                    opt = new RedisOption()
+                    {
+                        SkuName = "Premium",
+                        RegionName = "East US",
+                        NonSSL = true,
+                    };
+                    _redisCollection.CreateCache("BVT-" + currentTestCase + "-EUS-" + currentDate, opt, redisReques.group);
+                }
+                else
+                {
+                    opt = new RedisOption()
+                    {
+                        SkuName = "Premium",
+                        RegionName = "Central US EUAP",
+                        NonSSL = true,
+                    };
+                    _redisCollection.CreateCache("BVT-" + currentTestCase + "-" + currentDate, opt, redisReques.group);
+                }
+            }
+            return Ok();
+        }
+
     }
 }

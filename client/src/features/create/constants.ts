@@ -14,6 +14,29 @@ export const subscriptionList = [
     label: 'CacheTeam - RedisTiP',
   },
 ];
+//case列表
+export const  BVTTestCaseNames = [
+  "FlushBladeTest",
+  "DataAccessConfigurationBladeTest",
+  "OverviewBladeTest",
+  "AccessKeysBladeTest",
+  "AdvancedSettingsBladeTest",
+  "RebootBladeTest", //Need multiple shards
+  "ScaleBladeTest",
+  "ClusterSizeBladeTest",
+  "DataPersistenceBladeTest-NotPremium", //NotPremium
+  "DataPersistenceBladeTest-Premium",
+  "ManagedIdentityBladeTest",
+  "ScheduleUpdatesBladeTest",
+  "GeoreplicationBladeTest", //Need two caches
+  "VirtualNetworkBladeTest",
+  //"PrivateEndpointBladeTest", //Could not be create
+  "FirewallBladeTest",
+  "PropertiesBladeTest",
+  "Import-ExportBladeTest",
+  "PortalOwnedBladeTest",
+  "LocalizationTest"
+];
 export const Overlay = styled(Box)({
   position: 'fixed',
   top: 0,

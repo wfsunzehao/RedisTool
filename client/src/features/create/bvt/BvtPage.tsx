@@ -2,26 +2,37 @@ import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
+  Checkbox,
   CircularProgress,
   FormControl,
+  FormControlLabel,
+  FormHelperText,
+  InputLabel,
+  ListItemText,
   MenuItem,
+  OutlinedInput,
+  Radio,
+  RadioGroup,
+  Select,
   TextField,
   styled
 } from '@mui/material';
 import swal from 'sweetalert';
 import agent from '../../../app/api/agent';
 import { DataModel } from '../../../common/models/DataModel';
-import { Overlay,subscriptionList } from '../constants';
+import { BVTTestCaseNames, Overlay,subscriptionList } from '../constants';
 
 
 const BvtPage: React.FC = () => {
   const [subscription, setSubscription] = useState('');
   const [group, setGroup] = useState('');
-  const [name, setName] = useState(''); // 用于 BVT 的 name
+  const [name, setName] = useState('');  
   const [region, setRegion] = useState(''); // 用于 BVT 的 region
   const [quantity, setQuantity] = useState(''); // 用于 MAN 的数量
   const [time, setTime] = useState(''); // 用于 PERF 的时间
 
+  const [selectedNames, setSelectedNames] = useState<string[]>([]); // 用于复选框的选中状态
+  const [option, setOption] = useState('all'); // 新增状态用于单选框
   const [loading, setLoading] = useState(false);
   const [groupList,setGroupList] = useState<string[]>([]);
   const [errors, setErrors] = useState<{ [key: string]: string }>({}); 
@@ -39,6 +50,7 @@ const BvtPage: React.FC = () => {
     const newErrors: { [key: string]: string } = {};
     if (!subscription) newErrors.subscription = "订阅不能为空";
     if (!group) newErrors.group = "组不能为空";
+    if (option === 'case' && selectedNames.length === 0) newErrors.selectedNames = "至少选择一个名称"; // 校验
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // 返回是否有错误
   };
@@ -66,11 +78,14 @@ const BvtPage: React.FC = () => {
           region: 'Central US EUAP', // 这里替换为实际的region值
           subscription,
           group,
-          port:'6379'
+          port:'6379',
+          ...(option === 'case' && { cases: selectedNames }) // 条件传递
           // 添加其他字段的值
         };
 
-        agent.Create.sendBvtJson(data)
+        const apiPath = option === 'case' ? agent.Create.sendOneBvtJson : agent.Create.sendAllBvtJson; // 根据选项选择请求路径
+
+        apiPath(data)
           .then(response => {
             console.log(response);
             swal({
@@ -106,6 +121,7 @@ const BvtPage: React.FC = () => {
   const handleCancel = () => {
     setSubscription('');
     setGroup('');
+    setSelectedNames([]); // 清除选中的名称
     setErrors({});
   };
   // 处理下拉框改变事件
@@ -117,7 +133,7 @@ const BvtPage: React.FC = () => {
   }
   return (
           <Box>
-            <p style={{ color: '#1976d2', fontSize: '30px',textAlign: 'center'  }}>创建：BVT Cache</p>
+            <p style={{ color: '#1976d2', fontSize: '30px',textAlign: 'center'  }}>创建：All BVT Cache</p>
             <form className="submit-box" onSubmit={handleSubmit}>
               <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
                 <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
@@ -132,10 +148,10 @@ const BvtPage: React.FC = () => {
                     fullWidth
                   >
                     {subscriptionList.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
+                      <MenuItem key={option.value} value={option.value}>
                         {option.label}
-                    </MenuItem>
-                ))}
+                      </MenuItem>
+                    ))}
 
                   </TextField>
                 </FormControl>
@@ -158,6 +174,43 @@ const BvtPage: React.FC = () => {
                     ))}
                   </TextField>
                 </FormControl>
+                  {/* 添加单选框 */}
+                <FormControl component="fieldset" sx={{ marginTop: 2 }}>
+                  <RadioGroup row value={option} onChange={(e) => setOption(e.target.value)}>
+                    <FormControlLabel value="all" control={<Radio />} label="All" />
+                    <FormControlLabel value="case" control={<Radio />} label="Case" />
+                  </RadioGroup>
+                </FormControl>
+                {/* 当选择 case 时显示复选框 */}
+                {/* 下拉框与复选框结合 */}
+                {option === 'case' && (
+                  <FormControl
+                    variant="outlined"
+                    sx={{ width: '100%', marginTop: 2 }}
+                    error={!!errors.selectedNames} // 应用错误样式
+                  >
+                    <InputLabel id="names-label">Case</InputLabel>
+                    <Select
+                      labelId="names-label"
+                      multiple
+                      value={selectedNames}
+                      onChange={(e) => setSelectedNames(e.target.value as string[])}
+                      input={<OutlinedInput label="Case" />}
+                      renderValue={(selected) => selected.join(', ')}
+                    >
+                      {BVTTestCaseNames.map((name) => (
+                        <MenuItem key={name} value={name}>
+                          <Checkbox checked={selectedNames.includes(name)} />
+                          <ListItemText primary={name} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {errors.selectedNames && (
+                      <FormHelperText error>{errors.selectedNames}</FormHelperText> // 红色错误信息
+                    )}
+                  </FormControl>
+                )}
+
               </Box>
               {/* 其他相关表单字段 */}
               <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
