@@ -11,6 +11,7 @@ import swal from 'sweetalert';
 import agent from '../../../app/api/agent';
 import { DataModel } from '../../../common/models/DataModel';
 import { Overlay, subscriptionList } from '../constants';
+import LoadingComponent from '../../../common/components/CustomLoading';
 
 
 const ManPage: React.FC = () => {
@@ -45,7 +46,6 @@ const ManPage: React.FC = () => {
     if (!CheckForm()) {
       return; // 如果有错误，停止提交
     }
-    setLoading(true);
 
     swal({
       title: "Confirm the operation",
@@ -54,6 +54,7 @@ const ManPage: React.FC = () => {
       dangerMode: true,
       closeOnClickOutside: false, // 防止点击外部关闭
     }).then((willSubmit) => {
+      setLoading(true);
       if (willSubmit) {
         // 提交逻辑
         const data: DataModel = {
@@ -167,7 +168,7 @@ const ManPage: React.FC = () => {
       </form>
       {loading && (
         <Overlay>
-          <CircularProgress />
+          <LoadingComponent message='正在提交，请稍候...' />
         </Overlay>
       )}
     </Box>

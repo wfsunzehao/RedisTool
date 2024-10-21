@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Alert,
   Box,
   Button,
   Checkbox,
@@ -21,6 +22,7 @@ import swal from 'sweetalert';
 import agent from '../../../app/api/agent';
 import { DataModel } from '../../../common/models/DataModel';
 import { BVTTestCaseNames, Overlay,subscriptionList } from '../constants';
+import LoadingComponent from '../../../common/components/CustomLoading';
 
 
 const BvtPage: React.FC = () => {
@@ -62,7 +64,6 @@ const BvtPage: React.FC = () => {
     if (!CheckForm()) {
       return; // 如果有错误，停止提交
     }
-    setLoading(true);
 
     swal({
       title: "Confirm the operation",
@@ -71,6 +72,7 @@ const BvtPage: React.FC = () => {
       dangerMode: true,
       closeOnClickOutside: false, // 防止点击外部关闭
     }).then((willSubmit) => {
+      setLoading(true);
       if (willSubmit) {
         // 提交逻辑
         const data: DataModel = {
@@ -211,9 +213,13 @@ const BvtPage: React.FC = () => {
                   </FormControl>
                 )}
 
+              <Alert sx={{ mt: 2 }} severity="warning">请谨慎操作 , 提交后会创建cache</Alert>
               </Box>
+
+              
               {/* 其他相关表单字段 */}
               <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+               
                 <Button type="submit" variant="contained" color="primary" sx={{ mx: 1 }}>
                   提交
                 </Button>
@@ -221,10 +227,11 @@ const BvtPage: React.FC = () => {
                   取消
                 </Button>
               </Box>
+             
             </form>
             {loading && (
               <Overlay>
-                <CircularProgress />
+                <LoadingComponent message='正在提交，请稍候...' />
               </Overlay>
             )}
           </Box>            

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { Box, Paper, List, ListItem, ListItemText, ListItemIcon, Typography } from '@mui/material';
+import { Box, Paper, List, ListItem, ListItemText, ListItemIcon, Typography, Alert } from '@mui/material';
 import { Assignment } from '@mui/icons-material'; // 示例图标
 
 
@@ -35,9 +35,10 @@ const CreatePage: React.FC = () => {
         </List>
       </Box>
       <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: '20px'}}>
-        <Typography variant="body1" color="warning.main" textAlign="center">
+        {/* <Typography variant="body1" color="warning.main" textAlign="center">
           注意事项：请确保填写的信息准确无误。
-        </Typography>
+        </Typography> */}
+        <Alert severity="info">现在BVT已经可以创建.</Alert>
         <Box sx={{ width: '40%', padding: '20px'}}> {/* 确保 Outlet 区域的宽度更大 */}
           <Outlet /> {/* 这里将渲染子路由组件 */}
         </Box>
