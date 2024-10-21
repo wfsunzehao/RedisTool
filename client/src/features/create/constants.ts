@@ -1,4 +1,4 @@
-import { createTheme } from "@mui/material";
+import { Box, createTheme } from "@mui/material";
 import { Button, keyframes, ListItem, ListItemText, Paper, styled } from "@mui/material";
 
 
@@ -14,6 +14,18 @@ export const subscriptionList = [
     label: 'CacheTeam - RedisTiP',
   },
 ];
+export const Overlay = styled(Box)({
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  backgroundColor: 'rgba(0, 0, 0, 0.5)', // 半透明黑色
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  zIndex: 1000, // 确保覆盖在其他元素之上
+});
 // 创建主题
 export const theme = createTheme({
     palette: {

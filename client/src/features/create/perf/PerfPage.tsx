@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Paper, Box, Divider, Button, List, ListItem, ListItemText, FormControl, InputLabel, TextField, Typography, MenuItem, Container, Snackbar, Alert } from '@mui/material';
-
+import {
+  Box,
+  Button,
+  CircularProgress,
+  FormControl,
+  MenuItem,
+  TextField,
+} from '@mui/material';
 import swal from 'sweetalert';
 import agent from '../../../app/api/agent';
 import { DataModel } from '../../../common/models/DataModel';
-import { subscriptionList } from '../constants';
+import { Overlay, subscriptionList } from '../constants';
 
 
 const PerfPage: React.FC = () => {
@@ -15,6 +21,7 @@ const PerfPage: React.FC = () => {
   const [quantity, setQuantity] = useState(''); // 用于 MAN 的数量
   const [time, setTime] = useState(''); // 用于 PERF 的时间
 
+  const [loading, setLoading] = useState(false);
   const [groupList,setGroupList] = useState<string[]>([]);
   const [errors, setErrors] = useState<{ [key: string]: string }>({}); 
   //初始化
@@ -43,6 +50,8 @@ const PerfPage: React.FC = () => {
     if (!CheckForm()) {
       return; // 如果有错误，停止提交
     }
+    setLoading(true);
+
     swal({
       title: "Confirm the operation",
       text: "Once started, the cache used in BVT will be created!",
@@ -54,18 +63,18 @@ const PerfPage: React.FC = () => {
         // 提交逻辑
         const data: DataModel = {
           name,
-          region: 'EUS', // 这里替换为实际的region值
+          region: 'Central US EUAP', // 这里替换为实际的region值
           subscription,
           group,
+          port:'6379'
           // 添加其他字段的值
         };
-  
-        agent.Create.sendPerfJson(data)
+
+        agent.Create.sendManJson(data)
           .then(response => {
             console.log(response);
             swal({
               title: "Submission was successful!",
-              //text: "Go to <a href='https://portal.azure.com' target='_blank'>Azure portal</a>",
               icon: "success",
               button: "OK!",
               content: {
@@ -84,7 +93,12 @@ const PerfPage: React.FC = () => {
               icon: "error",
               button: "OK!",
             });
+          })
+          .finally(() => {
+            setLoading(false);
           });
+      } else {
+        setLoading(false);
       }
     });
   };
@@ -188,6 +202,11 @@ const PerfPage: React.FC = () => {
                 </Button>
               </Box>
             </form>
+            {loading && (
+              <Overlay>
+                <CircularProgress />
+              </Overlay>
+            )}
           </Box>            
   );
 };

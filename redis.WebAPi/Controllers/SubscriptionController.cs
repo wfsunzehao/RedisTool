@@ -42,11 +42,15 @@ namespace redis.WebAPi.Controllers
         }
 
         [HttpPost("test")]
-        public IActionResult Test([FromBody] MyRequestModel model)
+        public async Task<IActionResult> Test([FromBody] MyRequestModel model)
         {
+            // 延迟 10 秒
+            await Task.Delay(10000); // 10000 毫秒 = 10 秒
+
             // 处理接收到的参数
             return Ok(new { subscription = model.subscription, group = model.group });
         }
+
 
         public class MyRequestModel
         {
