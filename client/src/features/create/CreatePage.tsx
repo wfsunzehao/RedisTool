@@ -58,7 +58,7 @@ const CreatePage: React.FC = () => {
           paddingTop: '20px',
         }}
       >
-        <Alert severity="info">现在BVT已经可以创建</Alert>
+        <Alert severity="info" sx={{width: '600px',margin: '0 auto'}}>Now only BVT can create , MAN PERF stay tuned!</Alert>
         <Box sx={{ width: '40%', padding: '20px' }}>
           <Outlet /> {/* 渲染子路由组件 */}
         </Box>

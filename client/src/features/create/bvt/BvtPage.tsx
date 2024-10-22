@@ -143,6 +143,10 @@ const BvtPage: React.FC = () => {
   }
   return (
           <Box>
+            <Alert severity="info" sx={{width: '600px',margin: '0 auto'}}>
+                  Currently, PrivateEndpointBladeTest, CacheCreationTest, and EnterpriseTest
+                  need to be manually verified and created, and are not included in this feature. 
+            </Alert>
             <p style={{ color: '#1976d2', fontSize: '30px',textAlign: 'center'  }}>创建： BVT Cache</p>
             <form className="submit-box" onSubmit={handleSubmit}>
               <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
