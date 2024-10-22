@@ -157,10 +157,10 @@ namespace redis.WebAPi.Controllers
                         opt.SkuName = "Premium";
                         opt.RegionName = "Central US EUAP";
                         opt.NonSSL = true;
-                        _redisCollection.CreateCache($"BVT-{currentTestCase}-{currentDate}-{randomNumber}", opt, redisReques.group);
+                        _redisCollection.CreateCache($"BVT-{currentTestCase}-{currentDate}-CUSE-{randomNumber}", opt, redisReques.group);
                         //another option
                         opt.RegionName = "East US";
-                        _redisCollection.CreateCache($"BVT-{currentTestCase}-{currentDate}-{randomNumber}", opt, redisReques.group);
+                        _redisCollection.CreateCache($"BVT-{currentTestCase}-{currentDate}-EUS-{randomNumber}", opt, redisReques.group);
                         continue; // Continue the loop to avoid duplicate creation
 
                     default:
