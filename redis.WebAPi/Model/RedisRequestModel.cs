@@ -11,6 +11,7 @@
         public long numKeysPerShard { get; set; }
 
         public string[] ?Cases { get; set; }
+        public string ?Quantity { get; set; }
         
     }
 }

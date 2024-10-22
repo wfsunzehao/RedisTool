@@ -19,6 +19,8 @@ namespace redis.WebAPi.Controllers
         private readonly IRedisCollection _redisCollection;
         private readonly ISubscriptionResourceService _subscriptionResourceService;
 
+        private static Random random = new Random();
+
         public CreationController(IRedisCollection redisCollection, ISubscriptionResourceService subscriptionResourceService)
         {
             this._redisCollection = redisCollection;
@@ -115,68 +117,67 @@ namespace redis.WebAPi.Controllers
         {
             if (redisReques.Cases == null || redisReques.Cases.Length == 0)
             {
-                throw new InvalidOperationException("ListOfCases cannot be null or empty.");
+                throw new InvalidOperationException("Cases cannot be null or empty.");
             }
+
+            if (redisReques.Quantity != null && redisReques.Cases.Length == 1)
+            {
+                string caseToCopy = redisReques.Cases[0]; // Get the case to be copied
+                int quantity = int.Parse(redisReques.Quantity.ToString()); // to an integer
+                redisReques.Cases = Enumerable.Repeat(caseToCopy, quantity).ToArray(); // Copy the specified quantity and replace the original array
+            }
+
             _subscriptionResourceService.SetSubscriptionResource(redisReques.subscription);
 
-            for (int i = 0; i < redisReques.Cases.Length; i++) {
-                
-                string currentTestCase = redisReques.Cases[i];
+            foreach (var currentTestCase in redisReques.Cases)
+            {
                 string currentDate = DateTime.Now.ToString("MMdd");
-
-                RedisOption opt = new RedisOption();
+                int randomNumber = GenerateFourDigitRandomNumber();
                 
-                if (currentTestCase == "RebootBladeTest")
+                RedisOption opt = new RedisOption();
+
+                switch (currentTestCase)
                 {
-                    opt = new RedisOption()
-                    {
-                        SkuName = "Premium",
-                        RegionName = "Central US EUAP",
-                        Cluster = true,
-                        MaxShards = 2,
-                        NonSSL = true,
-                    };
-                    _redisCollection.CreateCache("BVT-" + currentTestCase + "-" + currentDate, opt, redisReques.group);
+                    case "RebootBladeTest":
+                        opt.SkuName = "Premium";
+                        opt.RegionName = "Central US EUAP";
+                        opt.Cluster = true;
+                        opt.MaxShards = 2;
+                        opt.NonSSL = true;
+                        break;
+
+                    case "DataPersistenceBladeTest-NotPremium":
+                        opt.SkuName = "Basic";
+                        opt.RegionName = "Central US EUAP";
+                        opt.NonSSL = true;
+                        break;
+
+                    case "GeoreplicationBladeTest":
+                        // Create two caching options
+                        opt.SkuName = "Premium";
+                        opt.RegionName = "Central US EUAP";
+                        opt.NonSSL = true;
+                        _redisCollection.CreateCache($"BVT-{currentTestCase}-{currentDate}-{randomNumber}", opt, redisReques.group);
+                        //another option
+                        opt.RegionName = "East US";
+                        _redisCollection.CreateCache($"BVT-{currentTestCase}-{currentDate}-{randomNumber}", opt, redisReques.group);
+                        continue; // Continue the loop to avoid duplicate creation
+
+                    default:
+                        opt.SkuName = "Premium";
+                        opt.RegionName = "Central US EUAP";
+                        opt.NonSSL = true;
+                        break;
                 }
-                else if (currentTestCase == "DataPersistenceBladeTest-NotPremium")
-                {
-                    opt = new RedisOption()
-                    {
-                        SkuName = "Basic",
-                        RegionName = "Central US EUAP",
-                        NonSSL = true,
-                    };
-                    _redisCollection.CreateCache("BVT-" + currentTestCase + "-" + currentDate, opt, redisReques.group);
-                }
-                else if (currentTestCase == "GeoreplicationBladeTest")
-                {
-                    opt = new RedisOption()
-                    {
-                        SkuName = "Premium",
-                        RegionName = "Central US EUAP",
-                        NonSSL = true,
-                    };
-                    _redisCollection.CreateCache("BVT-" + currentTestCase + "-CUSE-"+ currentDate, opt, redisReques.group);
-                    opt = new RedisOption()
-                    {
-                        SkuName = "Premium",
-                        RegionName = "East US",
-                        NonSSL = true,
-                    };
-                    _redisCollection.CreateCache("BVT-" + currentTestCase + "-EUS-" + currentDate, opt, redisReques.group);
-                }
-                else
-                {
-                    opt = new RedisOption()
-                    {
-                        SkuName = "Premium",
-                        RegionName = "Central US EUAP",
-                        NonSSL = true,
-                    };
-                    _redisCollection.CreateCache("BVT-" + currentTestCase + "-" + currentDate, opt, redisReques.group);
-                }
+
+                _redisCollection.CreateCache($"BVT-{currentTestCase}-{currentDate}-{randomNumber}", opt, redisReques.group);
             }
+
             return Ok();
+        }
+        private static int GenerateFourDigitRandomNumber()
+        {
+            return random.Next(1000, 10000); // 生成1000到9999之间的随机数
         }
 
     }

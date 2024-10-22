@@ -14,6 +14,7 @@ import BvtPage from "../../features/create/bvt/BvtPage";
 import ManPage from "../../features/create/man/ManPage";
 import PerfPage from "../../features/create/perf/PerfPage";
 import DeletePage from "../../features/delete/DeletePage";
+import InsertPage from "../../features/other/insert/InsertPage";
 
 export const router = createBrowserRouter([
     {
@@ -32,7 +33,13 @@ export const router = createBrowserRouter([
                 
             },
             {path: 'delete',element: <DeletePage/>,},
-            {path: 'other',element: <OtherPage/>},
+            {
+                path: 'other',
+                element: <OtherPage/>,
+                children:[
+                    {path: 'insert',element: <InsertPage/>},
+                ]
+            },
             {path: 'catalog',element: <Catalog/>},
             {path: 'catalog/:id',element: <CompanyDetail/>},
             {path: 'about',element: <AboutPage/>},

@@ -15,16 +15,23 @@ const CreatePage: React.FC = () => {
   const [defaultPath] = useState('/create/bvt'); // 默认路径
 
   // 默认渲染BVT页面
-  useEffect(() => {
-    if (currentTab === 'create') {
-      window.location.href = defaultPath; // 重定向到默认路径
-    }
-  }, [currentTab, defaultPath]);
+  // useEffect(() => {
+  //   if (currentTab === 'create') {
+  //     window.location.href = defaultPath; // 重定向到默认路径
+  //   }
+  // }, [currentTab, defaultPath]);
   
 
   return (
     <Paper elevation={10} sx={{ height: '100vh', display: 'flex', border: '1px solid #ccc' }}>
-      <Box sx={{ width: '200px', borderRight: '1px solid #ccc', display: 'flex', flexDirection: 'column', position: 'fixed', height: '100%', overflowY: 'auto' }}>
+      <Box sx={{ 
+                width: '200px',
+                borderRight: '1px solid #ccc', 
+                display: 'flex', 
+                flexDirection: 'column', 
+                position: 'fixed', 
+                height: '100%', 
+                overflowY: 'auto' }}>
         <List sx={{ paddingTop: '20px' }}>
           {leftLinks.map(({ title, path, icon }) => (
             <ListItem 
@@ -42,8 +49,15 @@ const CreatePage: React.FC = () => {
           ))}
         </List>
       </Box>
-      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: '20px' }}>
-        
+      <Box 
+        sx={{ 
+          flex: 1, 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          paddingTop: '20px',
+        }}
+      >
         <Alert severity="info">现在BVT已经可以创建</Alert>
         <Box sx={{ width: '40%', padding: '20px' }}>
           <Outlet /> {/* 渲染子路由组件 */}

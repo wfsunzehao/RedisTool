@@ -30,7 +30,7 @@ const BvtPage: React.FC = () => {
   const [group, setGroup] = useState('');
   const [name, setName] = useState('');  
   const [region, setRegion] = useState(''); // 用于 BVT 的 region
-  const [quantity, setQuantity] = useState(''); // 用于 MAN 的数量
+  const [quantity, setQuantity] = useState(''); // 数量
   const [time, setTime] = useState(''); // 用于 PERF 的时间
 
   const [selectedNames, setSelectedNames] = useState<string[]>([]); // 用于复选框的选中状态
@@ -53,6 +53,9 @@ const BvtPage: React.FC = () => {
     if (!subscription) newErrors.subscription = "订阅不能为空";
     if (!group) newErrors.group = "组不能为空";
     if (option === 'case' && selectedNames.length === 0) newErrors.selectedNames = "至少选择一个名称"; // 校验
+    if (option === 'case' && selectedNames.length === 1 && quantity.trim() === '') {
+      newErrors.quantity = "数量不能为空"; // 仅在选择一个时校验数量
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // 返回是否有错误
   };
@@ -80,10 +83,14 @@ const BvtPage: React.FC = () => {
           region: 'Central US EUAP', // 这里替换为实际的region值
           subscription,
           group,
-          port:'6379',
-          ...(option === 'case' && { cases: selectedNames }) // 条件传递
+          port: '6379',
+          ...(option === 'case' && {
+            cases: selectedNames,
+            ...(selectedNames.length === 1 && { quantity: quantity}), // 仅在选择一个case时添加数量
+          }),
           // 添加其他字段的值
         };
+        
 
         const apiPath = option === 'case' ? agent.Create.sendOneBvtJson : agent.Create.sendAllBvtJson; // 根据选项选择请求路径
 
@@ -124,6 +131,7 @@ const BvtPage: React.FC = () => {
     setSubscription('');
     setGroup('');
     setSelectedNames([]); // 清除选中的名称
+    setQuantity(''); // 清除数量
     setErrors({});
   };
   // 处理下拉框改变事件
@@ -135,7 +143,7 @@ const BvtPage: React.FC = () => {
   }
   return (
           <Box>
-            <p style={{ color: '#1976d2', fontSize: '30px',textAlign: 'center'  }}>创建：All BVT Cache</p>
+            <p style={{ color: '#1976d2', fontSize: '30px',textAlign: 'center'  }}>创建： BVT Cache</p>
             <form className="submit-box" onSubmit={handleSubmit}>
               <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
                 <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
@@ -186,32 +194,47 @@ const BvtPage: React.FC = () => {
                 {/* 当选择 case 时显示复选框 */}
                 {/* 下拉框与复选框结合 */}
                 {option === 'case' && (
-                  <FormControl
-                    variant="outlined"
-                    sx={{ width: '100%', marginTop: 2 }}
-                    error={!!errors.selectedNames} // 应用错误样式
-                  >
-                    <InputLabel id="names-label">Case</InputLabel>
-                    <Select
-                      labelId="names-label"
-                      multiple
-                      value={selectedNames}
-                      onChange={(e) => setSelectedNames(e.target.value as string[])}
-                      input={<OutlinedInput label="Case" />}
-                      renderValue={(selected) => selected.join(', ')}
-                    >
-                      {BVTTestCaseNames.map((name) => (
-                        <MenuItem key={name} value={name}>
-                          <Checkbox checked={selectedNames.includes(name)} />
-                          <ListItemText primary={name} />
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    {errors.selectedNames && (
-                      <FormHelperText error>{errors.selectedNames}</FormHelperText> // 红色错误信息
-                    )}
-                  </FormControl>
+            <>
+              <FormControl
+                variant="outlined"
+                sx={{ width: '100%', marginTop: 2 }}
+                error={!!errors.selectedNames}
+              >
+                <InputLabel id="names-label">Case</InputLabel>
+                <Select
+                  labelId="names-label"
+                  multiple
+                  value={selectedNames}
+                  onChange={(e) => setSelectedNames(e.target.value as string[])}
+                  input={<OutlinedInput label="Case" />}
+                  renderValue={(selected) => selected.join(', ')}
+                >
+                  {BVTTestCaseNames.map((name) => (
+                    <MenuItem key={name} value={name}>
+                      <Checkbox checked={selectedNames.includes(name)} />
+                      <ListItemText primary={name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+                {errors.selectedNames && (
+                  <FormHelperText error>{errors.selectedNames}</FormHelperText>
                 )}
+              </FormControl>
+
+              {selectedNames.length === 1 && (
+                <TextField
+                  label="数量"
+                  type="number"
+                  value={quantity}
+                  onChange={(e) => setQuantity(e.target.value)}
+                  variant="outlined"
+                  error={!!errors.quantity}
+                  helperText={errors.quantity}
+                  sx={{ width: '100%', marginTop: 2 }}
+                />
+              )}
+            </>
+          )}
 
               <Alert sx={{ mt: 2 }} severity="warning">请谨慎操作 , 提交后会创建cache</Alert>
               </Box>
