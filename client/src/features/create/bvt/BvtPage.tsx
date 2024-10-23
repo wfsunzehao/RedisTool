@@ -31,7 +31,6 @@ const BvtPage: React.FC = () => {
   const [name, setName] = useState('');  
   const [region, setRegion] = useState(''); // 用于 BVT 的 region
   const [quantity, setQuantity] = useState(''); // 数量
-  const [time, setTime] = useState(''); // 用于 PERF 的时间
 
   const [selectedNames, setSelectedNames] = useState<string[]>([]); // 用于复选框的选中状态
   const [option, setOption] = useState('all'); // 新增状态用于单选框

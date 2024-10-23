@@ -6,5 +6,6 @@ export interface DataModel {
     port?:string;
     cases?:string[];
     quantity?:string;
+    numKeysPerShard?:number;
     // 添加其他字段
 }

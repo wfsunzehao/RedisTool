@@ -56,6 +56,10 @@ const Create = {
     sendPerfJson:(body: object)=>request.post(`/Subscription/test`,body),
 }
 
+const Other = {
+    sendInsertJson:(body: object)=>request.post(`/StackExchange/AddDataToRedis`,body),
+}
+
 
 const TestErrors = {
     get400Error: () => request.get('buggy/bad-request'),
@@ -69,6 +73,7 @@ const TestErrors = {
 const agent = {
     Company,
     Create,
+    Other,
     TestErrors
 }
 
