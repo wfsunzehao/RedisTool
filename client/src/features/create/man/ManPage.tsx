@@ -167,7 +167,7 @@ const ManPage: React.FC = () => {
       </form>
       {loading && (
         <Overlay>
-          <LoadingComponent message='正在提交，请稍候...' />
+          <LoadingComponent />
         </Overlay>
       )}
     </Box>
