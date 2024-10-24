@@ -177,7 +177,7 @@ namespace redis.WebAPi.Controllers
         }
         private static int GenerateFourDigitRandomNumber()
         {
-            return random.Next(1000, 10000); // 生成1000到9999之间的随机数
+            return random.Next(1000, 10000); // Generate random numbers between 1000 and 9999
         }
 
     }

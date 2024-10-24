@@ -11,6 +11,7 @@ import agent from '../../../app/api/agent';
 import { DataModel } from '../../../common/models/DataModel';
 import { Overlay, subscriptionList } from '../constants';
 import LoadingComponent from '../../../common/components/CustomLoading';
+import { useMessage } from '../../../app/context/MessageContext';
 
 
 const ManPage: React.FC = () => {
@@ -20,6 +21,7 @@ const ManPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [groupList, setGroupList] = useState<string[]>([]);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const { addMessage } = useMessage();
   //初始化
   useEffect(() => {
     //默认显示Cache Team - Vendor CTI Testing 2
@@ -67,6 +69,7 @@ const ManPage: React.FC = () => {
 
         agent.Create.sendManJson(data)
           .then(response => {
+            addMessage("Submission was successful!"); // 添加成功消息
             console.log(response);
             swal({
               title: "Submission was successful!",
