@@ -19,9 +19,9 @@ namespace redis.WebAPi.Service.AzureShared
     {
         public ArmClient ArmClient { get; set; }
 
-        public AzureClientFactory() { ArmClient = InitializeAzureClientAsync(); }
+        public AzureClientFactory() { ArmClient = InitializeAzureClientAsync().Result; }
 
-        public ArmClient InitializeAzureClientAsync()
+        public static async Task<ArmClient> InitializeAzureClientAsync()
         {
             string tenantId = "72f988bf-86f1-41af-91ab-2d7cd011db47";
 
@@ -35,6 +35,8 @@ namespace redis.WebAPi.Service.AzureShared
 
             TokenCredential? tokenCredential = null;
 
+            ArmEnvironment armEnvironment = ArmEnvironment.AzurePublicCloud;
+
             // For instances where application id is not loaded, like, executing on local dev box in outlook based tenant
             // for dogfood/stage environments, use powershell context. You can login using powershell 
             // 'Login-AzAccount -Environment Dogfood'
@@ -46,9 +48,14 @@ namespace redis.WebAPi.Service.AzureShared
             //{
             //    AuthorityHost = EnvironmentConstants.GetAuthorityHost(cloud),
             //});
-            armClient = new ArmClient(tokenCredential);
+        
+            if (armClient == null)
+            {
+                (armClient, tokenCredential) = await GetArmClientAuthBasedOnApp(
+                    "1e57c478-0901-4c02-8d35-49db234b78d2", tenantId, applicationId, armEnvironment
+                );
+            }
 
-            armClient ??= GetArmClientAuthBasedOnApp(tenantId, applicationId, armClient).Result;
             var sub = armClient.GetSubscriptionResource(new ResourceIdentifier("/subscriptions/" + "1e57c478-0901-4c02-8d35-49db234b78d2")); 
            
             return armClient;
@@ -76,8 +83,7 @@ namespace redis.WebAPi.Service.AzureShared
         /// <param name="armClient"></param>
         /// <returns></returns>
 
-
-        private static async Task<ArmClient> GetArmClientAuthBasedOnApp(string? tenantId, string? applicationId, ArmClient? armClient)
+        private static async Task<Tuple<ArmClient, TokenCredential>> GetArmClientAuthBasedOnApp(string? subscriptionId, string? tenantId, string? applicationId, ArmEnvironment armEnvironment)
         {
             Uri authHost = AzureAuthorityHosts.AzurePublicCloud;
             Uri keyVaultUril = new Uri("https://azurecache-sharedsecrets.vault.azure.net/");
@@ -94,9 +100,8 @@ namespace redis.WebAPi.Service.AzureShared
                     SendCertificateChain = true
                 });
 
-            armClient = new ArmClient(clientCertificateCredential);
-
-            return armClient;
+            var armClient = new ArmClient(clientCertificateCredential, subscriptionId, GetArmClientOptions(armEnvironment));
+            return Tuple.Create(armClient, (TokenCredential)clientCertificateCredential);
         }
 
         private static async Task<List<RedisResource>> GetAllRedisResourcesAsync(RedisCollection redisCollection)
@@ -112,6 +117,16 @@ namespace redis.WebAPi.Service.AzureShared
             }
             return redisList;
         }
+        private static ArmClientOptions GetArmClientOptions(ArmEnvironment armEnvironment)
+        {
+            var options = new ArmClientOptions()
+            {
+                Environment = armEnvironment,
+            };
+            
+            return options;
+        }
+        
 
     }
 }
