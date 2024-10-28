@@ -22,12 +22,12 @@ namespace redis.WebAPi.Controllers
         }
         //Add data interface
         [HttpPost("AddDataToRedis")]
-        public async Task<IActionResult> AddDataToRedis([FromBody] RedisRequestModel redisRequest)
+        public async Task<IActionResult> AddDataToRedis([FromBody] StackExchangeModel redisRequest)
         {
             try
             {
-                _subscriptionResourceService.SetSubscriptionResource(redisRequest.subscription);
-                _stackExchangeService.AddData(redisRequest.group, redisRequest.name, redisRequest.port, redisRequest.ssl, redisRequest.numKeysPerShard);
+                _subscriptionResourceService.SetSubscriptionResource(redisRequest.Subscription);
+                _stackExchangeService.AddData(redisRequest.Group, redisRequest.Name, redisRequest.Port, redisRequest.Ssl, redisRequest.NumKeysPerShard);
                 return Ok();
             }
             catch (ArgumentNullException ex)

@@ -20,7 +20,7 @@ namespace redis.WebAPi.Controllers
         [HttpGet("{resourceGroupName}")]
         public async Task<IActionResult> GetResourceGroup(string resourceGroupName)
         {
-            // 使用工厂生成 ArmClient 实例
+            // Use the factory to generate an ArmClient instance
             var armClient = _client.ArmClient;
             var subResource = armClient.GetSubscriptionResource(new ResourceIdentifier("/subscriptions/" + "1e57c478-0901-4c02-8d35-49db234b78d2"));
             var resourceGroup = (await subResource.GetResourceGroupAsync(resourceGroupName)).Value;
@@ -33,6 +33,8 @@ namespace redis.WebAPi.Controllers
 
             return Ok(resourceGroup);
         }
+
+        
 
 
 

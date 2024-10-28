@@ -12,7 +12,7 @@ namespace redis.WebAPi.Service
         private readonly ArmClient _armClient;
         private SubscriptionResource _subscriptionResource;
 
-        // 构造函数，注入 ArmClient
+        // Constructor, inject ArmClient
         public SubscriptionResourceService(AzureClientFactory armClient)
         {
             _armClient = armClient.ArmClient;
@@ -27,7 +27,7 @@ namespace redis.WebAPi.Service
             return _subscriptionResource;
         }
 
-        // 根据传入的 subscriptionId 创建 SubscriptionResource
+        // Create a SubscriptionResource based on the passed subscriptionId
         public void SetSubscriptionResource(string subscriptionId)
         {
             _subscriptionResource = _armClient.GetSubscriptionResource(new ResourceIdentifier("/subscriptions/" + subscriptionId));
