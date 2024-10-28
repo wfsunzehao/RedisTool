@@ -15,6 +15,7 @@ import ManPage from "../../features/create/man/ManPage";
 import PerfPage from "../../features/create/perf/PerfPage";
 import DeletePage from "../../features/delete/DeletePage";
 import InsertPage from "../../features/other/insert/InsertPage";
+import MedianPage from "../../features/other/median/MedianPage";
 
 export const router = createBrowserRouter([
     {
@@ -38,6 +39,7 @@ export const router = createBrowserRouter([
                 element: <OtherPage/>,
                 children:[
                     {path: 'insert',element: <InsertPage/>},
+                    {path: 'median',element: <MedianPage/>},
                 ]
             },
             {path: 'catalog',element: <Catalog/>},

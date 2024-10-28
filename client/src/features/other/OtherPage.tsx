@@ -5,6 +5,7 @@ import { Assignment } from '@mui/icons-material';
 
 const leftLinks = [
   { title: 'insert', path: '/other/insert', icon: <Assignment /> },
+  { title: 'median', path: '/other/median', icon: <Assignment /> },
 ];
 
 const OtherPage: React.FC = () => {
