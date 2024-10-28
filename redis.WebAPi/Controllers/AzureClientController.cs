@@ -1,5 +1,7 @@
+using Azure;
 using Azure.Core;
 using Azure.ResourceManager;
+using Azure.ResourceManager.Redis;
 using Microsoft.AspNetCore.Mvc;
 using redis.WebAPi.Service.AzureShared;
 using redis.WebAPi.Service.IService;
@@ -34,10 +36,29 @@ namespace redis.WebAPi.Controllers
             return Ok(resourceGroup);
         }
 
-        
+        [HttpDelete("DeleteResource")]
+        public async Task<IActionResult> DeleteResource(string subscription, string resourceGroupName)
+        {
+            try
+            {
+                var armClient = _client.ArmClient;
+                var subResource = armClient.GetSubscriptionResource(new ResourceIdentifier("/subscriptions/" + subscription));
+                var resourceGroupResource = subResource.GetResourceGroupAsync(resourceGroupName).Result.Value.GetGenericResources().ToList();
 
+                for (var i = 0; i < resourceGroupResource.Count; i++)
+                {
+                    resourceGroupResource[i].DeleteAsync(WaitUntil.Started);
+                }
 
-
+                return Ok("Delete" + resourceGroupName + "Successfully");
+            }
+            catch (Exception ex)
+            {
+                // Record abnormal information or perform other processing
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return StatusCode(500, "An error occurred while deleting resources.");
+            }
+        }
 
     }
 }
