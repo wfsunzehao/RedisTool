@@ -14,7 +14,7 @@ const OtherPage: React.FC = () => {
   const currentTab = location.pathname.split('/').pop();
   const defaultPath = '/other/insert';
 
-  // 如果当前路径是'/create'，则重定向到默认路径
+  // 如果当前路径是'/other'，则重定向到默认路径
   useEffect(() => {
     if (location.pathname === '/other') {
       navigate(defaultPath);

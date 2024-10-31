@@ -11,17 +11,19 @@ import agent from '../../../app/api/agent';
 import { DataModel } from '../../../common/models/DataModel';
 
 import LoadingComponent from '../../../common/components/CustomLoading';
+import { useMessage } from '../../../app/context/MessageContext';
 import { Overlay, subscriptionList } from '../../../common/constants/constants';
+import { DeleteModel } from '../../../common/models/DeleteModel';
 
 
-const InsertPage: React.FC = () => {
+const GroupPage: React.FC = () => {
   const [subscription, setSubscription] = useState('');
   const [group, setGroup] = useState('');
   const [name, setName] = useState(''); 
-  const [quantity, setQuantity] = useState<number>(); // 数量
   const [loading, setLoading] = useState(false);
   const [groupList, setGroupList] = useState<string[]>([]);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const { addMessage } = useMessage();
   //初始化
   useEffect(() => {
     //默认显示Cache Team - Vendor CTI Testing 2
@@ -36,8 +38,6 @@ const InsertPage: React.FC = () => {
     const newErrors: { [key: string]: string } = {};
     if (!subscription) newErrors.subscription = "订阅不能为空";
     if (!group) newErrors.group = "组不能为空";
-    if (!name) newErrors.name = "名称不能为空"; // 新增名称验证
-    if (!quantity) newErrors.quantity = "数量不能为空"; // 新增名称验证
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // 返回是否有错误
   };
@@ -60,18 +60,14 @@ const InsertPage: React.FC = () => {
       setLoading(true);
       if (willSubmit) {
         // 提交逻辑
-        const data: DataModel = {
-          name:name,
-          region: 'Central US EUAP', // 这里替换为实际的region值
-          subscription,
-          group,
-          port:'6379'
-          // 添加其他字段的值
-        };
+        // const data: DeleteModel = {
+        //   subscription,
+        //   group,
+        // };
 
-        //agent.Other.sendInsertJson(data)正式接口
-        agent.Create.sendManJson(data)//测试接口
+        agent.Delete.sendDelGroupJson(subscription,group)
           .then(response => {
+            addMessage("Submission was successful!"); // 添加成功消息
             console.log(response);
             swal({
               title: "Submission was successful!",
@@ -106,11 +102,9 @@ const InsertPage: React.FC = () => {
   const handleCancel = () => {
     setSubscription('');
     setGroup('');
-    setName(''); // 清空名称输入
-    setQuantity(''); // 清空数量输入
     setErrors({});
   };
-  // 处理下拉框改变事件
+  // 处理下拉框改变事件 
   const handleSubChange = (subscriptionid: string) => {
     setSubscription(subscriptionid);
     setErrors(prevErrors => ({ ...prevErrors, subscription: '' })); // 清除订阅错误
@@ -126,25 +120,17 @@ const InsertPage: React.FC = () => {
         setGroup(value);
         setErrors(prevErrors => ({ ...prevErrors, group: '' })); // 清除组错误
         break;
-      case 'name':
-        setName(value);
-        setErrors(prevErrors => ({ ...prevErrors, name: '' })); // 清除名称错误
-        break;
-      case 'quantity':
-        setQuantity(value);
-        setErrors(prevErrors => ({ ...prevErrors, quantity: '' })); // 清除数量错误
-        break;
       default:
         break;
     }
   };
 
+
   return (
     <Box>
-      <p style={{ color: '#1976d2', fontSize: '30px', textAlign: 'center' }}>插入数据</p>
+      <p style={{ color: '#1976d2', fontSize: '30px', textAlign: 'center' }}>删除cache</p>
       <form className="submit-box" onSubmit={handleSubmit}>
         <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
-        
           <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
             <TextField
               select
@@ -170,7 +156,7 @@ const InsertPage: React.FC = () => {
               select
               label="Group"
               value={group}
-              onChange={handleInputChange('group')} // 使用通用方法
+              onChange={handleInputChange('group')}
               variant="outlined"
               error={!!errors.group}
               helperText={errors.group}
@@ -182,32 +168,6 @@ const InsertPage: React.FC = () => {
                   {item}
                 </MenuItem>
               ))}
-            </TextField>
-          </FormControl>
-          <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
-            <TextField
-              label="Name"
-              value={name}
-              onChange={handleInputChange('name')} // 使用通用方法
-              variant="outlined"
-              error={!!errors.name}
-              helperText={errors.name}
-              fullWidth
-              disabled={loading}
-            >
-            </TextField>
-          </FormControl>
-          <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
-            <TextField
-              label="Quantity"
-              value={quantity}
-              onChange={handleInputChange('quantity')} // 使用通用方法
-              variant="outlined"
-              error={!!errors.quantity}
-              helperText={errors.quantity}
-              fullWidth
-              disabled={loading}
-            >
             </TextField>
           </FormControl>
         </Box>
@@ -222,11 +182,11 @@ const InsertPage: React.FC = () => {
       </form>
       {loading && (
         <Overlay>
-          <LoadingComponent message='正在提交，请稍候...' />
+          <LoadingComponent />
         </Overlay>
       )}
     </Box>
   );
 };
 
-export default InsertPage;
+export default GroupPage;

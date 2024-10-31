@@ -1,22 +1,15 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Button,
-  Typography,
-  TextField,
-} from '@mui/material';
+import { Box, Button, Typography, TextField } from '@mui/material';
 import swal from 'sweetalert';
 import agent from '../../../app/api/agent';
 import LoadingComponent from '../../../common/components/CustomLoading';
-import { Overlay } from '../../create/constants';
+import { Overlay } from '../../../common/constants/constants';
 
 const MedianPage: React.FC = () => {
   const [folderPath, setFolderPath] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
-  // 处理文件夹选择
   const handleFolderSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    
     const files = event.target.files;
     if (files && files.length > 0) {
       const fullPath = files[0].webkitRelativePath; // 获取完整路径
@@ -25,7 +18,6 @@ const MedianPage: React.FC = () => {
     }
   };
 
-  // 提交文件夹路径
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -66,11 +58,11 @@ const MedianPage: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
           <TextField
             value={folderPath}
-            onChange={() => {}} // 只读输入框，不需要处理更改
+            onChange={() => {}} // 只读输入框
             variant="outlined"
             label="已选择文件夹"
             fullWidth
-            sx={{ flexGrow: 1 }} // 使输入框填满剩余空间
+            sx={{ flexGrow: 1 }}
           />
           <input
             type="file"

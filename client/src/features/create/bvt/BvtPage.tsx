@@ -15,13 +15,14 @@ import {
   Radio,
   RadioGroup,
   Select,
+  SelectChangeEvent,
   TextField,
   styled
 } from '@mui/material';
 import swal from 'sweetalert';
 import agent from '../../../app/api/agent';
 import { DataModel } from '../../../common/models/DataModel';
-import { BVTTestCaseNames, Overlay,subscriptionList } from '../constants';
+import { BVTTestCaseNames, Overlay,subscriptionList } from '../../../common/constants/constants';
 import LoadingComponent from '../../../common/components/CustomLoading';
 
 
@@ -136,10 +137,40 @@ const BvtPage: React.FC = () => {
   // 处理下拉框改变事件
   const handleSubChange=(subscriptionid:string)=>{
     setSubscription(subscriptionid);
+    setErrors(prevErrors => ({ ...prevErrors, subscription: '' })); // 清除订阅错误
     agent.Create.getGroup(subscriptionid)
     .then(response => { setGroupList(response);})
     .catch(error => console.log(error.response))
   }
+  const handleInputChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { value } = event.target;
+
+    switch (field) {
+      case 'group':
+        setGroup(value);
+        setErrors(prevErrors => ({ ...prevErrors, group: '' })); // 清除组错误
+        break;
+      case 'name':
+        setName(value);
+        setErrors(prevErrors => ({ ...prevErrors, name: '' })); // 清除名称错误
+        break;
+      case 'quantity':
+        setQuantity(value);
+        setErrors(prevErrors => ({ ...prevErrors, quantity: '' })); // 清除数量错误
+        break;
+      default:
+        break;
+    }
+  };
+  // 处理复选框选择
+  const handleSelectChange = (event: SelectChangeEvent<string[]>) => {
+    const value = event.target.value as string[];
+    setSelectedNames(value);
+    if (value.length > 0) {
+      setErrors(prevErrors => ({ ...prevErrors, selectedNames: '' }));
+    }
+  };
+
   return (
           <Box>
             <Alert severity="info" sx={{width: '600px',margin: '0 auto'}}>
@@ -174,7 +205,7 @@ const BvtPage: React.FC = () => {
                     select
                     label="Group"
                     value={group}
-                    onChange={(e) => setGroup(e.target.value)}
+                    onChange={handleInputChange('group')}
                     variant="outlined"
                     error={!!errors.group} // 判断是否有错误
                     helperText={errors.group} // 显示错误信息
@@ -208,7 +239,7 @@ const BvtPage: React.FC = () => {
                   labelId="names-label"
                   multiple
                   value={selectedNames}
-                  onChange={(e) => setSelectedNames(e.target.value as string[])}
+                  onChange={handleSelectChange}
                   input={<OutlinedInput label="Case" />}
                   renderValue={(selected) => selected.join(', ')}
                 >
@@ -229,7 +260,7 @@ const BvtPage: React.FC = () => {
                   label="数量"
                   type="number"
                   value={quantity}
-                  onChange={(e) => setQuantity(e.target.value)}
+                  onChange={handleInputChange('quantity')}
                   variant="outlined"
                   error={!!errors.quantity}
                   helperText={errors.quantity}

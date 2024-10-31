@@ -9,7 +9,7 @@ using redis.WebAPi.Service.IService;
 namespace redis.WebAPi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class AzureClientController : ControllerBase
     {
         private readonly AzureClientFactory _client;

@@ -9,7 +9,7 @@ import {
 import swal from 'sweetalert';
 import agent from '../../../app/api/agent';
 import { DataModel } from '../../../common/models/DataModel';
-import { Overlay, subscriptionList } from '../constants';
+import { Overlay, subscriptionList } from '../../../common/constants/constants';
 import LoadingComponent from '../../../common/components/CustomLoading';
 import { useMessage } from '../../../app/context/MessageContext';
 

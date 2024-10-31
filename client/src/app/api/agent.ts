@@ -39,7 +39,8 @@ const request = {
     getByParam: (url: string, params: string) => axios.get(url, {params}).then(responseBody),
     post: (url: string, body: object) => axios.post(url, body).then(responseBody),
     put: (url: string, body: object) => axios.put(url, body).then(responseBody),
-    delete: (url: string) => axios.delete(url).then(responseBody)
+    delete: (url: string) => axios.delete(url).then(responseBody),
+    deleteByGroup: (url: string, body: object) => axios.delete(url, body).then(responseBody)
 }
 
 const Company = {
@@ -54,6 +55,12 @@ const Create = {
     sendOneBvtJson:(body: object)=>request.post(`/Creation/CreateBVTCacheByCase`,body),
     sendManJson:(body: object)=>request.post(`/Subscription/test`,body),
     sendPerfJson:(body: object)=>request.post(`/Subscription/test`,body),
+}
+
+const Delete = {
+    //sendDelGroupJson:(body: object)=>request.deleteByGroup(`/StackExchange/DeleteGroup`,body),
+    sendDelGroupJson:(subscription: string, group: string)=>request.delete(`/AzureClient/DeleteResource?subscription=${subscription}&resourceGroupName=${group}`),
+    
 }
 
 const Other = {
@@ -74,6 +81,7 @@ const TestErrors = {
 const agent = {
     Company,
     Create,
+    Delete,
     Other,
     TestErrors
 }

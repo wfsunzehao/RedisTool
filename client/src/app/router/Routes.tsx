@@ -7,7 +7,6 @@ import AboutPage from "../../features/about/AboutPage";
 import ContactPage from "../../features/contact/ContactPage";
 import ServerError from "../errors/ServerError";
 import NotFound from "../errors/NotFound";
-import Delete from "../../features/delete/DeletePage";
 import CreatePage from "../../features/create/CreatePage";
 import OtherPage from "../../features/other/OtherPage";
 import BvtPage from "../../features/create/bvt/BvtPage";
@@ -16,6 +15,7 @@ import PerfPage from "../../features/create/perf/PerfPage";
 import DeletePage from "../../features/delete/DeletePage";
 import InsertPage from "../../features/other/insert/InsertPage";
 import MedianPage from "../../features/other/median/MedianPage";
+import GroupPage from "../../features/delete/group/GroupPage";
 
 export const router = createBrowserRouter([
     {
@@ -33,7 +33,13 @@ export const router = createBrowserRouter([
                 ]
                 
             },
-            {path: 'delete',element: <DeletePage/>,},
+            {
+                path: 'delete',
+                element: <DeletePage/>,
+                children:[
+                    {path: 'group',element: <GroupPage/>},
+                ]
+            },
             {
                 path: 'other',
                 element: <OtherPage/>,
