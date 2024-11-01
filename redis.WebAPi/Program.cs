@@ -35,6 +35,8 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 
     containerBuilder.RegisterType<StackExchangeService>().As<IStackExchangeService>().SingleInstance();
 
+    containerBuilder.RegisterType<ResourceDeletionService>().As<IResourceDeletionService>().SingleInstance();
+
 });
 
 var app = builder.Build();

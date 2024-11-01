@@ -40,7 +40,7 @@ const request = {
     post: (url: string, body: object) => axios.post(url, body).then(responseBody),
     put: (url: string, body: object) => axios.put(url, body).then(responseBody),
     delete: (url: string) => axios.delete(url).then(responseBody),
-    deleteByGroup: (url: string, body: object) => axios.delete(url, body).then(responseBody)
+    deleteByGroup: (url: string, body: object) => axios.delete(url, { data: body }).then(responseBody)
 }
 
 const Company = {
@@ -60,7 +60,7 @@ const Create = {
 const Delete = {
     //sendDelGroupJson:(body: object)=>request.deleteByGroup(`/StackExchange/DeleteGroup`,body),
     sendDelGroupJson:(subscription: string, group: string)=>request.delete(`/AzureClient/DeleteResource?subscription=${subscription}&resourceGroupName=${group}`),
-    
+    sendDelGroupJsonT:(body: object)=>request.deleteByGroup(`/ResourceDeletion/DeleteResource`,body),   
 }
 
 const Other = {

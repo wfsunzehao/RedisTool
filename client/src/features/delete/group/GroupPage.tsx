@@ -14,6 +14,7 @@ import LoadingComponent from '../../../common/components/CustomLoading';
 import { useMessage } from '../../../app/context/MessageContext';
 import { Overlay, subscriptionList } from '../../../common/constants/constants';
 import { DeleteModel } from '../../../common/models/DeleteModel';
+import { handleGenericSubmit } from '../../../app/util/util';
 
 
 const GroupPage: React.FC = () => {
@@ -43,60 +44,16 @@ const GroupPage: React.FC = () => {
   };
 
 
+  const apiPathFunction = async (data: DeleteModel) => {
+    return await agent.Delete.sendDelGroupJsonT(data); // 或其他 API 调用
+  };
   const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    // 校验表单
-    if (!CheckForm()) {
-      return; // 如果有错误，停止提交
-    }
-
-    swal({
-      title: "Confirm the operation",
-      text: "Once started, the cache used in BVT will be created!",
-      buttons: ["No", "Yes!"],
-      dangerMode: true,
-      closeOnClickOutside: false, // 防止点击外部关闭
-    }).then((willSubmit) => {
-      setLoading(true);
-      if (willSubmit) {
-        // 提交逻辑
-        // const data: DeleteModel = {
-        //   subscription,
-        //   group,
-        // };
-
-        agent.Delete.sendDelGroupJson(subscription,group)
-          .then(response => {
-            addMessage("Submission was successful!"); // 添加成功消息
-            console.log(response);
-            swal({
-              title: "Submission was successful!",
-              icon: "success",
-              button: "OK!",
-              content: {
-                element: "div",
-                attributes: {
-                  innerHTML: "Go to <a href='https://portal.azure.com' target='_blank'>Azure portal</a>",
-                },
-              },
-            });
-          })
-          .catch(error => {
-            console.log(error.response);
-            swal({
-              title: "Error!",
-              text: "There was an issue with your submission.",
-              icon: "error",
-              button: "OK!",
-            });
-          })
-          .finally(() => {
-            setLoading(false);
-          });
-      } else {
-        setLoading(false);
-      }
-    });
+      // 提交逻辑
+        const data: DeleteModel = {
+          subscription,
+          resourceGroupName:group,
+        };       
+        handleGenericSubmit(event, data, apiPathFunction, CheckForm, setLoading); 
   };
   // 处理取消按钮点击事件
   const handleCancel = () => {
