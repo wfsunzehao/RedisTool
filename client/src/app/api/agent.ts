@@ -17,7 +17,7 @@ axios.interceptors.response.use(async response => {
     const {data, status} = error.response as AxiosResponse;
     switch(status){
         case 400:
-            toast.error('data.title');
+            toast.error(data.title);
             break;
         case 401:
             toast.error('unauthorized');
