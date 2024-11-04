@@ -6,9 +6,7 @@ import {
   MenuItem,
   TextField,
 } from '@mui/material';
-import swal from 'sweetalert';
 import agent from '../../../app/api/agent';
-import { DataModel } from '../../../common/models/DataModel';
 
 import LoadingComponent from '../../../common/components/CustomLoading';
 import { useMessage } from '../../../app/context/MessageContext';
@@ -20,11 +18,9 @@ import { handleGenericSubmit } from '../../../app/util/util';
 const GroupPage: React.FC = () => {
   const [subscription, setSubscription] = useState('');
   const [group, setGroup] = useState('');
-  const [name, setName] = useState(''); 
   const [loading, setLoading] = useState(false);
   const [groupList, setGroupList] = useState<string[]>([]);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const { addMessage } = useMessage();
   //初始化
   useEffect(() => {
     //默认显示Cache Team - Vendor CTI Testing 2

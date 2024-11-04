@@ -4,7 +4,7 @@ import { Company } from "../../common/models/company"
 import CompanyList from "./CompanyList"
 import agent from "../../app/api/agent";
 import LoadingComponent from "../../common/components/CustomLoading";
-import { Checkbox, Container, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, Paper, Radio, RadioGroup, TextField } from "@mui/material";
+import { Checkbox, FormControl, FormControlLabel, FormGroup, Grid, Paper, Radio, RadioGroup, TextField } from "@mui/material";
 
 const sortOptions = [
     { value: 'name', label: 'Name' },
