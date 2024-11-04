@@ -24,6 +24,7 @@ import agent from '../../../app/api/agent';
 import { DataModel } from '../../../common/models/DataModel';
 import { BVTTestCaseNames, Overlay,subscriptionList } from '../../../common/constants/constants';
 import LoadingComponent from '../../../common/components/CustomLoading';
+import { handleGenericSubmit } from '../../../app/util/util';
 
 
 const BvtPage: React.FC = () => {
@@ -61,70 +62,25 @@ const BvtPage: React.FC = () => {
   };
 
 
+  const apiPathFunction = async (data: DataModel) => {
+    const apiPath = option === 'case' ? agent.Create.sendOneBvtJson : agent.Create.sendAllBvtJson;
+    return await apiPath(data); // 调用选中的 API 路径
+};
   const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    // 校验表单
-    if (!CheckForm()) {
-      return; // 如果有错误，停止提交
-    }
-
-    swal({
-      title: "Confirm the operation",
-      text: "Once started, the cache used in BVT will be created!",
-      buttons: ["No", "Yes!"],
-      dangerMode: true,
-      closeOnClickOutside: false, // 防止点击外部关闭
-    }).then((willSubmit) => {
-      setLoading(true);
-      if (willSubmit) {
-        // 提交逻辑
-        const data: DataModel = {
-          name,
-          region: 'Central US EUAP', // 这里替换为实际的region值
-          subscription,
-          group,
-          port: '6379',
-          ...(option === 'case' && {
-            cases: selectedNames,
-            ...(selectedNames.length === 1 && { quantity: quantity}), // 仅在选择一个case时添加数量
-          }),
-          // 添加其他字段的值
-        };
-        
-
-        const apiPath = option === 'case' ? agent.Create.sendOneBvtJson : agent.Create.sendAllBvtJson; // 根据选项选择请求路径
-
-        apiPath(data)
-          .then(response => {
-            console.log(response);
-            swal({
-              title: "Submission was successful!",
-              icon: "success",
-              button: "OK!",
-              content: {
-                element: "div",
-                attributes: {
-                  innerHTML: "Go to <a href='https://portal.azure.com' target='_blank'>Azure portal</a>",
-                },
-              },
-            });
-          })
-          .catch(error => {
-            console.log(error.response);
-            swal({
-              title: "Error!",
-              text: "There was an issue with your submission.",
-              icon: "error",
-              button: "OK!",
-            });
-          })
-          .finally(() => {
-            setLoading(false);
-          });
-      } else {
-        setLoading(false);
-      }
-    });
+      // 提交逻辑
+      const data: DataModel = {
+        name,
+        region: 'Central US EUAP', // 这里替换为实际的region值
+        subscription,
+        group,
+        port: '6379',
+        ...(option === 'case' && {
+          cases: selectedNames,
+          ...(selectedNames.length === 1 && { quantity: quantity}), // 仅在选择一个case时添加数量
+        }),
+        // 添加其他字段的值
+      };    
+        handleGenericSubmit(event, data, apiPathFunction, CheckForm, setLoading); 
   };
   // 处理取消按钮点击事件
   const handleCancel = () => {

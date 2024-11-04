@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Box, Paper, List, ListItem, ListItemText, ListItemIcon, Alert } from '@mui/material';
+import { Box, Paper, List, ListItem, ListItemText, ListItemIcon, Alert, ListItemButton } from '@mui/material';
 
 interface NavPageProps {
   links: Array<{ title: string; path: string; icon: JSX.Element }>;
@@ -34,8 +34,7 @@ const NavPage: React.FC<NavPageProps> = ({ links, defaultPath, alertMessage }) =
       }}>
         <List sx={{ paddingTop: '20px' }}>
           {links.map(({ title, path, icon }) => (
-            <ListItem
-              button
+            <ListItemButton
               component={Link}
               to={path}
               selected={isSelected(path)}
@@ -45,7 +44,7 @@ const NavPage: React.FC<NavPageProps> = ({ links, defaultPath, alertMessage }) =
                 {icon}
               </ListItemIcon>
               <ListItemText primary={title} />
-            </ListItem>
+            </ListItemButton>
           ))}
         </List>
       </Box>

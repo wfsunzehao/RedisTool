@@ -45,10 +45,10 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 export default function Header() {
   const { toggleTheme, isDarkMode } = useTheme();
   const { messages } = useMessage();
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const handleChatIconClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleChatIconClick = (event:React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget as HTMLElement);
   };
 
   const handleClose = () => {
