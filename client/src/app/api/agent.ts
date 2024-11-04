@@ -1,7 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { router } from "../router/Routes";
-import { Group } from "@mui/icons-material";
 
 const sleep = () => new Promise(resolve => setTimeout(resolve, 500));
 
@@ -54,7 +53,7 @@ const Create = {
     sendAllBvtJson:(body: object)=>request.post(`/Creation/CreateBVTCache`,body),
     sendOneBvtJson:(body: object)=>request.post(`/Creation/CreateBVTCacheByCase`,body),
     sendManJson:(body: object)=>request.post(`/Subscription/test`,body),
-    sendPerfJson:(body: object)=>request.post(`/Subscription/test`,body),
+    sendPerfJson: (body: object) =>request.post(`/Creation/CreatePerfCache`, body),
 }
 
 const Delete = {
