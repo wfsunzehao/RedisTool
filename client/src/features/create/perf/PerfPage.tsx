@@ -14,6 +14,7 @@ import { Overlay, subscriptionList } from "../../../common/constants/constants";
 import LoadingComponent from "../../../common/components/CustomLoading";
 import InputLabel from "@mui/material/InputLabel";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { handleGenericSubmit } from "../../../app/util/util";
 
 const PerfPage: React.FC = () => {
   // 获取当前日期，并将其格式化为 MMDD
@@ -62,62 +63,17 @@ const PerfPage: React.FC = () => {
     return Object.keys(newErrors).length === 0; // 返回是否有错误
   };
 
+  const apiPathFunction = async (data: PerfModel) => {
+    return await agent.Create.sendPerfJson(data); 
+  };
   const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    // 校验表单
-    if (!CheckForm()) {
-      return; // 如果有错误，停止提交
-    }
-
-    swal({
-      title: "Confirm the operation",
-      text: "Once started, the cache used in BVT will be created!",
-      buttons: ["No", "Yes!"],
-      dangerMode: true,
-      closeOnClickOutside: false, // 防止点击外部关闭
-    }).then((willSubmit) => {
-      setLoading(true);
-      if (willSubmit) {
-        // 提交逻辑
-        const data: PerfModel = {
-          subscription: subscription,
-          group: group,
-          sku: sku,
-          // 添加其他字段的值
-        };
-
-        agent.Create.sendPerfJson(data)
-          .then((response) => {
-            console.log(response);
-            swal({
-              title: "Submission was successful!",
-              icon: "success",
-              button: "OK!",
-              content: {
-                element: "div",
-                attributes: {
-                  innerHTML:
-                    "Go to <a href='https://portal.azure.com' target='_blank'>Azure portal</a>",
-                },
-              },
-            });
-          })
-          .catch((error) => {
-            console.log(error.response);
-            swal({
-              title: "Error!",
-              text: "There was an issue with your submission.",
-              icon: "error",
-              button: "OK!",
-            });
-          })
-          .finally(() => {
-            setLoading(false);
-          });
-      } else {
-        setLoading(false);
-      }
-    });
+      // 提交逻辑
+      const data: PerfModel = {
+        subscription: subscription,
+        group: group,
+        sku: sku,
+      };      
+        handleGenericSubmit(event, data, apiPathFunction, CheckForm, setLoading); 
   };
   // 处理取消按钮点击事件
   const handleCancel = () => {

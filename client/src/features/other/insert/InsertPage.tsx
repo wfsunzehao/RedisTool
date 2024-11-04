@@ -107,7 +107,7 @@ const InsertPage: React.FC = () => {
     setSubscription('');
     setGroup('');
     setName(''); // 清空名称输入
-    setQuantity(''); // 清空数量输入
+    setQuantity(undefined); // 清空数量输入
     setErrors({});
   };
   // 处理下拉框改变事件
@@ -131,7 +131,8 @@ const InsertPage: React.FC = () => {
         setErrors(prevErrors => ({ ...prevErrors, name: '' })); // 清除名称错误
         break;
       case 'quantity':
-        setQuantity(value);
+        const quantityValue = parseFloat(value);
+        setQuantity(isNaN(quantityValue) ? undefined : quantityValue); // 处理 NaN 的情况
         setErrors(prevErrors => ({ ...prevErrors, quantity: '' })); // 清除数量错误
         break;
       default:

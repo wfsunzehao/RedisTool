@@ -45,10 +45,6 @@ export const router = createBrowserRouter([
           { path: "median", element: <MedianPage /> },
         ],
       },
-      { path: "catalog", element: <Catalog /> },
-      { path: "catalog/:id", element: <CompanyDetail /> },
-      { path: "about", element: <AboutPage /> },
-      { path: "contact", element: <ContactPage /> },
       { path: "test", element: <CreatePage /> },
       { path: "server-error", element: <ServerError /> },
       { path: "not-found", element: <NotFound /> }, //404

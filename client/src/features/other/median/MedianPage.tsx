@@ -66,11 +66,11 @@ const MedianPage: React.FC = () => {
           />
           <input
             type="file"
-            webkitdirectory="true"
             onChange={handleFolderSelect}
             style={{ display: 'none' }}
             id="folder-input"
             multiple
+            {...({ webkitdirectory: true } as React.InputHTMLAttributes<HTMLInputElement>)}
           />
           <label htmlFor="folder-input">
             <Button variant="contained" component="span" sx={{ marginLeft: 2 }}>
