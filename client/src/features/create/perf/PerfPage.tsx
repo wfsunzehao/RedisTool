@@ -31,10 +31,14 @@ const PerfPage: React.FC = () => {
     `Verifyperformance-{SKU}-EUS2E-${formattedDate}`
   );
   const [loading, setLoading] = useState(false);
+  const [sku, setSku] = useState("All");
   const [groupList, setGroupList] = useState<string[]>([]);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const handlenameChange = (event: SelectChangeEvent) => {
     setCacheName(event.target.value as string);
+  };
+  const handleskuChange = (event: SelectChangeEvent) => {
+    setSku(event.target.value as string);
   };
   //初始化
   useEffect(() => {
@@ -78,6 +82,7 @@ const PerfPage: React.FC = () => {
         const data: PerfModel = {
           subscription: subscription,
           group: group,
+          sku: sku,
           // 添加其他字段的值
         };
 
@@ -227,6 +232,21 @@ const PerfPage: React.FC = () => {
                 </MenuItem>
               ))}
             </TextField>
+          </FormControl>
+          <FormControl variant="outlined" sx={{ width: "100%", marginTop: 2 }}>
+            <InputLabel id="sku-simple-select-label">SKU</InputLabel>
+            <Select
+              labelId="sku-simple-select-label"
+              id="sku-simple-select"
+              value={sku}
+              label="sku"
+              onChange={handleskuChange}
+            >
+              <MenuItem value="All">All</MenuItem>
+              <MenuItem value="Basic">Basic</MenuItem>
+              <MenuItem value="Standard">Standard</MenuItem>
+              <MenuItem value="Premium">Premium</MenuItem>
+            </Select>
           </FormControl>
         </Box>
         {/* 其他相关表单字段 */}

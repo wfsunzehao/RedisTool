@@ -12,4 +12,5 @@ export interface DataModel {
 export interface PerfModel {
   subscription?: string;
   group?: string;
+  sku?: string;
 }

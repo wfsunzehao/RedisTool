@@ -18,44 +18,41 @@ import MedianPage from "../../features/other/median/MedianPage";
 import GroupPage from "../../features/delete/group/GroupPage";
 
 export const router = createBrowserRouter([
-    {
-        path: '/',
-        element: <App />,
-        children:[
-            {path: '',element: <HomePage/>},
-            {
-                path: 'create',
-                element: <CreatePage/>,
-                children:[
-                    {path: 'bvt',element: <BvtPage/>},
-                    {path: 'man',element: <ManPage/>},
-                    {path: 'perf',element: <PerfPage/>},
-                ]
-                
-            },
-            {
-                path: 'delete',
-                element: <DeletePage/>,
-                children:[
-                    {path: 'group',element: <GroupPage/>},
-                ]
-            },
-            {
-                path: 'other',
-                element: <OtherPage/>,
-                children:[
-                    {path: 'insert',element: <InsertPage/>},
-                    {path: 'median',element: <MedianPage/>},
-                ]
-            },
-            {path: 'catalog',element: <Catalog/>},
-            {path: 'catalog/:id',element: <CompanyDetail/>},
-            {path: 'about',element: <AboutPage/>},
-            {path: 'contact',element: <ContactPage/>},
-            {path: 'test',element: <CreatePage/>},
-            {path: 'server-error',element: <ServerError/>},
-            {path: 'not-found',element: <NotFound/>}, //404
-            {path: '*',element: <Navigate replace to ='/not-found'/>}
-        ]
-    }
-])
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      { path: "", element: <HomePage /> },
+      {
+        path: "create",
+        element: <CreatePage />,
+        children: [
+          { path: "bvt", element: <BvtPage /> },
+          { path: "man", element: <ManPage /> },
+          { path: "perf", element: <PerfPage /> },
+        ],
+      },
+      {
+        path: "delete",
+        element: <DeletePage />,
+        children: [{ path: "group", element: <GroupPage /> }],
+      },
+      {
+        path: "other",
+        element: <OtherPage />,
+        children: [
+          { path: "insert", element: <InsertPage /> },
+          { path: "median", element: <MedianPage /> },
+        ],
+      },
+      { path: "catalog", element: <Catalog /> },
+      { path: "catalog/:id", element: <CompanyDetail /> },
+      { path: "about", element: <AboutPage /> },
+      { path: "contact", element: <ContactPage /> },
+      { path: "test", element: <CreatePage /> },
+      { path: "server-error", element: <ServerError /> },
+      { path: "not-found", element: <NotFound /> }, //404
+      { path: "*", element: <Navigate replace to="/not-found" /> },
+    ],
+  },
+]);

@@ -180,43 +180,50 @@ namespace redis.WebAPi.Controllers
             string RegionName_1 = "East US 2 EUAP";
             string formattedDate = DateTime.Now.ToString("MMdd");
 
-            _subscriptionResourceService.SetSubscriptionResource(redisReques.subscription);
-             for (int i = 1; i <= 5; i++)
-             {
-                RedisOption opt = new RedisOption() 
+            _subscriptionResourceService.SetSubscriptionResource(redisReques.Subscription);
+            if (redisReques.Sku == "All" || redisReques.Sku == "Premium")
+            {
+                for (int i = 1; i <= 5; i++)
                 {
-                    SkuName = "Premium",
-                    RegionName = RegionName_1,
-                    SkuCapacity = i,
-                    NonSSL = true,
-                };
-            _redisCollection.CreateCache("Verifyperformance-P" + i + "-EUS2E" + "-" + formattedDate, opt, redisReques.group);
-             }
-              for (int i = 0; i <= 6; i++)
-             {
-                RedisOption opt = new RedisOption() 
+                    RedisOption opt = new RedisOption() 
+                    {
+                        SkuName = "Premium",
+                        RegionName = RegionName_1,
+                        SkuCapacity = i,
+                        NonSSL = true,
+                    };
+                _redisCollection.CreateCache("Verifyperformance-P" + i + "-EUS2E" + "-" + formattedDate, opt, redisReques.Group);
+                }
+            }
+            if (redisReques.Sku == "All" || redisReques.Sku == "Standard")
+            {
+                for (int i = 0; i <= 6; i++)
                 {
-                    SkuName = "Standard",
-                    RegionName = RegionName_1,
-                    SkuCapacity = i,
-                    NonSSL = true,
-                };
-            _redisCollection.CreateCache("Verifyperformance-C" + i + "-EUS2E-Standard" + "-" + formattedDate, opt, redisReques.group);
-             }
-              for (int i = 0; i <= 6; i++)
-             {
-                RedisOption opt = new RedisOption() 
+                    RedisOption opt = new RedisOption() 
+                    {
+                        SkuName = "Standard",
+                        RegionName = RegionName_1,
+                        SkuCapacity = i,
+                        NonSSL = true,
+                    };
+                _redisCollection.CreateCache("Verifyperformance-C" + i + "-EUS2E-Standard" + "-" + formattedDate, opt, redisReques.Group);
+                }
+            }
+            if (redisReques.Sku == "All" || redisReques.Sku == "Basic")
+            {
+                for (int i = 0; i <= 6; i++)
                 {
-                    SkuName = "Basic",
-                    RegionName = RegionName_1,
-                    SkuCapacity = i,
-                    NonSSL = true,
-                };
-            _redisCollection.CreateCache("Verifyperformance-C" + i + "-EUS2E-Basic" + "-" + formattedDate, opt, redisReques.group);
-             }
-
-            
-            
+                    RedisOption opt = new RedisOption() 
+                    {
+                        SkuName = "Basic",
+                        RegionName = RegionName_1,
+                        SkuCapacity = i,
+                        NonSSL = true,
+                    };
+                _redisCollection.CreateCache("Verifyperformance-C" + i + "-EUS2E-Basic" + "-" + formattedDate, opt, redisReques.Group);
+                
+                }
+            }
             // Processing received parameters
             return Ok();
         }
