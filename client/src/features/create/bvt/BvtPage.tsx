@@ -129,7 +129,7 @@ const BvtPage: React.FC = () => {
 
   return (
           <Box>
-            <Alert severity="info" sx={{width: '600px',margin: '0 auto'}}>
+            <Alert severity="info" sx={{width: '600px',margin: '0 auto',marginBottom: '16px'}}>
                   Currently, PrivateEndpointBladeTest, CacheCreationTest, and EnterpriseTest
                   need to be manually verified and created, and are not included in this feature. 
             </Alert>

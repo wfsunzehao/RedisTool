@@ -55,10 +55,10 @@ const NavPage: React.FC<NavPageProps> = ({ links, defaultPath, alertMessage }) =
         alignItems: 'center',
         paddingTop: '20px',
       }}>
-        <Alert severity="info" sx={{ width: '600px', margin: '0 auto' }}>
-          {alertMessage}
-        </Alert>
         <Box sx={{ width: '40%', padding: '20px' }}>
+          <Alert severity="info" sx={{ width: '600px', margin: '0 auto' ,marginBottom: '16px'}}>
+            {alertMessage}
+          </Alert>
           <Outlet />
         </Box>
       </Box>
