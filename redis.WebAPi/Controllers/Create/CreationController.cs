@@ -175,6 +175,51 @@ namespace redis.WebAPi.Controllers
 
             return Ok();
         }
+        [HttpPost("CreatePerfCache")]
+        public async Task<IActionResult> CreatePerfCache([FromBody] PerfRequestModel redisReques){
+            string RegionName_1 = "East US 2 EUAP";
+            string formattedDate = DateTime.Now.ToString("MMdd");
+
+            _subscriptionResourceService.SetSubscriptionResource(redisReques.subscription);
+             for (int i = 1; i <= 5; i++)
+             {
+                RedisOption opt = new RedisOption() 
+                {
+                    SkuName = "Premium",
+                    RegionName = RegionName_1,
+                    SkuCapacity = i,
+                    NonSSL = true,
+                };
+            _redisCollection.CreateCache("Verifyperformance-P" + i + "-EUS2E" + "-" + formattedDate, opt, redisReques.group);
+             }
+              for (int i = 0; i <= 6; i++)
+             {
+                RedisOption opt = new RedisOption() 
+                {
+                    SkuName = "Standard",
+                    RegionName = RegionName_1,
+                    SkuCapacity = i,
+                    NonSSL = true,
+                };
+            _redisCollection.CreateCache("Verifyperformance-C" + i + "-EUS2E-Standard" + "-" + formattedDate, opt, redisReques.group);
+             }
+              for (int i = 0; i <= 6; i++)
+             {
+                RedisOption opt = new RedisOption() 
+                {
+                    SkuName = "Basic",
+                    RegionName = RegionName_1,
+                    SkuCapacity = i,
+                    NonSSL = true,
+                };
+            _redisCollection.CreateCache("Verifyperformance-C" + i + "-EUS2E-Basic" + "-" + formattedDate, opt, redisReques.group);
+             }
+
+            
+            
+            // Processing received parameters
+            return Ok();
+        }
         private static int GenerateFourDigitRandomNumber()
         {
             return random.Next(1000, 10000); // Generate random numbers between 1000 and 9999
