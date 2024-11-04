@@ -78,7 +78,7 @@ const ManPage: React.FC = () => {
           <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
             <TextField
               select
-              label={`订阅`}
+              label={`Subscription`}
               value={subscription}
               onChange={(e) => handleSubChange(e.target.value)}
               variant="outlined"
