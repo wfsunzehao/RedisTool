@@ -8,6 +8,7 @@ import OtherPage from "../../features/other/OtherPage";
 import BvtPage from "../../features/create/bvt/BvtPage";
 import ManPage from "../../features/create/man/ManPage";
 import PerfPage from "../../features/create/perf/PerfPage";
+import AltPage from "../../features/create/alt/AltPage";
 import DeletePage from "../../features/delete/DeletePage";
 import InsertPage from "../../features/other/insert/InsertPage";
 import MedianPage from "../../features/other/median/MedianPage";
@@ -26,6 +27,7 @@ export const router = createBrowserRouter([
           { path: "bvt", element: <BvtPage /> },
           { path: "man", element: <ManPage /> },
           { path: "perf", element: <PerfPage /> },
+          { path: "alt", element: <AltPage /> },
         ],
       },
       {

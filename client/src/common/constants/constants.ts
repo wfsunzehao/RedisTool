@@ -13,6 +13,10 @@ export const subscriptionList = [
     value: '32353108-c7dc-4873-9ce8-a7d4d731673d',
     label: 'CacheTeam - RedisTiP',
   },
+  {
+    value: "fc2f20f5-602a-4ebd-97e6-4fae3f1f6424",
+    label: "CacheTeam - Redis Perf and Stress Resources",
+  },
 ];
 //case列表
 export const  BVTTestCaseNames = [

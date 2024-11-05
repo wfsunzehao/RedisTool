@@ -54,6 +54,7 @@ const Create = {
     sendOneBvtJson:(body: object)=>request.post(`/Creation/CreateBVTCacheByCase`,body),
     sendManJson:(body: object)=>request.post(`/Subscription/test`,body),
     sendPerfJson: (body: object) =>request.post(`/Creation/CreatePerfCache`, body),
+    sendAltJson: (body: object) =>request.post(`/Creation/CreateAltCache`, body),
 }
 
 const Delete = {

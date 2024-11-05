@@ -227,6 +227,58 @@ namespace redis.WebAPi.Controllers
             // Processing received parameters
             return Ok();
         }
+        [HttpPost("CreateAltCache")]
+        public async Task<IActionResult> CreateAltCache([FromBody] PerfRequestModel redisReques){
+            string RegionName_1 = "East US 2 EUAP";
+            string formattedDate = DateTime.Now.ToString("MMdd");
+
+            _subscriptionResourceService.SetSubscriptionResource(redisReques.Subscription);
+            if (redisReques.Sku == "All" || redisReques.Sku == "Premium")
+            {
+                for (int i = 1; i <= 5; i++)
+                {
+                    RedisOption opt = new RedisOption() 
+                    {
+                        SkuName = "Premium",
+                        RegionName = RegionName_1,
+                        SkuCapacity = i,
+                        NonSSL = true,
+                    };
+                _redisCollection.CreateCache("Alt-eus2e-P" + i + "-" + formattedDate, opt, redisReques.Group);
+                }
+            }
+            if (redisReques.Sku == "All" || redisReques.Sku == "Standard")
+            {
+                for (int i = 0; i <= 6; i++)
+                {
+                    RedisOption opt = new RedisOption() 
+                    {
+                        SkuName = "Standard",
+                        RegionName = RegionName_1,
+                        SkuCapacity = i,
+                        NonSSL = true,
+                    };
+                _redisCollection.CreateCache("Alt-eus2e-SC" + i + "-" + formattedDate, opt, redisReques.Group);
+                }
+            }
+            if (redisReques.Sku == "All" || redisReques.Sku == "Basic")
+            {
+                for (int i = 0; i <= 6; i++)
+                {
+                    RedisOption opt = new RedisOption() 
+                    {
+                        SkuName = "Basic",
+                        RegionName = RegionName_1,
+                        SkuCapacity = i,
+                        NonSSL = true,
+                    };
+                _redisCollection.CreateCache("Alt-eus2e-BC" + i + "-" + formattedDate, opt, redisReques.Group);
+                
+                }
+            }
+            // Processing received parameters
+            return Ok();
+        }
         private static int GenerateFourDigitRandomNumber()
         {
             return random.Next(1000, 10000); // Generate random numbers between 1000 and 9999
