@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 
-namespace YourNamespace.Controllers
+namespace redis.WebAPi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
