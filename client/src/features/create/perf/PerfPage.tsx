@@ -84,21 +84,26 @@ const PerfPage: React.FC = () => {
     setRegion("");
     setErrors({}); // 重置错误信息
   };
+  const handleInputChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { value } = event.target;
 
-  // 处理列表项点击事件
-  //   const handleListItemClick = (formName: string) => {
-  //     setSelectedForm(formName);
-  //     // 重置输入框，当选择不同表单时
-  //     setSubscription('');
-  //     setGroup('');
-  //     setName('');
-  //     setQuantity('');
-  //     setRegion('');//清空地区
-  //     setErrors({}); // 清空错误信息
-  //   };
+    switch (field) {
+      case 'group':
+        setGroup(value);
+        setErrors(prevErrors => ({ ...prevErrors, group: '' })); // 清除组错误
+        break;
+      case 'region':
+        setRegion(value);
+        setErrors(prevErrors => ({ ...prevErrors, region: '' })); // 清除区域错误
+        break;
+      default:
+        break;
+    }
+  };
   // 处理下拉框改变事件
   const handleSubChange = (subscriptionid: string) => {
     setSubscription(subscriptionid);
+    setErrors(prevErrors => ({ ...prevErrors, subscription: '' })); // 清除订阅错误
     agent.Create.getGroup(subscriptionid)
       .then((response) => {
         setGroupList(response);
@@ -158,7 +163,7 @@ const PerfPage: React.FC = () => {
               select
               label="Group"
               value={group}
-              onChange={(e) => setGroup(e.target.value)}
+              onChange={handleInputChange('group')}
               variant="outlined"
               error={!!errors.group} // 判断是否有错误
               helperText={errors.group} // 显示错误信息
@@ -176,7 +181,7 @@ const PerfPage: React.FC = () => {
               select
               label="Region"
               value={region}
-              onChange={(e) => setRegion(e.target.value)}
+              onChange={handleInputChange('region')}
               variant="outlined"
               error={!!errors.region} // 判断是否有错误
               helperText={errors.region} // 显示错误信息
