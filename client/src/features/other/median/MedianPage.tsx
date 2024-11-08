@@ -1,28 +1,24 @@
 import React, { useState } from 'react';
 import { Box, Button, Typography, TextField } from '@mui/material';
 import swal from 'sweetalert';
-import agent from '../../../app/api/agent';
-import LoadingComponent from '../../../common/components/CustomLoading';
 import { Overlay } from '../../../common/constants/constants';
+import LoadingComponent from '../../../common/components/CustomLoading';
 
 const MedianPage: React.FC = () => {
-  const [folderPath, setFolderPath] = useState<string>('');
+  const [folderPath, setFolderPath] = useState<string>('D:\\Tests\\Alt\\Latency'); // 默认路径
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handleFolderSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files && files.length > 0) {
-      const fullPath = files[0].webkitRelativePath; // 获取完整路径
-      const path = fullPath.substring(0, fullPath.lastIndexOf('/')); // 提取文件夹路径
-      setFolderPath(path);
-    }
+  // 处理路径输入框的变化
+  const handleFolderPathChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFolderPath(event.target.value);
   };
 
+  // 提交表单
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
     if (!folderPath) {
-      swal("错误!", "请选择文件夹", "error");
+      swal("错误!", "路径不能为空", "error");
       return;
     }
 
@@ -34,11 +30,31 @@ const MedianPage: React.FC = () => {
     }).then((willSubmit) => {
       if (willSubmit) {
         setLoading(true);
-        
-        agent.Other.sendOtherJson({ path: folderPath })
+
+        // 将文件夹路径传递给后端，使用 fetch 来获取 Excel 文件
+        fetch('https://localhost:7179/api/Median/sendMedianJson', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ path: folderPath })
+        })
           .then(response => {
-            console.log(response);
-            swal("成功!", "文件夹处理成功!", "success");
+            if (response.ok) {
+              // 返回的是 Excel 文件内容
+              return response.blob();
+            } else {
+              throw new Error("无法生成报告");
+            }
+          })
+          .then(blob => {
+            // 创建 Blob URL
+            const downloadUrl = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = 'Median_Report.xlsx'; // 设置下载文件名
+            link.click(); // 触发下载
+            swal("成功!", "文件夹处理成功！Excel 报告已下载！", "success");
           })
           .catch(error => {
             console.error(error);
@@ -53,30 +69,17 @@ const MedianPage: React.FC = () => {
 
   return (
     <Box sx={{ textAlign: 'center', p: 3 }}>
-      <Typography variant="h4" sx={{ color: '#1976d2' }}>选择文件夹路径</Typography>
+      <Typography variant="h4" sx={{ color: '#1976d2' }}>输入文件夹路径</Typography>
       <form onSubmit={handleSubmit}>
         <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
           <TextField
             value={folderPath}
-            onChange={() => {}} // 只读输入框
+            onChange={handleFolderPathChange} // 用户修改路径
             variant="outlined"
-            label="已选择文件夹"
+            label="文件夹路径"
             fullWidth
             sx={{ flexGrow: 1 }}
           />
-          <input
-            type="file"
-            onChange={handleFolderSelect}
-            style={{ display: 'none' }}
-            id="folder-input"
-            multiple
-            {...({ webkitdirectory: true } as React.InputHTMLAttributes<HTMLInputElement>)}
-          />
-          <label htmlFor="folder-input">
-            <Button variant="contained" component="span" sx={{ marginLeft: 2 }}>
-              选择文件夹
-            </Button>
-          </label>
         </Box>
         <Box sx={{ mt: 2 }}>
           <Button type="submit" variant="contained" color="primary" disabled={loading}>

@@ -65,7 +65,7 @@ const Delete = {
 
 const Other = {
     sendInsertJson:(body: object)=>request.post(`/StackExchange/AddDataToRedis`,body),
-    sendOtherJson:(body: object)=>request.post(`/StackExchange/Median`,body),
+    sendMedianJson:(body: object)=>request.post(`/Median/sendMedianJson`,body),
 }
 
 
