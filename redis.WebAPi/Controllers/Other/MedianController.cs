@@ -16,24 +16,24 @@ namespace YourNamespace.Controllers
         {
             if (string.IsNullOrWhiteSpace(request.Path))
             {
-                return BadRequest("Â·¾¶²»ÄÜÎª¿Õ");
+                return BadRequest("è·¯å¾„ä¸èƒ½ä¸ºç©º");
             }
 
             string baseFolderPath = request.Path;
             if (!Directory.Exists(baseFolderPath))
             {
-                return BadRequest($"Ö¸¶¨µÄÎÄ¼ş¼Ğ {baseFolderPath} ²»´æÔÚ");
+                return BadRequest($"æŒ‡å®šçš„æ–‡ä»¶å¤¹ {baseFolderPath} ä¸å­˜åœ¨");
             }
 
             List<string> resultMessages = new List<string>();
-            List<MedianResult> allResults = new List<MedianResult>(); // ´æ´¢ËùÓĞÎÄ¼ş¼ĞµÄ¼ÆËã½á¹û
+            List<MedianResult> allResults = new List<MedianResult>(); // å­˜å‚¨æ‰€æœ‰æ–‡ä»¶å¤¹çš„è®¡ç®—ç»“æœ
 
             try
             {
-                // »ñÈ¡Â·¾¶ÏÂËùÓĞ×ÓÎÄ¼ş¼Ğ
+                // è·å–è·¯å¾„ä¸‹æ‰€æœ‰å­æ–‡ä»¶å¤¹
                 string[] subDirectories = Directory.GetDirectories(baseFolderPath, "*", SearchOption.TopDirectoryOnly);
 
-                // Èç¹ûÃ»ÓĞ×ÓÎÄ¼ş¼Ğ£¬ÔòÖ±½Ó´¦Àíµ±Ç°ÎÄ¼ş¼ĞÏÂµÄÎÄ¼ş
+                // å¦‚æœæ²¡æœ‰å­æ–‡ä»¶å¤¹ï¼Œåˆ™ç›´æ¥å¤„ç†å½“å‰æ–‡ä»¶å¤¹ä¸‹çš„æ–‡ä»¶
                 if (subDirectories.Length == 0)
                 {
                     string[] fileNames = Directory.GetFiles(baseFolderPath, "*.xlsx", SearchOption.TopDirectoryOnly);
@@ -43,12 +43,12 @@ namespace YourNamespace.Controllers
                     }
                     else
                     {
-                        resultMessages.Add($"µ±Ç°ÎÄ¼ş¼Ğ {baseFolderPath} ÖĞÃ»ÓĞ .xlsx ÎÄ¼ş");
+                        resultMessages.Add($"å½“å‰æ–‡ä»¶å¤¹ {baseFolderPath} ä¸­æ²¡æœ‰ .xlsx æ–‡ä»¶");
                     }
                 }
                 else
                 {
-                    // ·ñÔò£¬´¦ÀíÃ¿¸ö×ÓÎÄ¼ş¼Ğ
+                    // å¦åˆ™ï¼Œå¤„ç†æ¯ä¸ªå­æ–‡ä»¶å¤¹
                     foreach (var subDirectory in subDirectories)
                     {
                         string[] fileNames = Directory.GetFiles(subDirectory, "*.xlsx", SearchOption.TopDirectoryOnly);
@@ -59,18 +59,18 @@ namespace YourNamespace.Controllers
                     }
                 }
 
-                // Éú³É Excel ÎÄ¼ş²¢·µ»Ø
+                // ç”Ÿæˆ Excel æ–‡ä»¶å¹¶è¿”å›
                 var fileContent = GenerateExcelReport(allResults);
                 var fileName = "Median_Report.xlsx";
                 return File(fileContent, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "´¦ÀíÎÄ¼ş¼ĞÊ±·¢Éú´íÎó", details = ex.Message });
+                return StatusCode(500, new { message = "å¤„ç†æ–‡ä»¶å¤¹æ—¶å‘ç”Ÿé”™è¯¯", details = ex.Message });
             }
         }
 
-        // ´¦ÀíÎÄ¼ş¼ĞÖĞµÄÎÄ¼ş£¬¼ÆËãÃ¿¸öÎÄ¼şµÄÖĞÎ»Êı£¬²¢·µ»ØÎÄ¼ş¼ĞµÄÖĞÎ»Êı
+        // å¤„ç†æ–‡ä»¶å¤¹ä¸­çš„æ–‡ä»¶ï¼Œè®¡ç®—æ¯ä¸ªæ–‡ä»¶çš„ä¸­ä½æ•°ï¼Œå¹¶è¿”å›æ–‡ä»¶å¤¹çš„ä¸­ä½æ•°
         private List<MedianResult> ProcessFiles(string[] fileNames, string folderName)
         {
             List<double> medianList = new List<double>();
@@ -97,7 +97,7 @@ namespace YourNamespace.Controllers
                 double overallMedian = CalculateMedian(medianList);
                 results.Add(new MedianResult
                 {
-                    FileName = $"{folderName} ÖĞÎ»ÊıµÄÖĞÎ»Êı",
+                    FileName = $"{folderName} ä¸­ä½æ•°çš„ä¸­ä½æ•°",
                     Median = overallMedian
                 });
             }
@@ -105,7 +105,7 @@ namespace YourNamespace.Controllers
             {
                 results.Add(new MedianResult
                 {
-                    FileName = $"{folderName} Ã»ÓĞ¿ÉÓÃÊı¾İ",
+                    FileName = $"{folderName} æ²¡æœ‰å¯ç”¨æ•°æ®",
                     Median = 0
                 });
             }
@@ -113,7 +113,7 @@ namespace YourNamespace.Controllers
             return results;
         }
 
-        // ´Ó Excel ÎÄ¼şÖĞÌáÈ¡Êı¾İ
+        // ä» Excel æ–‡ä»¶ä¸­æå–æ•°æ®
         private List<double> ExtractData(string fileName)
         {
             List<double> data = new List<double>();
@@ -122,7 +122,7 @@ namespace YourNamespace.Controllers
             using (ExcelPackage package = new ExcelPackage(fileInfo))
             {
                 ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
-                int startRow = 12; // ÆğÊ¼ĞĞ
+                int startRow = 12; // èµ·å§‹è¡Œ
                 int rowCount = worksheet.Dimension.Rows;
 
                 for (int row = startRow; row <= rowCount; row++)
@@ -137,7 +137,7 @@ namespace YourNamespace.Controllers
             return data;
         }
 
-        // ¼ÆËãÖĞÎ»Êı
+        // è®¡ç®—ä¸­ä½æ•°
         private double CalculateMedian(List<double> data)
         {
             data.Sort();
@@ -152,18 +152,18 @@ namespace YourNamespace.Controllers
             }
         }
 
-        // Éú³É Excel ±¨¸æ²¢·µ»ØÆäÄÚÈİ
+        // ç”Ÿæˆ Excel æŠ¥å‘Šå¹¶è¿”å›å…¶å†…å®¹
         private byte[] GenerateExcelReport(List<MedianResult> results)
         {
             using (var package = new ExcelPackage())
             {
-                var worksheet = package.Workbook.Worksheets.Add("ÖĞÎ»Êı±¨¸æ");
+                var worksheet = package.Workbook.Worksheets.Add("ä¸­ä½æ•°æŠ¥å‘Š");
 
-                // Ìí¼Ó±íÍ·
-                worksheet.Cells[1, 1].Value = "ÎÄ¼şÃû";
-                worksheet.Cells[1, 2].Value = "ÖĞÎ»Êı";
+                // æ·»åŠ è¡¨å¤´
+                worksheet.Cells[1, 1].Value = "æ–‡ä»¶å";
+                worksheet.Cells[1, 2].Value = "ä¸­ä½æ•°";
 
-                // Ìî³äÊı¾İ
+                // å¡«å……æ•°æ®
                 int row = 2;
                 foreach (var result in results)
                 {
@@ -172,23 +172,23 @@ namespace YourNamespace.Controllers
                     row++;
                 }
 
-                // ¸ñÊ½»¯ÁĞ¿í
+                // æ ¼å¼åŒ–åˆ—å®½
                 worksheet.Column(1).AutoFit();
                 worksheet.Column(2).AutoFit();
 
-                // ·µ»Ø Excel ÎÄ¼şÄÚÈİ
+                // è¿”å› Excel æ–‡ä»¶å†…å®¹
                 return package.GetAsByteArray();
             }
         }
     }
 
-    // ÓÃÓÚ½ÓÊÕÇ°¶ËÇëÇóµÄÎÄ¼ş¼ĞÂ·¾¶
+    // ç”¨äºæ¥æ”¶å‰ç«¯è¯·æ±‚çš„æ–‡ä»¶å¤¹è·¯å¾„
     public class FolderPathRequest
     {
         public string Path { get; set; }
     }
 
-    // ÓÃÓÚ´æ´¢Ã¿¸öÎÄ¼şµÄÖĞÎ»Êı½á¹û
+    // ç”¨äºå­˜å‚¨æ¯ä¸ªæ–‡ä»¶çš„ä¸­ä½æ•°ç»“æœ
     public class MedianResult
     {
         public string FileName { get; set; }
