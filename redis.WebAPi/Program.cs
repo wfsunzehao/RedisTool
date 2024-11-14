@@ -54,6 +54,7 @@ app.UseCors(opt=>
         //opt=> .AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()
         //允许指定来源
         opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+        opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://172.29.20.156:3000");
     });
 
 app.UseHttpsRedirection();
