@@ -58,6 +58,7 @@ const Create = {
 }
 
 const Delete = {
+    getResource: (subscriptionid: string) => request.get(`Subscription/${subscriptionid}`),
     //sendDelGroupJson:(body: object)=>request.deleteByGroup(`/StackExchange/DeleteGroup`,body),
     sendDelGroupJson:(subscription: string, group: string)=>request.delete(`/AzureClient/DeleteResource?subscription=${subscription}&resourceGroupName=${group}`),
     sendDelGroupJsonT:(body: object)=>request.deleteByGroup(`/ResourceDeletion/DeleteResource`,body),   
