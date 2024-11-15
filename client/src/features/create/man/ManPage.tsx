@@ -53,8 +53,9 @@ const ManPage: React.FC = () => {
           group,
           port:'6379'
           // 添加其他字段的值
-        };       
-        handleGenericSubmit(event, data, apiPathFunction, CheckForm, setLoading); 
+        };
+        const customMessage = "Once started, the cache used in MAN will be created!";     
+        handleGenericSubmit(event, data, apiPathFunction, CheckForm, setLoading,customMessage); 
   };
   // 处理取消按钮点击事件
   const handleCancel = () => {

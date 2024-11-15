@@ -1,9 +1,3 @@
-export function getCookie(key: string) {
-    const b=document.cookie.match('(^|;)\\s*'+key+'\\s*=\\s*([^;]+)');
-    return b?b.pop():"";
-}
-
-// utils.ts
 import swal from 'sweetalert';
 
 export const handleGenericSubmit = async<T> (
@@ -11,7 +5,8 @@ export const handleGenericSubmit = async<T> (
   data: T, // 使用泛型
   apiPath: (data: T) => Promise<T>,
   CheckForm: () => boolean,
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  confirmationMessage: string = "Once started, the cache used in BVT will be created!" // 新增的参数，带有默认值
 ) => {
   event.preventDefault();
 
@@ -22,7 +17,7 @@ export const handleGenericSubmit = async<T> (
 
   swal({
     title: "Confirm the operation",
-    text: "Once started, the cache used in BVT will be created!",
+    text: confirmationMessage, // 使用传入的 confirmationMessage
     buttons: ["No", "Yes!"],
     dangerMode: true,
     closeOnClickOutside: false,
@@ -93,5 +88,3 @@ export const handleGenericSubmit = async<T> (
     }
   });
 };
-
-
