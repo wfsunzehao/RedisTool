@@ -214,6 +214,13 @@ const AltPage: React.FC = () => {
               <MenuItem value="Premium">Premium</MenuItem>
             </Select>
           </FormControl>
+          {/* 添加单选框 */}
+          <FormControl component="fieldset" sx={{ marginTop: 2 }}>
+            <RadioGroup row value={option} onChange={(e) => setOption(e.target.value)}>
+            <FormControlLabel value="all" control={<Radio />} label="All" />
+            <FormControlLabel value="case" control={<Radio />} label="Case" />
+            </RadioGroup>
+          </FormControl>
         </Box>
         {/* 其他相关表单字段 */}
         <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>

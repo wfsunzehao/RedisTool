@@ -41,26 +41,6 @@ namespace redis.WebAPi.Controllers
             }
         }
 
-        [HttpPost("test")]
-        public async Task<IActionResult> Test([FromBody] MyRequestModel model)
-        {
-            // Delay 10 seconds
-            await Task.Delay(10000); // 10000 milliseconds = 10 seconds
-
-            // Processing received parameters
-            return Ok(new { subscription = model.subscription, group = model.group });
-        }
-
-
-        public class MyRequestModel
-        {
-            public string name { get; set; }
-            public string region { get; set; }
-            public string subscription { get; set; }
-            public string group { get; set; }
-
-        }
-
         // Example: Get a SubscriptionResource and perform some operation
         [HttpGet("getSubscriptionResource")]
         public IActionResult GetSubscriptionResource()
