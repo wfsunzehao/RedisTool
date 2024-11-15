@@ -1,3 +1,4 @@
+using Azure.ResourceManager.Redis;
 using Microsoft.AspNetCore.Mvc;
 using redis.WebAPi.Model;
 using redis.WebAPi.Service.IService;
@@ -10,9 +11,12 @@ namespace redis.WebAPi.Controllers
     {
         private readonly IResourceDeletionService _resourceDeletionService;
 
-        public ResourceDeletionController(IResourceDeletionService resourceDeletionService)
+        private readonly ISubscriptionResourceService _subscriptionResourceService;
+
+        public ResourceDeletionController(IResourceDeletionService resourceDeletionService, ISubscriptionResourceService subscriptionResourceService)
         {
             _resourceDeletionService = resourceDeletionService;
+            _subscriptionResourceService = subscriptionResourceService; 
         }
 
         [HttpDelete("DeleteResource")]
@@ -28,5 +32,28 @@ namespace redis.WebAPi.Controllers
                 return StatusCode(500, "An error occurred while deleting resources.");
             }
         }
+
+
+        [HttpPost("ShowRedisResource")]
+        public async Task<IActionResult> ShowResource([FromBody] RedisRequestModel request)
+        {
+            try
+            {
+                // Generate SubscriptionResource based on the subscriptionId passed in by the front end
+                _subscriptionResourceService.SetSubscriptionResource(request.subscription);
+                List<string> redisName = new List<string>();
+                foreach (var s in _subscriptionResourceService.GetSubscription().GetResourceGroup(request.group).Value.GetAllRedis())
+                {
+                    redisName.Add(s.Data.Name);
+                }
+
+                return Ok(redisName.ToList());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error setting subscription: {ex.Message}");
+            }
+        }
+
     }
 }
