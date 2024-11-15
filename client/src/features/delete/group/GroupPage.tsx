@@ -128,7 +128,7 @@ const GroupPage: React.FC = () => {
 
   return (
     <Box>
-      <p style={{ color: '#1976d2', fontSize: '30px', textAlign: 'center' }}>删除cache</p>
+      <p style={{ color: '#1976d2', fontSize: '30px', textAlign: 'center' }}>Delete cache</p>
       <form className="submit-box" onSubmit={handleSubmit}>
         <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
           <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
@@ -185,7 +185,7 @@ const GroupPage: React.FC = () => {
               overflowY: 'auto', // 启用垂直滚动
             }}
           >
-            <h3>资源列表</h3>
+            <h3>ResourceList</h3>
             {resourceList.length > 0 ? (
               <List>
                 {resourceList.map((resource, index) => (
@@ -205,10 +205,10 @@ const GroupPage: React.FC = () => {
         
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
           <Button type="submit" variant="contained" color="primary" sx={{ mx: 1 }} disabled={loading}>
-            提交
+          submit
           </Button>
           <Button type="button" variant="outlined" color="secondary" onClick={handleCancel} sx={{ mx: 1 }} disabled={loading}>
-            取消
+          cancel
           </Button>
         </Box>
       </form>
