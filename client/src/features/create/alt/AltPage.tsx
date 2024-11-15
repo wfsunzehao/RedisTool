@@ -118,7 +118,7 @@ const AltPage: React.FC = () => {
   return (
     <Box>
       <p style={{ color: "#1976d2", fontSize: "30px", textAlign: "center" }}>
-        创建：Alt Cache
+      Create：Alt Cache
       </p>
       <form className="submit-box" onSubmit={handleSubmit}>
         <Box
@@ -214,6 +214,7 @@ const AltPage: React.FC = () => {
               <MenuItem value="Premium">Premium</MenuItem>
             </Select>
           </FormControl>
+          
         </Box>
         {/* 其他相关表单字段 */}
         <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
@@ -223,7 +224,7 @@ const AltPage: React.FC = () => {
             color="primary"
             sx={{ mx: 1 }}
           >
-            提交
+            submit
           </Button>
           <Button
             type="button"
@@ -232,7 +233,7 @@ const AltPage: React.FC = () => {
             onClick={handleCancel}
             sx={{ mx: 1 }}
           >
-            取消
+            cancel
           </Button>
         </Box>
       </form>

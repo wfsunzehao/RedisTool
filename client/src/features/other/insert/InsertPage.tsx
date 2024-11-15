@@ -99,7 +99,7 @@ const InsertPage: React.FC = () => {
 
   return (
     <Box>
-      <p style={{ color: '#1976d2', fontSize: '30px', textAlign: 'center' }}>插入数据</p>
+      <p style={{ color: '#1976d2', fontSize: '30px', textAlign: 'center' }}>insert data</p>
       <form className="submit-box" onSubmit={handleSubmit}>
         <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
         
@@ -171,10 +171,10 @@ const InsertPage: React.FC = () => {
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
           <Button type="submit" variant="contained" color="primary" sx={{ mx: 1 }} disabled={loading}>
-            提交
+          submit
           </Button>
           <Button type="button" variant="outlined" color="secondary" onClick={handleCancel} sx={{ mx: 1 }} disabled={loading}>
-            取消
+            cancel
           </Button>
         </Box>
       </form>

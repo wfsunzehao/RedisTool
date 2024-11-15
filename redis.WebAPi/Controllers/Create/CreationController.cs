@@ -53,6 +53,94 @@ namespace redis.WebAPi.Controllers
             return Ok();
         }
 
+        [HttpPost("CreateManualCache")]
+        public async Task<IActionResult> CreateManualCache([FromBody] RedisRequestModel redisReques)
+        {
+
+            _subscriptionResourceService.SetSubscriptionResource(redisReques.subscription);
+            if (redisReques.Cases == null || redisReques.Cases.Length == 0)
+            {
+                throw new InvalidOperationException("Cases cannot be null or empty.");
+            }
+
+            if (redisReques.Quantity != null && redisReques.Cases.Length == 1)
+            {
+                string caseToCopy = redisReques.Cases[0]; // Get the case to be copied
+                int quantity = int.Parse(redisReques.Quantity.ToString()); // to an integer
+                redisReques.Cases = Enumerable.Repeat(caseToCopy, quantity).ToArray(); // Copy the specified quantity and replace the original array
+            }
+
+            _subscriptionResourceService.SetSubscriptionResource(redisReques.subscription);
+
+            foreach (var currentTestCase in redisReques.Cases)
+            {
+                string currentDate = DateTime.Now.ToString("MMdd");
+                int randomNumber = GenerateFourDigitRandomNumber();
+                
+                RedisOption opt = new RedisOption();
+
+                switch (currentTestCase)
+                {
+                    case "8672":
+                        opt.SkuName = "Standard";
+                        opt.RegionName = "Central US EUAP";
+                        opt.NonSSL = true;
+                        _redisCollection.CreateCache($"ManualTest-{currentTestCase}-CUSE-{currentDate}-{randomNumber}", opt, redisReques.group);
+                        
+                        opt.RegionName = "East US";
+                        opt.SkuName = "Enterprise_E10";
+                        opt.SkuCapacity = 2;
+                        opt.NonSSL = false;
+                        _redisCollection.CreateCache($"ManualTest-{currentTestCase}-EUS-{currentDate}-{randomNumber}", opt, redisReques.group);
+                        
+                        opt.SkuName = "Standard";
+                        opt.RegionName = "East US 2 EUAP";
+                        opt.NonSSL = true;
+                        _redisCollection.CreateCache($"ManualTest-{currentTestCase}-EUS2E-{currentDate}-{randomNumber}", opt, redisReques.group);
+                        break;
+
+                    case "8659":
+                        opt.RegionName = "Central US EUAP";
+                        opt.SkuName = "Enterprise_E10";
+                        opt.SkuCapacity = 2;
+                        _redisCollection.CreateCache($"ManualTest-{currentTestCase}-CUSE-{currentDate}-{randomNumber}", opt, redisReques.group);
+                        break;
+
+                    case "8673":
+                        // Create two caching options
+                        opt.SkuName = "Premium";
+                        opt.RegionName = "East US 2 EUAP";
+                        opt.NonSSL = true;
+                        opt.Zones = new List<string>{"1","2"};
+                        _redisCollection.CreateCache($"ManualTest-{currentTestCase}-EUS2E-{currentDate}-1", opt, redisReques.group);                        //another option
+                        opt.ReplicasPerPrimary = 2;
+                        _redisCollection.CreateCache($"ManualTest-{currentTestCase}-EUS2E-{currentDate}-2", opt, redisReques.group);                        continue; // Continue the loop to avoid duplicate creation
+                    case "8675":
+                        // Create two caching options
+                        opt.SkuName = "Premium";
+                        opt.RegionName = "Central US EUAP";
+                        opt.NonSSL = true;
+                        _redisCollection.CreateCache($"BVT-{currentTestCase}-{currentDate}-CUSE-{randomNumber}", opt, redisReques.group);
+                        //another option
+                        opt.RegionName = "East US";
+                        _redisCollection.CreateCache($"BVT-{currentTestCase}-{currentDate}-EUS-{randomNumber}", opt, redisReques.group);
+                        continue; // Continue the loop to avoid duplicate creation
+
+                    default:
+                        opt.SkuName = "Premium";
+                        opt.RegionName = "Central US EUAP";
+                        opt.NonSSL = true;
+                        break;
+                                        }
+
+                _redisCollection.CreateCache($"BVT-{currentTestCase}-{currentDate}-{randomNumber}", opt, redisReques.group);
+            }
+
+            return Ok();
+
+           
+        }
+
         [HttpPost("CreateBVTCache")]
         //Currently, PrivateEndpointBladeTest, CacheCreationTest, and EnterpriseTest 
         //need to be manually verified and created, and are not included in this feature.

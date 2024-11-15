@@ -1,4 +1,5 @@
 using OfficeOpenXml;
+using redis.WebAPi.Models;  // 引入数据模型类
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,24 +17,24 @@ namespace redis.WebAPi.Controllers
         {
             if (string.IsNullOrWhiteSpace(request.Path))
             {
-                return BadRequest("路径不能为空");
+                return BadRequest("Path cannot be empty");
             }
 
             string baseFolderPath = request.Path;
             if (!Directory.Exists(baseFolderPath))
             {
-                return BadRequest($"指定的文件夹 {baseFolderPath} 不存在");
+                return BadRequest($"The specified folder {baseFolderPath} does not exist");
             }
 
             List<string> resultMessages = new List<string>();
-            List<MedianResult> allResults = new List<MedianResult>(); // 存储所有文件夹的计算结果
+            List<MedianResult> allResults = new List<MedianResult>(); // Storing calculation results for all folders
 
             try
             {
-                // 获取路径下所有子文件夹
+                // Get all subfolders in the path
                 string[] subDirectories = Directory.GetDirectories(baseFolderPath, "*", SearchOption.TopDirectoryOnly);
 
-                // 如果没有子文件夹，则直接处理当前文件夹下的文件
+                // If there are no subfolders, process the files in the current folder directly
                 if (subDirectories.Length == 0)
                 {
                     string[] fileNames = Directory.GetFiles(baseFolderPath, "*.xlsx", SearchOption.TopDirectoryOnly);
@@ -43,12 +44,12 @@ namespace redis.WebAPi.Controllers
                     }
                     else
                     {
-                        resultMessages.Add($"当前文件夹 {baseFolderPath} 中没有 .xlsx 文件");
+                        resultMessages.Add($"There are no .xlsx files in the current folder {baseFolderPath}");
                     }
                 }
                 else
                 {
-                    // 否则，处理每个子文件夹
+                    // Otherwise, process each subfolder
                     foreach (var subDirectory in subDirectories)
                     {
                         string[] fileNames = Directory.GetFiles(subDirectory, "*.xlsx", SearchOption.TopDirectoryOnly);
@@ -59,18 +60,18 @@ namespace redis.WebAPi.Controllers
                     }
                 }
 
-                // 生成 Excel 文件并返回
+                // Generate Excel file and return
                 var fileContent = GenerateExcelReport(allResults);
                 var fileName = "Median_Report.xlsx";
                 return File(fileContent, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "处理文件夹时发生错误", details = ex.Message });
+                return StatusCode(500, new { message = "An error occurred while processing the folder", details = ex.Message });
             }
         }
 
-        // 处理文件夹中的文件，计算每个文件的中位数，并返回文件夹的中位数
+        // Process the files in the folder, calculate the median for each file, and return the folder's median
         private List<MedianResult> ProcessFiles(string[] fileNames, string folderName)
         {
             List<double> medianList = new List<double>();
@@ -97,7 +98,7 @@ namespace redis.WebAPi.Controllers
                 double overallMedian = CalculateMedian(medianList);
                 results.Add(new MedianResult
                 {
-                    FileName = $"{folderName} 中位数的中位数",
+                    FileName = $"{folderName} Median of Medians",
                     Median = overallMedian
                 });
             }
@@ -105,7 +106,7 @@ namespace redis.WebAPi.Controllers
             {
                 results.Add(new MedianResult
                 {
-                    FileName = $"{folderName} 没有可用数据",
+                    FileName = $"{folderName} No available data",
                     Median = 0
                 });
             }
@@ -113,7 +114,7 @@ namespace redis.WebAPi.Controllers
             return results;
         }
 
-        // 从 Excel 文件中提取数据
+        // Extract data from the Excel file
         private List<double> ExtractData(string fileName)
         {
             List<double> data = new List<double>();
@@ -122,7 +123,7 @@ namespace redis.WebAPi.Controllers
             using (ExcelPackage package = new ExcelPackage(fileInfo))
             {
                 ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
-                int startRow = 12; // 起始行
+                int startRow = 12; // Starting row
                 int rowCount = worksheet.Dimension.Rows;
 
                 for (int row = startRow; row <= rowCount; row++)
@@ -137,7 +138,7 @@ namespace redis.WebAPi.Controllers
             return data;
         }
 
-        // 计算中位数
+        // Calculate the median
         private double CalculateMedian(List<double> data)
         {
             data.Sort();
@@ -152,18 +153,18 @@ namespace redis.WebAPi.Controllers
             }
         }
 
-        // 生成 Excel 报告并返回其内容
+        // Generate Excel report and return its content
         private byte[] GenerateExcelReport(List<MedianResult> results)
         {
             using (var package = new ExcelPackage())
             {
-                var worksheet = package.Workbook.Worksheets.Add("中位数报告");
+                var worksheet = package.Workbook.Worksheets.Add("Median Report");
 
-                // 添加表头
-                worksheet.Cells[1, 1].Value = "文件名";
-                worksheet.Cells[1, 2].Value = "中位数";
+                // Add header
+                worksheet.Cells[1, 1].Value = "File Name";
+                worksheet.Cells[1, 2].Value = "Median";
 
-                // 填充数据
+                // Fill in the data
                 int row = 2;
                 foreach (var result in results)
                 {
@@ -172,26 +173,13 @@ namespace redis.WebAPi.Controllers
                     row++;
                 }
 
-                // 格式化列宽
+                // Format column widths
                 worksheet.Column(1).AutoFit();
                 worksheet.Column(2).AutoFit();
 
-                // 返回 Excel 文件内容
+                // Return the Excel file content
                 return package.GetAsByteArray();
             }
         }
-    }
-
-    // 用于接收前端请求的文件夹路径
-    public class FolderPathRequest
-    {
-        public string Path { get; set; }
-    }
-
-    // 用于存储每个文件的中位数结果
-    public class MedianResult
-    {
-        public string FileName { get; set; }
-        public double Median { get; set; }
     }
 }

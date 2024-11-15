@@ -12,7 +12,7 @@ const DeletePage: React.FC = () => {
     <NavPage 
       links={leftLinks} 
       defaultPath="/delete/group" 
-      alertMessage="现在可以删除了!" 
+      alertMessage="You can delete it now!" 
     />
   );
 };

@@ -12,7 +12,7 @@ const OtherPage: React.FC = () => {
     <NavPage 
       links={leftLinks} 
       defaultPath="/other/insert" 
-      alertMessage="现在可以插入了!" 
+      alertMessage="You can insert it now!" 
     />
   );
 };
