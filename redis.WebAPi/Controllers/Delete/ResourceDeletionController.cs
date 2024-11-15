@@ -34,15 +34,15 @@ namespace redis.WebAPi.Controllers
         }
 
 
-        [HttpPost("ShowRedisResource")]
-        public async Task<IActionResult> ShowResource([FromBody] RedisRequestModel request)
+        [HttpGet("{subscriptionId}/{resourceGroupName}")]
+        public async Task<IActionResult> ShowResource(string subscriptionId, string resourceGroupName)
         {
             try
             {
                 // Generate SubscriptionResource based on the subscriptionId passed in by the front end
-                _subscriptionResourceService.SetSubscriptionResource(request.subscription);
+                _subscriptionResourceService.SetSubscriptionResource(subscriptionId);
                 List<string> redisName = new List<string>();
-                foreach (var s in _subscriptionResourceService.GetSubscription().GetResourceGroup(request.group).Value.GetAllRedis())
+                foreach (var s in _subscriptionResourceService.GetSubscription().GetResourceGroup(resourceGroupName).Value.GetAllRedis())
                 {
                     redisName.Add(s.Data.Name);
                 }

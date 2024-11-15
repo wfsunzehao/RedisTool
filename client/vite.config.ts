@@ -5,7 +5,7 @@ import fs from 'fs'
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
-    host: '0.0.0.0', // Allow external access
+    //host: '0.0.0.0', // Allow external access
     port: 3000,
     // https: {
     //   key: fs.readFileSync('key.pem'), // Specify the private key file path

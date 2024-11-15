@@ -39,7 +39,7 @@ const GroupPage: React.FC = () => {
     const intervalId = setInterval(() => {
       if (group) {
         // 调用API获取资源列表
-        agent.Delete.getResource(subscription)
+        agent.Delete.getResource(subscription, group)
           .then(response => {
             setResourceList(response); // 更新资源列表
           })
@@ -102,7 +102,7 @@ const GroupPage: React.FC = () => {
     setErrors(prevErrors => ({ ...prevErrors, group: '' })); // 清除组错误
 
     // 调用API获取该组的资源列表
-    agent.Delete.getResource(subscription)
+    agent.Delete.getResource(subscription,group)
       .then(response => {
         setResourceList(response);  // 保存资源列表
         setShowResourceBox(true);    // 显示资源框
