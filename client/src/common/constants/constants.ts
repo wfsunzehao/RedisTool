@@ -41,6 +41,13 @@ export const  BVTTestCaseNames = [
   "PortalOwnedBladeTest",
   "LocalizationTest"
 ];
+//case列表
+export const  ManualTestCaseNames = [
+
+  "8672",
+  "8659",
+  "8673"
+];
 export const Overlay = styled(Box)({
   position: 'fixed',
   top: 0,

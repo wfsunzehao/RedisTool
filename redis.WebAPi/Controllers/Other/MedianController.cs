@@ -1,4 +1,5 @@
 using OfficeOpenXml;
+using redis.WebAPi.Models;  // 引入数据模型类
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -180,18 +181,5 @@ namespace redis.WebAPi.Controllers
                 return package.GetAsByteArray();
             }
         }
-    }
-
-    // Class to receive the folder path from the frontend request
-    public class FolderPathRequest
-    {
-        public string Path { get; set; }
-    }
-
-    // Class to store the median result for each file
-    public class MedianResult
-    {
-        public string FileName { get; set; }
-        public double Median { get; set; }
     }
 }
