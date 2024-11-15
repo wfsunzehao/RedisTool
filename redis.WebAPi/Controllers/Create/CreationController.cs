@@ -8,6 +8,16 @@ using redis.WebAPi.Service.AzureShared.CreationFunction;
 using redis.WebAPi.Service.IService;
 using System.Data;
 using System;
+using Azure.ResourceManager.Redis.Models;
+using Azure.ResourceManager.Storage;
+using Azure.ResourceManager.Resources.Models;
+using Azure.ResourceManager.Resources;
+using Azure.Core.GeoJson;
+using Azure;
+using Azure.ResourceManager.Network;
+using Azure.ResourceManager.Network.Models;
+using Azure.ResourceManager.RedisEnterprise;
+using Microsoft.Identity.Client;
 
 namespace redis.WebAPi.Controllers
 {
@@ -17,6 +27,7 @@ namespace redis.WebAPi.Controllers
     public class CreationController : ControllerBase
     {
         private readonly IRedisCollection _redisCollection;
+        private readonly IAzureClient _azureClient;
         private readonly ISubscriptionResourceService _subscriptionResourceService;
 
         private static Random random = new Random();
@@ -279,10 +290,91 @@ namespace redis.WebAPi.Controllers
             // Processing received parameters
             return Ok();
         }
+        [HttpPost("CreateP0P1Cache")]
+        //25064413, 26639809, and 15379626 need to be created by yourself.
+        public async Task<IActionResult> CreateP0P1Cache([FromBody] P0P1RequestModel redisReques)
+        {
+
+            _subscriptionResourceService.SetSubscriptionResource(redisReques.subscription);
+            
+            ResourceGroupResource resourceGroupResource = await _subscriptionResourceService.GetSubscription().GetResourceGroupAsync(redisReques.group);
+
+            var connectionString = StorageAccountCreation.CreateStorageAccountAsync(redisReques.region, resourceGroupResource).Result;
+
+            VirtualNetworkResource virtualNetwork = VirtualNetworkCreation.CreateVirtualNetWorkResourceAsync(redisReques.region, resourceGroupResource).Result;
+
+            string currentDate = DateTime.Now.ToString("MMdd");
+
+            List<Task> tasks = new List<Task>();
+            foreach (var opt in P0P1ManualCacheModel.opt)
+            {
+                tasks.Add(Task.Run(() =>
+                {
+                    if (redisReques.region == "Central US EUAP" && opt.Zones != null)
+                    {
+                        return;
+                    }
+
+                    bool ifPrivateLink = false;
+                    bool ifGeo = false;
+                    foreach (var tag in opt.Tag)
+                    {
+                        if (tag == "AOF")
+                        {
+                            opt.redisCommonConfiguration.IsAofBackupEnabled = true;
+                            opt.redisCommonConfiguration.AofStorageConnectionString0 = connectionString;
+                        }
+                        if (tag == "Vnet")
+                        {
+                            opt.SubnetId = virtualNetwork.Data.Subnets[0].Id;
+                        }
+                        if (tag == "PrivateLink")
+                        {
+                            ifPrivateLink = true;
+                        }
+                        if (tag == "Geo")
+                        {
+                            ifGeo = true;
+                        }
+                    }
+                    opt.RegionName = redisReques.region;
+                    string cacheName = "Manual-Test-" + opt.Tag[0] + redisReques.region.Replace(" ", "") + currentDate;
+                    _redisCollection.CreateCache(cacheName, opt, redisReques.group);
+
+                    string cacheName2;
+                    if (ifGeo == true && redisReques.region == "Central US EUAP")
+                    {
+                        opt.RegionName = "East US";
+                        cacheName2 = "Manual-Test-" + opt.Tag[0] + redisReques.region.Replace(" ", "") + currentDate;
+                        _redisCollection.CreateCache(cacheName2, opt, redisReques.group);
+                    }
+                    else
+                    {
+                        opt.RegionName = "Southeast Asia";
+                        cacheName2 = "Manual-Test-" + opt.Tag[0] + redisReques.region.Replace(" ", "") + currentDate;
+                        _redisCollection.CreateCache(cacheName2, opt, redisReques.group);
+                    }
+                }));
+            }
+            var redisEnterpriseCC = resourceGroupResource.GetRedisEnterpriseClusters();
+
+            List<Task> tasks1 = new List<Task>();
+            foreach (var entOpt in P0P1ManualCacheModel.EntOpt)
+            {
+                tasks1.Add(Task.Run(async () =>
+                {
+                    string cacheNameEnt = entOpt.Tag[0] + redisReques.region.Replace(" ", "") + currentDate;
+                    RedisEnterpriseClusterResource EnterpriseCache = await EnterpriseCreation.CreateRedisEnterpriseCacheAsync(redisReques, entOpt,
+                    cacheNameEnt,
+                    redisEnterpriseCC);
+                }));
+            }
+
+        return Ok();
+        }
         private static int GenerateFourDigitRandomNumber()
         {
             return random.Next(1000, 10000); // Generate random numbers between 1000 and 9999
         }
-
     }
 }

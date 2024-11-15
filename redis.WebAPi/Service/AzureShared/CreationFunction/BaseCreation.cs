@@ -17,6 +17,8 @@ namespace redis.WebAPi.Service.AzureShared.CreationFunction
             RedisCreateOrUpdateContent createParams = CreateParametersFromOptions(options, forceCreateReplicas);
 
             RedisResource cache = (await RedisCollection.CreateOrUpdateAsync(WaitUntil.Completed, cacheName, createParams)).Value;
+
+            Console.WriteLine("Successfully created" + cache.Data.Name);
             return cache;
         }
 

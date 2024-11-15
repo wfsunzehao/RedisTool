@@ -34,5 +34,7 @@ namespace redis.WebAPi.Service.AzureShared
         public bool NonSSL { get; set; }
 
         public string CachePrefix { get; set; }
+
+        public IList<string> Tag { get; set; }
     }
 }

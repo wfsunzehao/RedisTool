@@ -60,7 +60,7 @@ namespace redis.WebAPi.Service.AzureShared
                     if (data.Count > 0)
                     {
                         double median = CalculateMedian(data); // Calculate the median of the data in the current file
-                        Console.WriteLine("文件: " + fileName + " 中位数: " + median); //Output the median of each excel file
+                        Console.WriteLine("File: " + fileName + " Median: " + median); //Output the median of each excel file
                         medianList.Add(median); // Add the median to the list
                     }
                 }
@@ -69,11 +69,11 @@ namespace redis.WebAPi.Service.AzureShared
             if (medianList.Count > 0)
             {
                 double overallMedian = CalculateMedian(medianList); // Calculate the median of medians
-                Console.WriteLine(name + "中位数的中位数: " + overallMedian);
+                Console.WriteLine(name + "Median of medians: " + overallMedian);
             }
             else
             {
-                Console.WriteLine("没有可用数据");
+                Console.WriteLine("No data available");
             }
         }
 
