@@ -1,4 +1,5 @@
 using Azure.ResourceManager.Redis;
+using Azure.ResourceManager.RedisEnterprise;
 using Microsoft.AspNetCore.Mvc;
 using redis.WebAPi.Model;
 using redis.WebAPi.Service.IService;
@@ -39,19 +40,23 @@ namespace redis.WebAPi.Controllers
         {
             try
             {
-                // Generate SubscriptionResource based on the subscriptionId passed in by the front end
                 _subscriptionResourceService.SetSubscriptionResource(subscriptionId);
-                List<string> redisName = new List<string>();
+                Dictionary<string,string> cacheInfo = new Dictionary<string, string>();
                 foreach (var s in _subscriptionResourceService.GetSubscription().GetResourceGroup(resourceGroupName).Value.GetAllRedis())
                 {
-                    redisName.Add(s.Data.Name);
+                    cacheInfo.Add(s.Data.Name,s.Data.Sku.Name.ToString());
                 }
 
-                return Ok(redisName.ToList());
+                foreach (var i in _subscriptionResourceService.GetSubscription().GetResourceGroup(resourceGroupName).Value.GetRedisEnterpriseClusters())
+                {
+                    cacheInfo.Add(i.Data.Name, i.Data.Sku.Name.ToString());
+                }
+
+                return Ok(cacheInfo);
             }
             catch (Exception ex)
             {
-                return BadRequest($"Error setting subscription: {ex.Message}");
+                return BadRequest($"Error: {ex.Message}");
             }
         }
 
