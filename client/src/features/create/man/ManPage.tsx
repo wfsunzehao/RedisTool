@@ -77,8 +77,9 @@ const ManPage: React.FC = () => {
             ...(selectedNames.length === 1 && { quantity: quantity}), // 仅在选择一个case时添加数量
           }),
           // 添加其他字段的值
-        };       
-        handleGenericSubmit(event, data, apiPathFunction, CheckForm, setLoading); 
+        };
+        const customMessage = "Once started, the cache used in MAN will be created!";     
+        handleGenericSubmit(event, data, apiPathFunction, CheckForm, setLoading,customMessage); 
   };
   // 处理取消按钮点击事件
   const handleCancel = () => {
@@ -127,7 +128,7 @@ const ManPage: React.FC = () => {
 
   return (
     <Box>
-      <p style={{ color: '#1976d2', fontSize: '30px', textAlign: 'center' }}>创建：Man Cache</p>
+      <p style={{ color: '#1976d2', fontSize: '30px', textAlign: 'center' }}>Create：Man Cache</p>
       <form className="submit-box" onSubmit={handleSubmit}>
         <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
           <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
@@ -222,10 +223,10 @@ const ManPage: React.FC = () => {
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
           <Button type="submit" variant="contained" color="primary" sx={{ mx: 1 }} disabled={loading}>
-            提交
+           submit
           </Button>
           <Button type="button" variant="outlined" color="secondary" onClick={handleCancel} sx={{ mx: 1 }} disabled={loading}>
-            取消
+            cancel
           </Button>
         </Box>
       </form>

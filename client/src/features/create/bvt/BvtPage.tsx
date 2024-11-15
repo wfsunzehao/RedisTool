@@ -133,7 +133,7 @@ const BvtPage: React.FC = () => {
                   Currently, PrivateEndpointBladeTest, CacheCreationTest, and EnterpriseTest
                   need to be manually verified and created, and are not included in this feature. 
             </Alert>
-            <p style={{ color: '#1976d2', fontSize: '30px',textAlign: 'center'  }}>创建： BVT Cache</p>
+            <p style={{ color: '#1976d2', fontSize: '30px',textAlign: 'center'  }}>Create： BVT Cache</p>
             <form className="submit-box" onSubmit={handleSubmit}>
               <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
                 <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
@@ -226,7 +226,7 @@ const BvtPage: React.FC = () => {
             </>
           )}
 
-              <Alert sx={{ mt: 2 }} severity="warning">请谨慎操作 , 提交后会创建cache</Alert>
+              <Alert sx={{ mt: 2 }} severity="warning">Please proceed with caution. A cache will be created after submission.</Alert>
               </Box>
 
               
@@ -234,10 +234,10 @@ const BvtPage: React.FC = () => {
               <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
                
                 <Button type="submit" variant="contained" color="primary" sx={{ mx: 1 }}>
-                  提交
+                   submit
                 </Button>
                 <Button type="button" variant="outlined" color="secondary" onClick={handleCancel} sx={{ mx: 1 }}>
-                  取消
+                   cancel
                 </Button>
               </Box>
              

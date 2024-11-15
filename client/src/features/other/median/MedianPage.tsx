@@ -69,21 +69,21 @@ const MedianPage: React.FC = () => {
 
   return (
     <Box sx={{ textAlign: 'center', p: 3 }}>
-      <Typography variant="h4" sx={{ color: '#1976d2' }}>输入文件夹路径</Typography>
+      <Typography variant="h4" sx={{ color: '#1976d2' }}>Enter the folder path</Typography>
       <form onSubmit={handleSubmit}>
         <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
           <TextField
             value={folderPath}
             onChange={handleFolderPathChange} // 用户修改路径
             variant="outlined"
-            label="文件夹路径"
+            label="Folder Path"
             fullWidth
             sx={{ flexGrow: 1 }}
           />
         </Box>
         <Box sx={{ mt: 2 }}>
           <Button type="submit" variant="contained" color="primary" disabled={loading}>
-            开始
+          submit
           </Button>
         </Box>
       </form>
