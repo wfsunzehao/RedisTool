@@ -54,6 +54,7 @@ const ManPage: React.FC = () => {
     const newErrors: { [key: string]: string } = {};
     if (!subscription) newErrors.subscription = "订阅不能为空";
     if (!group) newErrors.group = "组不能为空";
+    if (!region) newErrors.region = "区域不能为空";
     if (option === 'case' && selectedNames.length === 0) newErrors.selectedNames = "至少选择一个名称"; // 校验
     if (option === 'case' && selectedNames.length === 1 && quantity.trim() === '') {
       newErrors.quantity = "数量不能为空"; // 仅在选择一个时校验数量
@@ -62,7 +63,7 @@ const ManPage: React.FC = () => {
     return Object.keys(newErrors).length === 0; // 返回是否有错误
   };
 
-  const apiPathFunction = async (data: DataModel) => {
+  const apiPathFunction = async (data: ManModel) => {
     return await agent.Create.sendManJson(data); // 或其他 API 调用
   };
   const handleSubmit = (event: React.FormEvent) => {
@@ -85,6 +86,7 @@ const ManPage: React.FC = () => {
   const handleCancel = () => {
     setSubscription('');
     setGroup('');
+    setRegion('');
     setSelectedNames([]); // 清除选中的名称
     setQuantity(''); // 清除数量
     setErrors({});
@@ -196,7 +198,7 @@ const ManPage: React.FC = () => {
           <FormControl component="fieldset" sx={{ marginTop: 2 }}>
             <RadioGroup row value={option} onChange={(e) => setOption(e.target.value)}>
             <FormControlLabel value="all" control={<Radio />} label="All" />
-            <FormControlLabel value="case" control={<Radio />} label="Case" />
+            {/* <FormControlLabel value="case" control={<Radio />} label="Case" /> */}
             </RadioGroup>
           </FormControl>
            {/* 当选择 case 时显示复选框 */}
