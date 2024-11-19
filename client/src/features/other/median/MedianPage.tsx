@@ -5,7 +5,7 @@ import { Overlay } from '../../../common/constants/constants';
 import LoadingComponent from '../../../common/components/CustomLoading';
 
 const MedianPage: React.FC = () => {
-  const [folderPath, setFolderPath] = useState<string>('D:\\Tests\\Alt\\Latency'); // 默认路径
+  const [folderPath, setFolderPath] = useState<string>('D:\\Tests\\Alt\\Latency'); // Default path
   const [loading, setLoading] = useState<boolean>(false);
 
   // 处理路径输入框的变化
@@ -18,14 +18,14 @@ const MedianPage: React.FC = () => {
     event.preventDefault();
 
     if (!folderPath) {
-      swal("错误!", "路径不能为空", "error");
+      swal("Error!", "Path cannot be empty", "error");
       return;
     }
 
     swal({
-      title: "确认操作",
-      text: "开始处理该文件夹吗？",
-      buttons: ["取消", "确认"],
+      title: "Confirm Action",
+      text: "Do you want to start processing this folder?",
+      buttons: ["Cancel", "Confirm"],
       dangerMode: true,
     }).then((willSubmit) => {
       if (willSubmit) {
@@ -44,7 +44,7 @@ const MedianPage: React.FC = () => {
               // 返回的是 Excel 文件内容
               return response.blob();
             } else {
-              throw new Error("无法生成报告");
+              throw new Error("Unable to generate report");
             }
           })
           .then(blob => {
@@ -52,13 +52,13 @@ const MedianPage: React.FC = () => {
             const downloadUrl = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = downloadUrl;
-            link.download = 'Median_Report.xlsx'; // 设置下载文件名
-            link.click(); // 触发下载
-            swal("成功!", "文件夹处理成功！Excel 报告已下载！", "success");
+            link.download = 'Median_Report.xlsx'; // Set the download file name
+            link.click(); // Trigger the download
+            swal("Success!", "Folder processed successfully! Excel report has been downloaded!", "success");
           })
           .catch(error => {
             console.error(error);
-            swal("错误!", "处理文件夹时发生错误", "error");
+            swal("Error!", "An error occurred while processing the folder", "error");
           })
           .finally(() => {
             setLoading(false);
@@ -74,7 +74,7 @@ const MedianPage: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
           <TextField
             value={folderPath}
-            onChange={handleFolderPathChange} // 用户修改路径
+            onChange={handleFolderPathChange} // User modifies the path
             variant="outlined"
             label="Folder Path"
             fullWidth
@@ -83,13 +83,13 @@ const MedianPage: React.FC = () => {
         </Box>
         <Box sx={{ mt: 2 }}>
           <Button type="submit" variant="contained" color="primary" disabled={loading}>
-          submit
+            Submit
           </Button>
         </Box>
       </form>
       {loading && (
         <Overlay>
-          <LoadingComponent message='正在处理，请稍候...' />
+          <LoadingComponent message='Processing, please wait...' />
         </Overlay>
       )}
     </Box>
