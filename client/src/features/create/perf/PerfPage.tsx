@@ -24,8 +24,8 @@ const PerfPage: React.FC = () => {
   const formattedDate = `${month}${day}`; // 格式化为 MMDD
   const [subscription, setSubscription] = useState("");
   const [group, setGroup] = useState("");
-  const [name, setName] = useState(""); // 用于 BVT 的 name
-  const [region, setRegion] = useState(""); // 用于 BVT 的 region
+  const [name, setName] = useState(""); // 用于 Perf的 name
+  const [region, setRegion] = useState(""); // 用于 Perf的 region
   const [quantity, setQuantity] = useState(""); // 用于 MAN 的数量
   const [time, setTime] = useState(""); // 用于 PERF 的时间
   const [cacheName, setCacheName] = useState(

@@ -426,20 +426,20 @@ namespace redis.WebAPi.Controllers
                         }
                     }
                     opt.RegionName = redisReques.region;
-                    string cacheName = "Manual-Test-" + opt.Tag[0] + redisReques.region.Replace(" ", "") + currentDate;
+                    string cacheName = "ManualTest-" + opt.Tag[0] + redisReques.region.Replace(" ", "") + currentDate;
                     _redisCollection.CreateCache(cacheName, opt, redisReques.group);
 
                     string cacheName2;
                     if (ifGeo == true && redisReques.region == "Central US EUAP")
                     {
                         opt.RegionName = "East US";
-                        cacheName2 = "Manual-Test-" + opt.Tag[0] + redisReques.region.Replace(" ", "") + currentDate;
+                        cacheName2 = "ManualTest-" + opt.Tag[0] + redisReques.region.Replace(" ", "") + currentDate;
                         _redisCollection.CreateCache(cacheName2, opt, redisReques.group);
                     }
                     else
                     {
                         opt.RegionName = "Southeast Asia";
-                        cacheName2 = "Manual-Test-" + opt.Tag[0] + redisReques.region.Replace(" ", "") + currentDate;
+                        cacheName2 = "ManualTest-" + opt.Tag[0] + redisReques.region.Replace(" ", "") + currentDate;
                         _redisCollection.CreateCache(cacheName2, opt, redisReques.group);
                     }
                 }));

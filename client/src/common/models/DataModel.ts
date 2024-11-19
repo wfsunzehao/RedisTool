@@ -14,3 +14,8 @@ export interface PerfModel {
   group?: string;
   sku?: string;
 }
+export interface ManModel {
+  subscription?: string;
+  group?: string;
+  region?: string;
+}
