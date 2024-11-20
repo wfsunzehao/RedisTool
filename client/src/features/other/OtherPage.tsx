@@ -5,6 +5,7 @@ import NavPage from '../../common/layout/NavPage';
 const leftLinks = [
   { title: 'insert', path: '/other/insert', icon: <Assignment /> },
   { title: 'median', path: '/other/median', icon: <Assignment /> },
+  { title: 'signal', path: '/other/signal', icon: <Assignment /> },
 ];
 
 const OtherPage: React.FC = () => {

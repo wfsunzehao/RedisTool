@@ -1,8 +1,7 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Azure.Identity;
-using Azure.ResourceManager;
-using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.SignalR;
+using redis.WebAPi.Controllers.Create;
 using redis.WebAPi.Service;
 using redis.WebAPi.Service.AzureShared;
 using redis.WebAPi.Service.IService;
@@ -15,20 +14,23 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//add configuration 0909
+//Add SignalR service
+builder.Services.AddSignalR();
+//Add configuration 0909
 builder.Services.AddCors();
+
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
 
-    // 注册 ArmClientFactory，并从配置中传递订阅 ID
+    // Register ArmClientFactory and pass the subscription ID from the configuration
     containerBuilder.Register(c =>
     {
         
         return new AzureClientFactory();
     }).SingleInstance();
 
-    // 注册 SubscriptionResourceService，延迟生成 SubscriptionResource
+    // Registration of SubscriptionResourceService, delayed generation of SubscriptionResource
     containerBuilder.RegisterType<SubscriptionResourceService>().As<ISubscriptionResourceService>().SingleInstance();
 
     containerBuilder.RegisterType<RedisCollectionService>().As<IRedisCollection>().SingleInstance();
@@ -50,16 +52,18 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(opt=> 
     {
-        //允许所有来源
+        //Allow all sources
         //opt=> .AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()
-        //允许指定来源
-        opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+        //Allowed to specify sources
+        opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000").AllowCredentials(); ;
         opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://172.29.20.156:3000");
     });
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.MapHub<CreateHub>("/createHub");
 
 app.MapControllers();
 
