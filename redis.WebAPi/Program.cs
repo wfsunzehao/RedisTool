@@ -1,7 +1,7 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.SignalR;
-using redis.WebAPi.Controllers.Create;
+using redis.WebAPI.Controllers.Create;
 using redis.WebAPi.Service;
 using redis.WebAPi.Service.AzureShared;
 using redis.WebAPi.Service.IService;
