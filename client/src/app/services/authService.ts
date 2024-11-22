@@ -3,8 +3,8 @@ import { InteractiveBrowserCredential } from '@azure/identity';
 
 // 配置 Azure AD 信息
 const tenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47';  // Azure 租户 ID
-const clientId = 'd12243c1-a5bb-4217-92ba-c0da3d5c10ab';  // Azure 应用客户端 ID
-//const redirectUri = 'http://localhost:3000';  // 应用的重定向 URI
+const clientId = '04b07795-8ddb-461a-bbee-02f9e1bf7b46';  // Azure 应用客户端 ID
+const redirectUri = 'http://localhost:3000';  // 应用的重定向 URI
 
 export const getAccessToken = async () => {
   try {
@@ -12,7 +12,7 @@ export const getAccessToken = async () => {
     const credential = new InteractiveBrowserCredential({
       tenantId,
       clientId,
-      //redirectUri,
+      redirectUri,
     });
 
     // 获取访问 token

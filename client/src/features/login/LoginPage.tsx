@@ -1,36 +1,48 @@
-// src/components/LoginPage.tsx
 import React, { useState } from 'react';
-import { getAccessToken, sendTokenToBackend } from '../../app/services/authService';
+import axios from 'axios';
 
 const LoginPage: React.FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
-  const handleLogin = async () => {
-    try {
-      // 获取 token
-      const accessToken = await getAccessToken();
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
 
-      // 将 token 发送到后端
-      //await sendTokenToBackend(accessToken);
-      console.log(accessToken);
+        try {
+            const response = await axios.post('https://localhost:7179/api/auth/login', {
+                username,
+                password
+            });
 
-      // 登录成功后更新状态
-      //setIsLoggedIn(true);
-    } catch (error) {
-      console.error("Login failed:", error);
-    }
-  };
+            localStorage.setItem('authToken', response.data.token);  // 保存 JWT
+            alert('Login successful!');
+        } catch (error) {
+            setError('Invalid username or password.');
+        }
+    };
 
-  return (
-    <div>
-      <h1>Login with Azure AD</h1>
-      {!isLoggedIn ? (
-        <button onClick={handleLogin}>Login</button>
-      ) : (
-        <p>Logged in successfully!</p>
-      )}
-    </div>
-  );
+    return (
+        <div>
+            <h2>Login</h2>
+            {error && <div style={{ color: 'red' }}>{error}</div>}
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    );
 };
 
 export default LoginPage;
