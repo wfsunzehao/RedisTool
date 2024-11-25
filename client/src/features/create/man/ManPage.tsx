@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 import swal from 'sweetalert';
 import agent from '../../../app/api/agent';
-import { DataModel } from '../../../common/models/DataModel';
+import { ManModel } from '../../../common/models/DataModel';
 import { ManualTestCaseNames,Overlay, subscriptionList } from '../../../common/constants/constants';
 import LoadingComponent from '../../../common/components/CustomLoading';
 import { useMessage } from '../../../app/context/MessageContext';
@@ -31,8 +31,9 @@ import { handleGenericSubmit } from '../../../app/util/util';
 const ManPage: React.FC = () => {
   const [subscription, setSubscription] = useState('');
   const [group, setGroup] = useState('');
-  const [name, setName] = useState(''); 
+  // const [name, setName] = useState(''); 
   const [loading, setLoading] = useState(false);
+  const [region, setRegion] = useState(""); // 用于 BVT 的 region
   const [groupList, setGroupList] = useState<string[]>([]);
   const [selectedNames, setSelectedNames] = useState<string[]>([]); // 用于复选框的选中状态
   const [option, setOption] = useState('all'); // 新增状态用于单选框
@@ -53,6 +54,7 @@ const ManPage: React.FC = () => {
     const newErrors: { [key: string]: string } = {};
     if (!subscription) newErrors.subscription = "订阅不能为空";
     if (!group) newErrors.group = "组不能为空";
+    if (!region) newErrors.region = "区域不能为空";
     if (option === 'case' && selectedNames.length === 0) newErrors.selectedNames = "至少选择一个名称"; // 校验
     if (option === 'case' && selectedNames.length === 1 && quantity.trim() === '') {
       newErrors.quantity = "数量不能为空"; // 仅在选择一个时校验数量
@@ -61,21 +63,20 @@ const ManPage: React.FC = () => {
     return Object.keys(newErrors).length === 0; // 返回是否有错误
   };
 
-  const apiPathFunction = async (data: DataModel) => {
+  const apiPathFunction = async (data: ManModel) => {
     return await agent.Create.sendManJson(data); // 或其他 API 调用
   };
   const handleSubmit = (event: React.FormEvent) => {
       // 提交逻辑
-        const data: DataModel = {
-          name,
-          region: 'Central US EUAP', // 这里替换为实际的region值
+        const data: ManModel = {
+          
+          region: region, // 这里替换为实际的region值
           subscription,
           group,
-          port:'6379',
-          ...(option === 'case' && {
-            cases: selectedNames,
-            ...(selectedNames.length === 1 && { quantity: quantity}), // 仅在选择一个case时添加数量
-          }),
+          // ...(option === 'case' && {
+          //   cases: selectedNames,
+          //   ...(selectedNames.length === 1 && { quantity: quantity}), // 仅在选择一个case时添加数量
+          // }),
           // 添加其他字段的值
         };
         const customMessage = "Once started, the cache used in MAN will be created!";     
@@ -85,6 +86,7 @@ const ManPage: React.FC = () => {
   const handleCancel = () => {
     setSubscription('');
     setGroup('');
+    setRegion('');
     setSelectedNames([]); // 清除选中的名称
     setQuantity(''); // 清除数量
     setErrors({});
@@ -113,13 +115,17 @@ const ManPage: React.FC = () => {
           setGroup(value);
           setErrors(prevErrors => ({ ...prevErrors, group: '' })); // 清除组错误
           break;
-        case 'name':
-          setName(value);
-          setErrors(prevErrors => ({ ...prevErrors, name: '' })); // 清除名称错误
-          break;
+        // case 'name':
+        //   setName(value);
+        //   setErrors(prevErrors => ({ ...prevErrors, name: '' })); // 清除名称错误
+        //   break;
         case 'quantity':
           setQuantity(value);
           setErrors(prevErrors => ({ ...prevErrors, quantity: '' })); // 清除数量错误
+          break;
+        case 'region':
+          setRegion(value);
+          setErrors(prevErrors => ({ ...prevErrors, region: '' })); // 清除地区错误
           break;
         default:
           break;
@@ -170,11 +176,29 @@ const ManPage: React.FC = () => {
               ))}
             </TextField>
           </FormControl>
+          <FormControl variant="outlined" sx={{ width: "100%", marginTop: 2 }}>
+            <TextField
+              select
+              label="Region"
+              value={region}
+              onChange={handleInputChange('region')}
+              variant="outlined"
+              error={!!errors.region} // 判断是否有错误
+              helperText={errors.region} // 显示错误信息
+              fullWidth
+            >
+              {["East US 2 EUAP","Central US EUAP","East US"].map((item) => (
+                <MenuItem key={item} value={item}>
+                  {item}
+                </MenuItem>
+              ))}
+            </TextField>
+          </FormControl>
           {/* 添加单选框 */}
           <FormControl component="fieldset" sx={{ marginTop: 2 }}>
             <RadioGroup row value={option} onChange={(e) => setOption(e.target.value)}>
             <FormControlLabel value="all" control={<Radio />} label="All" />
-            <FormControlLabel value="case" control={<Radio />} label="Case" />
+            {/* <FormControlLabel value="case" control={<Radio />} label="Case" /> */}
             </RadioGroup>
           </FormControl>
            {/* 当选择 case 时显示复选框 */}

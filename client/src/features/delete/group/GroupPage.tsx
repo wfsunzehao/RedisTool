@@ -90,29 +90,32 @@ const GroupPage: React.FC = () => {
   // 订阅选择改变时
   const handleSubChange = (subscriptionid: string) => {
     setSubscription(subscriptionid);
+    setGroup(''); // 清空组选择框
+    setResourceList([]); // 清空资源列表
+    setShowResourceBox(false); // 隐藏资源框
     setErrors(prevErrors => ({ ...prevErrors, subscription: '' })); // 清除订阅错误
     agent.Create.getGroup(subscriptionid)
       .then(response => { setGroupList(response); })
       .catch(error => console.log(error.response));
   };
 
-  // 组选择改变时
-  const handleGroupChange = (group: string) => {
-    setGroup(group);
-    setErrors(prevErrors => ({ ...prevErrors, group: '' })); // 清除组错误
+ // 组选择改变时
+ const handleGroupChange = (group: string) => {
+  setGroup(group);
+  setErrors(prevErrors => ({ ...prevErrors, group: '' })); // 清除组错误
 
-    // 调用API获取该组的资源列表
-    agent.Delete.getResource(subscription,group)
-      .then(response => {
-        setResourceList(response);  // 保存资源列表
-        setShowResourceBox(true);    // 显示资源框
-      })
-      .catch(error => {
-        console.log(error.response);
-        setResourceList([]);  // 清空资源列表
-        setShowResourceBox(false); // 隐藏资源框
-      });
-  };
+  // 调用API获取该组的资源列表
+  agent.Delete.getResource(subscription,group)
+    .then(response => {
+      setResourceList(response);  // 保存资源列表
+      setShowResourceBox(true);    // 显示资源框
+    })
+    .catch(error => {
+      console.log(error.response);
+      setResourceList([]);  // 清空资源列表
+      setShowResourceBox(false); // 隐藏资源框
+    });
+};
 
   const handleInputChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { value } = event.target;

@@ -13,6 +13,8 @@ import DeletePage from "../../features/delete/DeletePage";
 import InsertPage from "../../features/other/insert/InsertPage";
 import MedianPage from "../../features/other/median/MedianPage";
 import GroupPage from "../../features/delete/group/GroupPage";
+import Signal from "../../features/other/signalR/Signal";
+import LoginPage from "../../features/login/LoginPage";
 
 export const router = createBrowserRouter([
   {
@@ -41,9 +43,10 @@ export const router = createBrowserRouter([
         children: [
           { path: "insert", element: <InsertPage /> },
           { path: "median", element: <MedianPage /> },
+          { path: "signal", element: <Signal /> },
         ],
       },
-      { path: "test", element: <CreatePage /> },
+      { path: "login", element: <LoginPage /> },
       { path: "server-error", element: <ServerError /> },
       { path: "not-found", element: <NotFound /> }, //404
       { path: "*", element: <Navigate replace to="/not-found" /> },

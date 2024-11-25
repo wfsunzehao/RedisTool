@@ -6,7 +6,6 @@ import {
   MenuItem,
   TextField,
 } from '@mui/material';
-import swal from 'sweetalert';
 import agent from '../../../app/api/agent';
 import { DataModel } from '../../../common/models/DataModel';
 
@@ -19,10 +18,11 @@ const InsertPage: React.FC = () => {
   const [subscription, setSubscription] = useState('');
   const [group, setGroup] = useState('');
   const [name, setName] = useState(''); 
-  const [quantity, setQuantity] = useState<number>(); // 数量
+  const [quantity, setQuantity] = useState(''); // 数量
   const [loading, setLoading] = useState(false);
   const [groupList, setGroupList] = useState<string[]>([]);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [resourceList, setResourceList] = useState<string[]>([]); // 资源列表状态
   //初始化
   useEffect(() => {
     //默认显示Cache Team - Vendor CTI Testing 2
@@ -45,26 +45,28 @@ const InsertPage: React.FC = () => {
 
 
   const apiPathFunction = async (data: DataModel) => {
-    return await agent.Create.sendManJson(data); // 或其他 API 调用
+    return await agent.Other.sendInsertJson(data); // 或其他 API 调用
   };
   const handleSubmit = (event: React.FormEvent) => {
       // 提交逻辑
       const data: DataModel = {
-        name:name,
+        name,
         region: 'Central US EUAP', // 这里替换为实际的region值
         subscription,
         group,
-        port:'6379'
+        port:'6379',
         // 添加其他字段的值
-      };    
-        handleGenericSubmit(event, data, apiPathFunction, CheckForm, setLoading); 
+        numKeysPerShard:quantity,
+      };
+      const customMessage = "Once started, the cache will be inserted!";    
+      handleGenericSubmit(event, data, apiPathFunction, CheckForm, setLoading,customMessage); 
   };
   // 处理取消按钮点击事件
   const handleCancel = () => {
     setSubscription('');
     setGroup('');
     setName(''); // 清空名称输入
-    setQuantity(undefined); // 清空数量输入
+    setQuantity(''); // 清空数量输入
     setErrors({});
   };
   // 处理下拉框改变事件
@@ -75,21 +77,34 @@ const InsertPage: React.FC = () => {
       .then(response => { setGroupList(response); })
       .catch(error => console.log(error.response));
   };
+  // 组选择改变时
+  const handleGroupChange = (group: string) => {
+    setGroup(group);
+    setErrors(prevErrors => ({ ...prevErrors, group: '' })); // 清除组错误
+
+    // 调用API获取该组的资源列表
+    agent.Delete.getResource(subscription,group)
+      .then(response => {
+        setResourceList(response);  // 保存资源列表
+      })
+      .catch(error => {
+        console.log(error.response);
+        setResourceList([]);  // 清空资源列表
+      });
+  };
   const handleInputChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { value } = event.target;
 
     switch (field) {
       case 'group':
-        setGroup(value);
-        setErrors(prevErrors => ({ ...prevErrors, group: '' })); // 清除组错误
+        handleGroupChange(value);
         break;
       case 'name':
         setName(value);
         setErrors(prevErrors => ({ ...prevErrors, name: '' })); // 清除名称错误
         break;
       case 'quantity':
-        const quantityValue = parseFloat(value);
-        setQuantity(isNaN(quantityValue) ? undefined : quantityValue); // 处理 NaN 的情况
+        setQuantity(value);
         setErrors(prevErrors => ({ ...prevErrors, quantity: '' })); // 清除数量错误
         break;
       default:
@@ -133,7 +148,7 @@ const InsertPage: React.FC = () => {
               error={!!errors.group}
               helperText={errors.group}
               fullWidth
-              disabled={loading}
+              disabled={loading || !subscription}  // 只有选择了subscription后才能选择group
             >
               {groupList.map((item) => (
                 <MenuItem key={item} value={item}>
@@ -144,6 +159,7 @@ const InsertPage: React.FC = () => {
           </FormControl>
           <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
             <TextField
+              select
               label="Name"
               value={name}
               onChange={handleInputChange('name')} // 使用通用方法
@@ -151,8 +167,13 @@ const InsertPage: React.FC = () => {
               error={!!errors.name}
               helperText={errors.name}
               fullWidth
-              disabled={loading}
+              disabled={loading || !group}  // 只有选择了group后才能选择name
             >
+              {resourceList.map((item) => (
+                <MenuItem key={item} value={item}>
+                  {item}
+                </MenuItem>
+              ))}
             </TextField>
           </FormControl>
           <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
@@ -164,7 +185,7 @@ const InsertPage: React.FC = () => {
               error={!!errors.quantity}
               helperText={errors.quantity}
               fullWidth
-              disabled={loading}
+              disabled={loading || !name}  // 只有选择了name后才能输入quantity
             >
             </TextField>
           </FormControl>
@@ -180,7 +201,7 @@ const InsertPage: React.FC = () => {
       </form>
       {loading && (
         <Overlay>
-          <LoadingComponent message='正在提交，请稍候...' />
+          <LoadingComponent message='Submitting, please wait...' />
         </Overlay>
       )}
     </Box>

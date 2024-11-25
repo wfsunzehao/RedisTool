@@ -1,42 +1,57 @@
-using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Azure.Identity;
-using Azure.ResourceManager;
-using Microsoft.Extensions.Options;
-using redis.WebAPi.Service;
-using redis.WebAPi.Service.AzureShared;
+using Autofac;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
+using System.Text;
+using redis.WebAPI.Controllers.Create;
 using redis.WebAPi.Service.IService;
+using redis.WebAPi.Service.AzureShared;
+using redis.WebAPi.Service;
+using redis.WebAPi.Repository.AppDbContext;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Swagger/OpenAPI configuration
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//add configuration 0909
+// SignalR service
+builder.Services.AddSignalR();
+// Add CORS policy
 builder.Services.AddCors();
+
+// JWT Authentication configuration
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false; // ø™∑¢ª∑æ≥ø…“‘≤ª«ø÷∆ HTTPS
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+            ValidAudience = builder.Configuration["JwtSettings:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"]))
+        };
+    });
+
+// Configure database connection
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//  π”√ Autofac ◊˜Œ™“¿¿µ◊¢»Î»›∆˜
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
-
-    // Ê≥®ÂÜå ArmClientFactoryÔºåÂπ∂‰ªéÈÖçÁΩÆ‰∏≠‰º†ÈÄíËÆ¢ÈòÖ ID
-    containerBuilder.Register(c =>
-    {
-        
-        return new AzureClientFactory();
-    }).SingleInstance();
-
-    // Ê≥®ÂÜå SubscriptionResourceServiceÔºåÂª∂ËøüÁîüÊàê SubscriptionResource
+    // Register other services
+    containerBuilder.RegisterType<AzureClientFactory>().SingleInstance();
     containerBuilder.RegisterType<SubscriptionResourceService>().As<ISubscriptionResourceService>().SingleInstance();
-
     containerBuilder.RegisterType<RedisCollectionService>().As<IRedisCollection>().SingleInstance();
-
     containerBuilder.RegisterType<StackExchangeService>().As<IStackExchangeService>().SingleInstance();
-
     containerBuilder.RegisterType<ResourceDeletionService>().As<IResourceDeletionService>().SingleInstance();
-
 });
 
 var app = builder.Build();
@@ -48,19 +63,24 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(opt=> 
-    {
-        //ÂÖÅËÆ∏ÊâÄÊúâÊù•Ê∫ê
-        //opt=> .AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()
-        //ÂÖÅËÆ∏ÊåáÂÆöÊù•Ê∫ê
-        opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
-        opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://172.29.20.156:3000");
-    });
+// Enable CORS
+app.UseCors(opt =>
+{
+    opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000").AllowCredentials();
+    opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://172.29.20.156:3000");
+});
 
+// Enable HTTPS redirection
 app.UseHttpsRedirection();
 
+// Enable authentication and authorization
+app.UseAuthentication();
 app.UseAuthorization();
 
+// Map SignalR Hub
+app.MapHub<CreateHub>("/createHub");
+
+// Map controllers
 app.MapControllers();
 
 app.Run();

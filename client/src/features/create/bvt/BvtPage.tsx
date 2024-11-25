@@ -244,7 +244,7 @@ const BvtPage: React.FC = () => {
             </form>
             {loading && (
               <Overlay>
-                <LoadingComponent message='正在提交，请稍候...' />
+                <LoadingComponent message='Submitting, please wait...' />
               </Overlay>
             )}
           </Box>            
