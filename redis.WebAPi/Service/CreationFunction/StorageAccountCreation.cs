@@ -1,7 +1,7 @@
 ﻿using Azure.ResourceManager.Resources;
 using Azure.ResourceManager.Storage;
 
-namespace redis.WebAPi.Service.AzureShared.CreationFunction
+namespace redis.WebAPi.Service.CreationFunction
 {
     public class StorageAccountCreation
     {

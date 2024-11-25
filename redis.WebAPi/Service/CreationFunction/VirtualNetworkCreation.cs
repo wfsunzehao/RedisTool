@@ -2,7 +2,7 @@
 using Azure.ResourceManager.Resources;
 using Azure;
 
-namespace redis.WebAPi.Service.AzureShared.CreationFunction
+namespace redis.WebAPi.Service.CreationFunction
 {
     public class VirtualNetworkCreation
     {

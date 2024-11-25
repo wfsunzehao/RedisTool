@@ -3,8 +3,9 @@ using Azure;
 using Azure.Core;
 using Azure.ResourceManager.RedisEnterprise.Models;
 using redis.WebAPi.Model;
+using redis.WebAPi.Service.AzureShared;
 
-namespace redis.WebAPi.Service.AzureShared.CreationFunction
+namespace redis.WebAPi.Service.CreationFunction
 {
     public class EnterpriseCreation
     {

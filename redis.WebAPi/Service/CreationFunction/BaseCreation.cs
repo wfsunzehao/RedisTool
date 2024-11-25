@@ -2,8 +2,9 @@
 using Azure.ResourceManager.Redis;
 using Azure;
 using Azure.Core;
+using redis.WebAPi.Service.AzureShared;
 
-namespace redis.WebAPi.Service.AzureShared.CreationFunction
+namespace redis.WebAPi.Service.CreationFunction
 {
     public class BaseCreation
     {
@@ -64,9 +65,9 @@ namespace redis.WebAPi.Service.AzureShared.CreationFunction
             {
                 parameters.RedisConfiguration = options.redisCommonConfiguration;
             }
-            
+
             parameters.RedisConfiguration.AdditionalProperties.Add("CacheVmType", BinaryData.FromString("\"IaaS\""));
-           
+
             if (skuobj.Name.ToString() == "Premium" && options.MinShards.HasValue && options.Cluster.HasValue && options.Cluster.Value)
             {
                 parameters.ShardCount = options.MinShards.Value;
@@ -86,7 +87,7 @@ namespace redis.WebAPi.Service.AzureShared.CreationFunction
             }
             // If RedisVersion is not specified, default will be used
 
-            if (forceCreateReplicas || (options.ReplicasPerPrimary.HasValue && skuobj.Name.ToString() == "Premium"))
+            if (forceCreateReplicas || options.ReplicasPerPrimary.HasValue && skuobj.Name.ToString() == "Premium")
             {
                 parameters.ReplicasPerMaster = options.ReplicasPerPrimary;
                 parameters.ReplicasPerPrimary = options.ReplicasPerPrimary;
