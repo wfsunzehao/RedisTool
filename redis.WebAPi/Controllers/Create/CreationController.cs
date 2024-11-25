@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using redis.WebAPi.Model;
 using redis.WebAPi.Service;
 using redis.WebAPi.Service.AzureShared;
-using redis.WebAPi.Service.AzureShared.CreationFunction;
 using redis.WebAPi.Service.IService;
 using System.Data;
 using System;
@@ -18,6 +17,7 @@ using Azure.ResourceManager.Network;
 using Azure.ResourceManager.Network.Models;
 using Azure.ResourceManager.RedisEnterprise;
 using Microsoft.Identity.Client;
+using redis.WebAPi.Service.CreationFunction;
 
 namespace redis.WebAPi.Controllers
 {

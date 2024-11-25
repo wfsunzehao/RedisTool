@@ -2,8 +2,8 @@
 using Azure.ResourceManager.Redis;
 using redis.WebAPi.Service.IService;
 using Azure.ResourceManager.Resources;
-using redis.WebAPi.Service.AzureShared.CreationFunction;
 using redis.WebAPi.Service.AzureShared;
+using redis.WebAPi.Service.CreationFunction;
 
 namespace redis.WebAPi.Service
 {
