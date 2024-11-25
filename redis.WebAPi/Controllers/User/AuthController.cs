@@ -21,6 +21,7 @@ public class AuthController : ControllerBase
         _configuration = configuration;
     }
 
+    // 登录功能
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest model)
     {
@@ -35,10 +36,45 @@ public class AuthController : ControllerBase
         return Ok(new { Token = token });
     }
 
+    // 注册功能
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] RegisterRequest model)
+    {
+        // 检查是否已存在相同的用户名或电子邮件
+        if (await _context.Users.AnyAsync(u => u.Username == model.Username))
+        {
+            return BadRequest("Username already exists.");
+        }
+
+        if (await _context.Users.AnyAsync(u => u.Email == model.Email))
+        {
+            return BadRequest("Email is already in use.");
+        }
+
+        // 对密码进行哈希处理
+        var hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.Password);
+
+        // 创建新的用户
+        var user = new User
+        {
+            Username = model.Username,
+            PasswordHash = hashedPassword,
+            Email = model.Email,
+            Role = model.Role ?? "user",  // 如果没有提供角色，则默认为 "user"
+        };
+
+        // 将用户添加到数据库
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
+
+        // 返回成功消息
+        return Ok(new { Message = "User registered successfully." });
+    }
+
+    // 生成 JWT Token
     private string GenerateJwtToken(User user)
     {
-        var claims = new[]
-        {
+        var claims = new[] {
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Role, user.Role)
@@ -57,8 +93,4 @@ public class AuthController : ControllerBase
     }
 }
 
-public class LoginRequest
-{
-    public string Username { get; set; }
-    public string Password { get; set; }
-}
+

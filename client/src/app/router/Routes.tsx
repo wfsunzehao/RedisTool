@@ -15,6 +15,7 @@ import MedianPage from "../../features/other/median/MedianPage";
 import GroupPage from "../../features/delete/group/GroupPage";
 import Signal from "../../features/other/signalR/Signal";
 import LoginPage from "../../features/login/LoginPage";
+import RegisterPage from "../../features/login/RegisterPage";
 
 export const router = createBrowserRouter([
   {
@@ -47,6 +48,7 @@ export const router = createBrowserRouter([
         ],
       },
       { path: "login", element: <LoginPage /> },
+      { path: "register", element: <RegisterPage /> },
       { path: "server-error", element: <ServerError /> },
       { path: "not-found", element: <NotFound /> }, //404
       { path: "*", element: <Navigate replace to="/not-found" /> },
