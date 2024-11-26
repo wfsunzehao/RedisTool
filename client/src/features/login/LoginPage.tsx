@@ -1,99 +1,177 @@
+// src/pages/LoginPage.tsx
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';  // 导入 useNavigate
+import { useNavigate } from 'react-router-dom';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from '@mui/material';
+import { useAuth } from '../../app/context/AuthContext';
+ // 引入 AuthContext
 
-const AuthPage: React.FC = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [email, setEmail] = useState('');
-    const [error, setError] = useState('');
-    const [isLogin, setIsLogin] = useState(true);  // 控制是否显示登录表单
+const LoginPage: React.FC = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLogin, setIsLogin] = useState(true);
+  const [isChangePassword, setIsChangePassword] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [targetUsername, setTargetUsername] = useState('');
 
-    const navigate = useNavigate();  // 获取 navigate 函数
+  const { setIsLoggedIn, setToken } = useAuth();  // 从 AuthContext 中获取方法
+  const navigate = useNavigate();
 
-    // 处理登录请求
-    const handleLogin = async (event: React.FormEvent) => {
-        event.preventDefault();
+  const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
 
-        try {
-            const response = await axios.post('https://localhost:7179/api/Auth/login', {
-                username,
-                password
-            });
+    try {
+      const response = await axios.post('https://localhost:7179/api/Auth/login', {
+        username,
+        password
+      });
 
-            localStorage.setItem('authToken', response.data.token);  // 保存 JWT
-            alert('Login successful!');
-            
-            // 登录成功后跳转到主页
-            navigate('/home');  // 根据你的路由配置来决定跳转的路径
-        } catch (error) {
-            setError('Invalid username or password.');
+      // 登录成功后保存 token，并更新登录状态
+      localStorage.setItem('authToken', response.data.token);
+      setToken(response.data.token);  // 更新状态中的 token
+      setIsLoggedIn(true);  // 更新登录状态
+      //alert('Login successful!');
+      navigate('/');  // 登录成功后跳转到主页
+    } catch (error) {
+      setError('Invalid username or password.');
+    }
+  };
+
+  const handleRegister = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    try {
+      const response = await axios.post('https://localhost:7179/api/Auth/register', {
+        username,
+        password,
+        email
+      });
+
+      alert('Registration successful! You can now log in.');
+      setIsLogin(true);
+    } catch (error) {
+      setError('Registration failed. Please check your details.');
+    }
+  };
+
+  const handleChangePassword = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      setError('You must be logged in to change your password.');
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        'https://localhost:7179/api/Auth/change-password',
+        { oldPassword, newPassword, targetUsername },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-    };
+      );
 
-    // 处理注册请求
-    const handleRegister = async (event: React.FormEvent) => {
-        event.preventDefault();
+      alert('Password changed successfully!');
+      setIsChangePassword(false);
+    } catch (error) {
+      setError('Failed to change password. Please check your old password.');
+    }
+  };
 
-        try {
-            const response = await axios.post('https://localhost:7179/api/Auth/register', {
-                username,
-                password,
-                email
-            });
+  return (
+    <Dialog open={true} onClose={() => {}} fullWidth maxWidth="sm">
+      <DialogTitle>{isChangePassword ? 'Change Password' : isLogin ? 'Login' : 'Register'}</DialogTitle>
+      <DialogContent>
+        {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
 
-            alert('Registration successful! You can now log in.');
-            setIsLogin(true);  // 注册成功后切换回登录界面
-        } catch (error) {
-            setError('Registration failed. Please check your details.');
-        }
-    };
+        {isChangePassword ? (
+          <form onSubmit={handleChangePassword}>
+            <TextField
+              label="Username"
+              value={targetUsername || username}
+              disabled={!isAdmin}
+              onChange={(e) => setTargetUsername(e.target.value)}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              label="Old Password"
+              type="password"
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              label="New Password"
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              fullWidth
+              margin="normal"
+            />
+            <DialogActions>
+              <Button type="submit" color="primary">Change Password</Button>
+              <Button onClick={() => setIsChangePassword(false)} color="secondary">Back to Login</Button>
+            </DialogActions>
+          </form>
+        ) : (
+          <form onSubmit={isLogin ? handleLogin : handleRegister}>
+            <TextField
+              label="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              fullWidth
+              margin="normal"
+              required
+            />
+            {isLogin ? null : (
+              <TextField
+                label="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                fullWidth
+                margin="normal"
+                required={!isLogin}
+              />
+            )}
+            <TextField
+              label="Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              fullWidth
+              margin="normal"
+              required
+            />
+            <DialogActions>
+              <Button type="submit" color="primary">{isLogin ? 'Login' : 'Register'}</Button>
+            </DialogActions>
+          </form>
+        )}
+      </DialogContent>
 
-    return (
-        <div>
-            <h2>{isLogin ? 'Login' : 'Register'}</h2>
-            {error && <div style={{ color: 'red' }}>{error}</div>}
-
-            {/* 根据 isLogin 显示登录或注册表单 */}
-            <form onSubmit={isLogin ? handleLogin : handleRegister}>
-                <input
-                    type="text"
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                />
-                {isLogin ? null : (
-                    <input
-                        type="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                )}
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                <button type="submit">{isLogin ? 'Login' : 'Register'}</button>
-            </form>
-
-            <div>
-                {isLogin ? (
-                    <p>
-                        Don't have an account?{' '}
-                        <button onClick={() => setIsLogin(false)}>Register here</button>
-                    </p>
-                ) : (
-                    <p>
-                        Already have an account?{' '}
-                        <button onClick={() => setIsLogin(true)}>Login here</button>
-                    </p>
-                )}
-            </div>
-        </div>
-    );
+      <DialogActions>
+        {isLogin ? (
+          <>
+            <Button onClick={() => setIsLogin(false)} color="secondary">Register here</Button>
+            <Button onClick={() => setIsChangePassword(true)} color="primary">Change Password</Button>
+          </>
+        ) : (
+          <>
+            <Button onClick={() => setIsLogin(true)} color="secondary">Login here</Button>
+          </>
+        )}
+      </DialogActions>
+    </Dialog>
+  );
 };
 
-export default AuthPage;
+export default LoginPage;

@@ -7,6 +7,7 @@ using System.Text;
 using redis.WebAPi.Model.UserModels;
 using redis.WebAPi.Repository.AppDbContext;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -21,7 +22,7 @@ public class AuthController : ControllerBase
         _configuration = configuration;
     }
 
-    // 登录功能
+    // Login functionality
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest model)
     {
@@ -32,15 +33,14 @@ public class AuthController : ControllerBase
         }
 
         var token = GenerateJwtToken(user);
-
         return Ok(new { Token = token });
     }
 
-    // 注册功能
+    // Registration functionality
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest model)
     {
-        // 检查是否已存在相同的用户名或电子邮件
+        // Check if the username or email already exists
         if (await _context.Users.AnyAsync(u => u.Username == model.Username))
         {
             return BadRequest("Username already exists.");
@@ -51,27 +51,93 @@ public class AuthController : ControllerBase
             return BadRequest("Email is already in use.");
         }
 
-        // 对密码进行哈希处理
+        // Password validation: Ensure password is at least 8 characters long and contains both letters and numbers
+        if (!IsValidPassword(model.Password))
+        {
+            return BadRequest("Password must be at least 8 characters long and contain both letters and numbers.");
+        }
+
+        // Hash the password
         var hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.Password);
 
-        // 创建新的用户
+        // Create a new user
         var user = new User
         {
             Username = model.Username,
             PasswordHash = hashedPassword,
             Email = model.Email,
-            Role = model.Role ?? "user",  // 如果没有提供角色，则默认为 "user"
+            Role = model.Role ?? "user",  // Default role is "user" if not provided
         };
 
-        // 将用户添加到数据库
+        // Add the user to the database
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
-        // 返回成功消息
+        // Return success message
         return Ok(new { Message = "User registered successfully." });
     }
 
-    // 生成 JWT Token
+    [HttpPost("change-password")]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest model)
+    {
+        var userId = GetUserIdFromToken();
+        if (userId == null)
+        {
+            return Unauthorized("User not authenticated.");
+        }
+
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == model.TargetUsername);
+        if (user == null)
+        {
+            return NotFound("User not found.");
+        }
+
+        // If the user is an admin, they can change any user's password
+        if (User.IsInRole("admin"))
+        {
+            // Allow admin to change the target user's password
+        }
+        else
+        {
+            // If the user is a regular user, they can only change their own password
+            if (userId != user.Id)
+            {
+                return Unauthorized("You can only change your own password.");
+            }
+        }
+
+        // Verify the old password
+        if (!BCrypt.Net.BCrypt.Verify(model.OldPassword, user.PasswordHash))
+        {
+            return BadRequest("Old password is incorrect.");
+        }
+
+        // Validate the complexity of the new password
+        if (!IsValidPassword(model.NewPassword))
+        {
+            return BadRequest("New password must be at least 8 characters long and contain both letters and numbers.");
+        }
+
+        // Hash the new password
+        var hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.NewPassword);
+
+        // Update the password
+        user.PasswordHash = hashedPassword;
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+
+        return Ok(new { Message = "Password changed successfully." });
+    }
+
+    // Password validation method
+    private bool IsValidPassword(string password)
+    {
+        // Password must be at least 8 characters long and contain both letters and numbers
+        var passwordRegex = new Regex(@"^(?=.*[a-zA-Z])(?=.*\d).{8,}$");
+        return passwordRegex.IsMatch(password);
+    }
+
+    // Generate JWT Token
     private string GenerateJwtToken(User user)
     {
         var claims = new[] {
@@ -91,6 +157,16 @@ public class AuthController : ControllerBase
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
+    // Get the current logged-in user's ID
+    private int? GetUserIdFromToken()
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userIdClaim))
+        {
+            return null;
+        }
+
+        return int.TryParse(userIdClaim, out var userId) ? userId : (int?)null;
+    }
 }
-
-
