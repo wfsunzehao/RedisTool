@@ -157,7 +157,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onClose }) => {
         {isLogin ? (
           <>
             <Button onClick={() => { setIsLogin(false); setIsRegister(true); }} color="secondary">Register here</Button>
-            <Button onClick={() => { setIsLogin(false); setIsChangePassword(true); }} color="primary">Forgot Password</Button>
+            <Button onClick={() => { setIsLogin(false); setIsChangePassword(true); }} color="primary">Change Password</Button>
           </>
         ) : isChangePassword ? (
           <Button onClick={() => { setIsLogin(true); setIsChangePassword(false); }} color="secondary">Back to Login</Button>
