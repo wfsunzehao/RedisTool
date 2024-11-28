@@ -1,12 +1,14 @@
-import { AppBar, Badge, Box, IconButton, List, ListItem, Popover, Divider, Avatar, MenuItem, Toolbar, Switch } from "@mui/material";
+import React, { useState } from "react";
+import { AppBar, Box, IconButton, List, ListItem, Popover, Badge, Avatar, Switch, MenuItem, Toolbar, Button, Divider } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import { NavLink } from "react-router-dom";
 import ChatIcon from '@mui/icons-material/Chat';
 import { useTheme } from "../../app/context/ThemeContext";
 import logo from '../../../public/images/wicrecend3.png';
 import { useMessage } from "../../app/context/MessageContext";
-import { useState } from "react";
 import { useAuth } from "../../app/context/AuthContext";
+import LoginPage from "../../features/login/LoginPage";
+ // 引入 LoginPage
 
 const midLinks = [
   { title: 'create', path: '/create' },
@@ -33,9 +35,10 @@ const navStyles = {
 export default function Header() {
   const { toggleTheme, isDarkMode } = useTheme();
   const { messages } = useMessage();
-  const { isLoggedIn, setIsLoggedIn } = useAuth(); // 使用 useAuth 获取登录状态
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null); // 用于控制Popover的显示
-  const [logoutAnchorEl, setLogoutAnchorEl] = useState<HTMLElement | null>(null); // 用于控制头像下拉菜单
+  const { isLoggedIn, setIsLoggedIn } = useAuth();
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [logoutAnchorEl, setLogoutAnchorEl] = useState<HTMLElement | null>(null);
+  const [openLoginDialog, setOpenLoginDialog] = useState(false); // 控制登录对话框的显示
 
   const handleChatIconClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget as HTMLElement);
@@ -46,31 +49,25 @@ export default function Header() {
   };
 
   const handleAvatarClick = (event: React.MouseEvent<HTMLElement>) => {
-    setLogoutAnchorEl(event.currentTarget);  // 显示下拉菜单
+    setLogoutAnchorEl(event.currentTarget);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('authToken');  // 清除 token
-    setIsLoggedIn(false);  // 更新登录状态
-    setLogoutAnchorEl(null);  // 关闭下拉菜单
+    localStorage.removeItem('authToken');
+    setIsLoggedIn(false);
+    setLogoutAnchorEl(null);
   };
 
   const open = Boolean(anchorEl);
   const id = open ? 'message-popover' : undefined;
-  const openLogoutMenu = Boolean(logoutAnchorEl); // 控制头像下拉菜单的打开状态
+  const openLogoutMenu = Boolean(logoutAnchorEl);
   const logoutId = openLogoutMenu ? 'logout-popover' : undefined;
 
   return (
     <AppBar position="sticky" sx={{ mb: 0 }}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Box display='flex' alignItems='center'>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
+          <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
             <MenuIcon />
           </IconButton>
           <img src={logo} alt="Logo" style={{ maxHeight: 40, marginRight: 16, objectFit: 'contain', filter: 'invert(100%) sepia(100%) saturate(0%) hue-rotate(180deg)' }} />
@@ -97,14 +94,8 @@ export default function Header() {
             open={open}
             anchorEl={anchorEl}
             onClose={handlePopoverClose}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             sx={{ transform: 'translateX(250px)' }}
           >
             {messages.length > 0 ? (
@@ -127,45 +118,37 @@ export default function Header() {
             )}
           </Popover>
 
-          {/* 头像下拉菜单 */}
           <Box sx={{ display: "flex", alignItems: "center" }}>
             {isLoggedIn ? (
-              <Avatar
-                sx={{ marginLeft: "16px" }}
-                src="/path-to-avatar.jpg"
-                alt="User Avatar"
-                onClick={handleAvatarClick} // 点击头像时显示下拉菜单
-              />
+              <Avatar sx={{ marginLeft: "16px" }} src="/path-to-avatar.jpg" alt="User Avatar" onClick={handleAvatarClick} />
             ) : (
               <List sx={{ display: "flex" }}>
-                {rightLinks.map(({ title, path }) => (
+                {rightLinks.map(({ title }) => (
                   <ListItem key={title}>
-                    <NavLink to={path}>{title}</NavLink>
+                    <Button onClick={() => setOpenLoginDialog(true)} color="inherit">
+                      {title}
+                    </Button>
                   </ListItem>
                 ))}
               </List>
             )}
           </Box>
 
-          {/* 头像下拉菜单 */}
           <Popover
             id={logoutId}
             open={openLogoutMenu}
             anchorEl={logoutAnchorEl}
-            onClose={() => setLogoutAnchorEl(null)} // 关闭下拉菜单
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
+            onClose={() => setLogoutAnchorEl(null)}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           >
-            <MenuItem onClick={handleLogout}>Logout</MenuItem> {/* 注销按钮 */}
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Popover>
         </Box>
       </Toolbar>
+
+      {/* 登录对话框 */}
+      {openLoginDialog && <LoginPage onClose={() => setOpenLoginDialog(false)} />}
     </AppBar>
   );
 }
