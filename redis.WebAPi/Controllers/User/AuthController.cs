@@ -77,6 +77,7 @@ public class AuthController : ControllerBase
         return Ok(new { Message = "User registered successfully." });
     }
 
+    // Change password functionality
     [HttpPost("change-password")]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest model)
     {
@@ -158,15 +159,52 @@ public class AuthController : ControllerBase
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    // Get the current logged-in user's ID
+    // Get the current logged-in user's ID from the JWT token
     private int? GetUserIdFromToken()
     {
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userPrincipal = GetClaimsPrincipalFromToken();
+        if (userPrincipal == null)
+        {
+            return null;
+        }
+
+        var userIdClaim = userPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userIdClaim))
         {
             return null;
         }
 
         return int.TryParse(userIdClaim, out var userId) ? userId : (int?)null;
+    }
+
+    // Extract and validate the JWT token from the request header
+    private ClaimsPrincipal GetClaimsPrincipalFromToken()
+    {
+        var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+        if (string.IsNullOrEmpty(token))
+        {
+            return null;
+        }
+
+        try
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]);
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = _configuration["JwtSettings:Issuer"],
+                ValidateAudience = true,
+                ValidAudience = _configuration["JwtSettings:Audience"],
+                ValidateLifetime = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key)
+            };
+
+            return tokenHandler.ValidateToken(token, validationParameters, out _);
+        }
+        catch
+        {
+            return null;
+        }
     }
 }
