@@ -81,42 +81,23 @@ public class AuthController : ControllerBase
     [HttpPost("change-password")]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest model)
     {
-        var userId = GetUserIdFromToken();
-        if (userId == null)
-        {
-            return Unauthorized("User not authenticated.");
-        }
-
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == model.TargetUsername);
+        // Find the user by username
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == model.Username);
         if (user == null)
         {
             return NotFound("User not found.");
         }
 
-        // If the user is an admin, they can change any user's password
-        if (User.IsInRole("admin"))
-        {
-            // Allow admin to change the target user's password
-        }
-        else
-        {
-            // If the user is a regular user, they can only change their own password
-            if (userId != user.Id)
-            {
-                return Unauthorized("You can only change your own password.");
-            }
-        }
-
         // Verify the old password
         if (!BCrypt.Net.BCrypt.Verify(model.OldPassword, user.PasswordHash))
         {
-            return BadRequest("Old password is incorrect.");
+            return Unauthorized("Old password is incorrect.");
         }
 
-        // Validate the complexity of the new password
+        // Validate the new password
         if (!IsValidPassword(model.NewPassword))
         {
-            return BadRequest("New password must be at least 8 characters long and contain both letters and numbers.");
+            return BadRequest("Password must be at least 8 characters long and contain both letters and numbers.");
         }
 
         // Hash the new password
