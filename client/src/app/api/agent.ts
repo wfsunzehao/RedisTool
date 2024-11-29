@@ -19,7 +19,7 @@ axios.interceptors.response.use(async response => {
             toast.error(data.title);
             break;
         case 401:
-            toast.error('unauthorized');
+            toast.error(data.message);
             break;
         case 404:
             router.navigate('/server-error',{state: {error: data}});
