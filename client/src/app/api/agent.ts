@@ -69,6 +69,14 @@ const Other = {
     sendMedianJson:(body: object)=>request.post(`/Median/sendMedianJson`,body),
 }
 
+const Auth= {
+    login: (username: string, password: string) => request.post(`/Auth/login`, { username, password }),
+    register: (username: string, password: string, email: string) => request.post(`/Auth/register`, { username, password, email }),
+    changePassword: (username: string, oldPassword: string, newPassword: string) => request.post(`/Auth/change-password`, { username, oldPassword, newPassword }),
+}
+
+
+
 
 const TestErrors = {
     get400Error: () => request.get('buggy/bad-request'),
@@ -84,6 +92,7 @@ const agent = {
     Create,
     Delete,
     Other,
+    Auth,
     TestErrors
 }
 
