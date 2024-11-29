@@ -29,11 +29,11 @@ public class AuthController : ControllerBase
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == model.Username);
         if (user == null || !BCrypt.Net.BCrypt.Verify(model.Password, user.PasswordHash))
         {
-            return Unauthorized("Invalid username or password.");
+            return Unauthorized(new { message = "Invalid username or password." });
         }
 
         var token = GenerateJwtToken(user);
-        return Ok(new { Token = token });
+        return Ok(new { token });
     }
 
     // Registration functionality
@@ -43,18 +43,18 @@ public class AuthController : ControllerBase
         // Check if the username or email already exists
         if (await _context.Users.AnyAsync(u => u.Username == model.Username))
         {
-            return BadRequest("Username already exists.");
+            return BadRequest(new { message = "Username already exists." });
         }
 
         if (await _context.Users.AnyAsync(u => u.Email == model.Email))
         {
-            return BadRequest("Email is already in use.");
+            return BadRequest(new { message = "Email is already in use." });
         }
 
         // Password validation: Ensure password is at least 8 characters long and contains both letters and numbers
         if (!IsValidPassword(model.Password))
         {
-            return BadRequest("Password must be at least 8 characters long and contain both letters and numbers.");
+            return BadRequest(new { message = "Password must be at least 8 characters long and contain both letters and numbers." });
         }
 
         // Hash the password
@@ -74,7 +74,7 @@ public class AuthController : ControllerBase
         await _context.SaveChangesAsync();
 
         // Return success message
-        return Ok(new { Message = "User registered successfully." });
+        return Ok(new { message = "User registered successfully." });
     }
 
     // Change password functionality
@@ -85,19 +85,19 @@ public class AuthController : ControllerBase
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == model.Username);
         if (user == null)
         {
-            return NotFound("User not found.");
+            return NotFound(new { message = "User not found." });
         }
 
         // Verify the old password
         if (!BCrypt.Net.BCrypt.Verify(model.OldPassword, user.PasswordHash))
         {
-            return Unauthorized("Old password is incorrect.");
+            return Unauthorized(new { message = "Old password is incorrect." });
         }
 
         // Validate the new password
         if (!IsValidPassword(model.NewPassword))
         {
-            return BadRequest("Password must be at least 8 characters long and contain both letters and numbers.");
+            return BadRequest(new { message = "Password must be at least 8 characters long and contain both letters and numbers." });
         }
 
         // Hash the new password
@@ -108,7 +108,7 @@ public class AuthController : ControllerBase
         _context.Users.Update(user);
         await _context.SaveChangesAsync();
 
-        return Ok(new { Message = "Password changed successfully." });
+        return Ok(new { message = "Password changed successfully." });
     }
 
     // Password validation method

@@ -18,7 +18,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onClose }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [isChangePassword, setIsChangePassword] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // 用于控制加载状态
+  const [isLoading, setIsLoading] = useState(false);
 
   const { setIsLoggedIn, setToken } = useAuth();
 
@@ -33,9 +33,10 @@ const LoginPage: React.FC<LoginPageProps> = ({ onClose }) => {
       setToken(response.token);
       setIsLoggedIn(true);
       setSuccess('Login successful!');
-      onClose(); // 登录成功后关闭对话框
+      onClose();
     } catch (error) {
-      setError('Invalid username or password.');
+      const errorMessage = (error as  { data: { message: string }  })?.data?.message || 'Invalid username or password.';
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -47,12 +48,13 @@ const LoginPage: React.FC<LoginPageProps> = ({ onClose }) => {
     setError('');
     setSuccess('');
     try {
-      await agent.Auth.register(username, password, email);
-      setSuccess('Registration successful! Please log in.');
-      setIsLogin(true); // 注册成功后切换回登录模式
-      setIsRegister(false); // 关闭注册模式
+      const response = await agent.Auth.register(username, password, email);
+      setSuccess(response.message);
+      setIsLogin(true);
+      setIsRegister(false);
     } catch (error) {
-      setError('Registration failed. Please check your details.');
+      const errorMessage = (error as  { data: { message: string }  })?.data?.message || 'Failed to register. Please check your details.';
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -69,7 +71,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ onClose }) => {
       setOldPassword('');
       setNewPassword('');
     } catch (error) {
-      setError('Failed to change password. Please check your details.');
+      const errorMessage = (error as  { data: { message: string }  })?.data?.message || 'Failed to change password. Please check your details.';
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -136,7 +139,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onClose }) => {
               />
             </>
           )}
-          
+
           <DialogActions>
             <Button type="submit" color="primary" disabled={isLoading}>
               {isLoading ? <CircularProgress size={24} /> : isLogin ? 'Login' : isChangePassword ? 'Change Password' : 'Register'}
