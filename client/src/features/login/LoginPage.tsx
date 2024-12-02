@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, CircularProgress } from '@mui/material';
 import { useAuth } from '../../app/context/AuthContext';
 import agent from '../../app/api/agent';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'; // 引入绿色对号图标
 
 interface LoginPageProps {
   onClose: () => void;
@@ -33,14 +34,19 @@ const LoginPage: React.FC<LoginPageProps> = ({ onClose }) => {
       setToken(response.token);
       setIsLoggedIn(true);
       setSuccess('Login successful!');
-      onClose();
+      
+      // 延迟2秒关闭弹窗
+      setTimeout(() => {
+        onClose();
+      }, 1500);
     } catch (error) {
-      const errorMessage = (error as  { data: { message: string }  })?.data?.message || 'Invalid username or password.';
+      const errorMessage = (error as { data: { message: string } })?.data?.message || 'Invalid username or password.';
       setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
   };
+  
 
   const handleRegister = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -53,7 +59,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onClose }) => {
       setIsLogin(true);
       setIsRegister(false);
     } catch (error) {
-      const errorMessage = (error as  { data: { message: string }  })?.data?.message || 'Failed to register. Please check your details.';
+      const errorMessage = (error as { data: { message: string } })?.data?.message || 'Failed to register. Please check your details.';
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -71,7 +77,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onClose }) => {
       setOldPassword('');
       setNewPassword('');
     } catch (error) {
-      const errorMessage = (error as  { data: { message: string }  })?.data?.message || 'Failed to change password. Please check your details.';
+      const errorMessage = (error as { data: { message: string } })?.data?.message || 'Failed to change password. Please check your details.';
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -83,7 +89,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onClose }) => {
       <DialogTitle>{isLogin ? 'Login' : isChangePassword ? 'Change Password' : isRegister ? 'Register' : ''}</DialogTitle>
       <DialogContent>
         {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
-        {success && <div style={{ color: 'green', marginBottom: '10px' }}>{success}</div>}
+        {success && (
+          <div style={{ color: 'green', marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
+            <CheckCircleIcon style={{ color: 'green', marginRight: '8px' }} /> {/* 显示绿色对号图标 */}
+            {success}
+          </div>
+        )}
 
         <form onSubmit={isLogin ? handleLogin : isChangePassword ? handleChangePassword : handleRegister}>
           <TextField

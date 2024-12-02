@@ -13,6 +13,7 @@ import LoginPage from "../../features/login/LoginPage";
 const midLinks = [
   { title: 'create', path: '/create' },
   { title: 'delete', path: '/delete' },
+  { title: 'benchmark', path: '/benchmark' },
   { title: 'other', path: '/other' },
 ];
 
