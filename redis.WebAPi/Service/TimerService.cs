@@ -5,10 +5,10 @@
         private Timer _timer;
         private bool _isTimerRunning;
 
-        // 属性，用于检查定时器是否正在运行
+        // Property to check if the timer is currently running
         public bool IsTimerRunning => _isTimerRunning;
 
-        // 启动定时器
+        // Start the timer
         public void StartTimer(TimerCallback callback)
         {
             if (!_isTimerRunning)
@@ -19,7 +19,7 @@
             }
         }
 
-        // 停止定时器
+        // Stop the timer
         public void StopTimer()
         {
             if (_isTimerRunning)
@@ -30,7 +30,7 @@
             }
         }
 
-        // 生成随机对象
+        // Generate a random object
         public object GenerateRandomObject()
         {
             var random = new Random();

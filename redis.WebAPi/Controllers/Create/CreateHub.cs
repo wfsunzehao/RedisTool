@@ -9,18 +9,18 @@ namespace redis.WebAPI.Controllers.Create
     {
         private readonly TimerService _timerService;
 
-        // 构造函数注入 TimerService
+        // Constructor injection of TimerService
         public CreateHub(TimerService timerService)
         {
             _timerService = timerService;
         }
 
-        // 客户端连接时，自动启动定时器
+        // Automatically start the timer when the client connects
         public override async Task OnConnectedAsync()
         {
             Console.WriteLine("Client connected.");
 
-            // 默认启动定时器
+            // Start the timer by default if it's not running
             if (!_timerService.IsTimerRunning)
             {
                 _timerService.StartTimer(TimerCallbackMethod);
@@ -29,12 +29,12 @@ namespace redis.WebAPI.Controllers.Create
             await Clients.Caller.SendAsync("TimerStarted", "Timer started automatically upon connection.");
         }
 
-        // 客户端断开连接时，停止定时器
+        // Stop the timer when the client disconnects
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
             Console.WriteLine("Client disconnected.");
 
-            // 如果没有其他连接，则停止定时器
+            // Stop the timer if there are no other connections
             if (_timerService.IsTimerRunning)
             {
                 _timerService.StopTimer();
@@ -43,15 +43,15 @@ namespace redis.WebAPI.Controllers.Create
             await base.OnDisconnectedAsync(exception);
         }
 
-        // 定时器回调方法，执行定时任务
+        // Timer callback method that executes periodic tasks
         private void TimerCallbackMethod(object state)
         {
-            // 生成随机对象并发送给所有连接的客户端
+            // Generate a random object and send it to all connected clients
             var randomObject = _timerService.GenerateRandomObject();
 
             try
             {
-                // 发送随机对象给所有客户端
+                // Send the random object to all clients
                 Clients.All.SendAsync("ReceiveRandomObject", randomObject);
                 Console.WriteLine("Sent random object to clients.");
             }
@@ -61,7 +61,7 @@ namespace redis.WebAPI.Controllers.Create
             }
         }
 
-        // 手动启动定时器的功能
+        // Function to manually start the timer
         public async Task StartTimerManually()
         {
             if (!_timerService.IsTimerRunning)
@@ -71,7 +71,7 @@ namespace redis.WebAPI.Controllers.Create
             }
         }
 
-        // 手动停止定时器的功能
+        // Function to manually stop the timer
         public async Task StopTimerManually()
         {
             if (_timerService.IsTimerRunning)
