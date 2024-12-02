@@ -1,7 +1,8 @@
-import React from 'react';
+import React from 'react'; 
 import { Assignment } from '@mui/icons-material';
 import { Button, List, ListItem, ListItemText, Paper } from '@mui/material';
-import NavPage from '../../common/layout/NavPage';
+import NavPage from '../../common/layout/NavPage'; // 使用 SignalContext hook 获取信号量
+import { useSignalContext } from '../../app/context/SignalContext';
 
 // 左侧导航栏的链接
 const leftLinks = [
@@ -11,17 +12,10 @@ const leftLinks = [
   { title: "ALT", path: "/create/ALT", icon: <Assignment /> },
 ];
 
-// 模拟的静态数据（常数），包含名字、时间和状态
-const data = [
-  { name: "Object_1", time: "2024-11-21 12:00:00", status: "Running" },
-  { name: "Object_2", time: "2024-11-21 12:02:00", status: "Creating" },
-  { name: "Object_3", time: "2024-11-21 12:04:00", status: "Deleting" },
-  { name: "Object_4", time: "2024-11-21 12:06:00", status: "Running" },
-  { name: "Object_5", time: "2024-11-21 12:08:00", status: "Creating" },
-];
-
 // 主页面组件
 const CreatePage: React.FC = () => {
+  const { randomObjects, clearRandomObjects, sendRandomObjectManually, startTimerManually, stopTimerManually } = useSignalContext();  // 使用 SignalContext hook 获取信号量
+
   return (
     <NavPage 
       links={leftLinks} 
@@ -30,9 +24,19 @@ const CreatePage: React.FC = () => {
       children={(
         <>
           {/* 用 Paper 组件将列表包裹起来，添加边框 */}
-          <Paper elevation={3} sx={{ padding: '20px', marginTop: '125px', marginBottom: '15px' }}>
+          <Paper 
+            elevation={3} 
+            sx={{ 
+              padding: '20px', 
+              marginTop: '125px', 
+              marginBottom: '15px', 
+              maxHeight: '400px', // 设置最大高度
+              overflowY: 'auto'   // 超过高度时出现垂直滚动条
+            }}
+          >
             <List>
-              {data.map((item, index) => (
+              {/* 动态展示从 SignalR 获取的 randomObjects 数据 */}
+              {randomObjects.slice().reverse().map((item, index) => (  // 使用 reverse() 使最新的数据显示在最上面
                 <ListItem key={index}>
                   <ListItemText 
                     primary={`${item.name}`} 
@@ -43,6 +47,11 @@ const CreatePage: React.FC = () => {
             </List>
           </Paper>
 
+          {/* 控制按钮 */}
+          <Button variant="contained" onClick={clearRandomObjects}>Clear Objects</Button>
+          <Button variant="contained" onClick={sendRandomObjectManually}>Get Random Object Manually</Button>
+          <Button variant="contained" onClick={startTimerManually}>Start Timer Manually</Button>
+          <Button variant="contained" onClick={stopTimerManually}>Stop Timer Manually</Button>
         </>
       )}
       sidebarWidth="200px"   // 修改左侧导航栏宽度
