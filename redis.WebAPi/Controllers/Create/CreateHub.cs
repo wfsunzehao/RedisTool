@@ -1,75 +1,84 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using redis.WebAPI.Service;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace redis.WebAPI.Controllers.Create
 {
     public class CreateHub : Hub
     {
-        private readonly Timer _timer;
-        private readonly Random _random;
-        private bool _isDisposed = false;
+        private readonly TimerService _timerService;
 
-        public CreateHub()
+        // 构造函数注入 TimerService
+        public CreateHub(TimerService timerService)
         {
-            _random = new Random();
-            // Trigger the GenerateAndSendRandomObject method every 2 seconds
-            _timer = new Timer(GenerateAndSendRandomObject, null, TimeSpan.Zero, TimeSpan.FromSeconds(2));
+            _timerService = timerService;
         }
 
-        // Send a random object every 2 seconds
-        private async void GenerateAndSendRandomObject(object? state)
+        // 客户端连接时，自动启动定时器
+        public override async Task OnConnectedAsync()
         {
-            if (_isDisposed) return;  // If the object is disposed, avoid further execution
+            Console.WriteLine("Client connected.");
 
-            var randomObject = GenerateRandomObject();
-            // Send to all connected clients
-            await Clients.All.SendAsync("ReceiveRandomObject", randomObject); // Make sure the event name "ReceiveRandomObject" matches the frontend
-        }
-
-        // Logic to generate a random object
-        private object GenerateRandomObject()
-        {
-            var statusOptions = new[] { "Creating", "Running", "Deleting" };
-            var randomStatus = statusOptions[_random.Next(statusOptions.Length)];
-
-            var randomObject = new
+            // 默认启动定时器
+            if (!_timerService.IsTimerRunning)
             {
-                Name = $"Object_{_random.Next(1, 100)}",
-                Time = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
-                Status = randomStatus
-            };
-
-            return randomObject;
-        }
-
-        // Manually trigger a request to send a random object
-        public async Task SendRandomObjectManually()
-        {
-            var randomObject = GenerateRandomObject();
-            // Send to the calling client
-            await Clients.Caller.SendAsync("ReceiveRandomObject", randomObject);
-        }
-
-        public override async Task OnDisconnectedAsync(Exception? exception)
-        {
-            await base.OnDisconnectedAsync(exception);
-            Dispose(true);  // Dispose resources
-        }
-
-        // Dispose resources
-        protected override void Dispose(bool disposing)
-        {
-            if (_isDisposed) return;
-
-            if (disposing)
-            {
-                _timer?.Dispose();  // Stop the timer
+                _timerService.StartTimer(TimerCallbackMethod);
             }
 
-            _isDisposed = true;
-            base.Dispose(disposing);
+            await Clients.Caller.SendAsync("TimerStarted", "Timer started automatically upon connection.");
+        }
+
+        // 客户端断开连接时，停止定时器
+        public override async Task OnDisconnectedAsync(Exception? exception)
+        {
+            Console.WriteLine("Client disconnected.");
+
+            // 如果没有其他连接，则停止定时器
+            if (_timerService.IsTimerRunning)
+            {
+                _timerService.StopTimer();
+            }
+
+            await base.OnDisconnectedAsync(exception);
+        }
+
+        // 定时器回调方法，执行定时任务
+        private void TimerCallbackMethod(object state)
+        {
+            // 生成随机对象并发送给所有连接的客户端
+            var randomObject = _timerService.GenerateRandomObject();
+
+            try
+            {
+                // 发送随机对象给所有客户端
+                Clients.All.SendAsync("ReceiveRandomObject", randomObject);
+                Console.WriteLine("Sent random object to clients.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error sending data to clients: " + ex.Message);
+            }
+        }
+
+        // 手动启动定时器的功能
+        public async Task StartTimerManually()
+        {
+            if (!_timerService.IsTimerRunning)
+            {
+                _timerService.StartTimer(TimerCallbackMethod);
+                await Clients.Caller.SendAsync("TimerStarted", "Timer started manually.");
+            }
+        }
+
+        // 手动停止定时器的功能
+        public async Task StopTimerManually()
+        {
+            if (_timerService.IsTimerRunning)
+            {
+                _timerService.StopTimer();
+                await Clients.Caller.SendAsync("TimerStopped", "Timer stopped manually.");
+            }
         }
     }
 }

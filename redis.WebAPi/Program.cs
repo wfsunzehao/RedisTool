@@ -9,6 +9,7 @@ using redis.WebAPi.Service.IService;
 using redis.WebAPi.Service.AzureShared;
 using redis.WebAPi.Service;
 using redis.WebAPi.Repository.AppDbContext;
+using redis.WebAPI.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +47,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
+    // Register CreateHub as singleton
+    containerBuilder.RegisterType<CreateHub>().AsSelf().SingleInstance();
+    
+    containerBuilder.RegisterType<TimerService>().SingleInstance();
+
     // Register other services
     containerBuilder.RegisterType<AzureClientFactory>().SingleInstance();
     containerBuilder.RegisterType<SubscriptionResourceService>().As<ISubscriptionResourceService>().SingleInstance();
@@ -66,6 +72,7 @@ if (app.Environment.IsDevelopment())
 // Enable CORS
 app.UseCors(opt =>
 {
+    opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000").AllowCredentials();
     opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000").AllowCredentials();
     opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://172.29.20.156:3000");
 });
