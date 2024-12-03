@@ -21,10 +21,10 @@ namespace redis.WebAPI.Controllers.Create
             Console.WriteLine("Client connected.");
 
             // Start the timer by default if it's not running
-            if (!_timerService.IsTimerRunning)
-            {
-                _timerService.StartTimer(TimerCallbackMethod);
-            }
+            //if (!_timerService.IsTimerRunning)
+            //{
+            //    _timerService.StartTimer(TimerCallbackMethod);
+            //}
 
             await Clients.Caller.SendAsync("TimerStarted", "Timer started automatically upon connection.");
         }

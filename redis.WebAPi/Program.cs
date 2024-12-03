@@ -49,8 +49,8 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
     // Register CreateHub as singleton
     containerBuilder.RegisterType<CreateHub>().AsSelf().SingleInstance();
-    
-    containerBuilder.RegisterType<TimerService>().SingleInstance();
+
+    containerBuilder.RegisterType<TimerService>().InstancePerLifetimeScope();
 
     // Register other services
     containerBuilder.RegisterType<AzureClientFactory>().SingleInstance();
