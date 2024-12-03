@@ -37,17 +37,25 @@ const GroupPage: React.FC = () => {
   // 每分钟更新一次资源列表
   useEffect(() => {
     const intervalId = setInterval(() => {
-      if (group) {
-        // 调用API获取资源列表
-        agent.Delete.getResource(subscription, group)
+      if (group) 
+        {
+          // 调用API获取该组的资源列表
+          agent.Delete.getResource(subscription, group)
           .then(response => {
-            setResourceList(response); // 更新资源列表
+            // 将键值对格式化为字符串数组，例如 "BVT-RebootBladeTest-1203-5675: Premium"
+            const resourceList = Object.keys(response).map(key => `${key}: ${response[key]}`);
+
+            // 保存资源列表（字符串数组）
+            setResourceList(resourceList);  
+            setShowResourceBox(true);  // 显示资源框
           })
           .catch(error => {
             console.log(error.response);
-            setResourceList([]); // 清空资源列表
+            setResourceList([]);  // 清空资源列表
+            setShowResourceBox(false); // 隐藏资源框
           });
-      }
+
+        }
     }, 60000); // 每 60000 毫秒（即 1 分钟）更新一次
 
     // 清除定时器，防止内存泄漏
@@ -105,16 +113,22 @@ const GroupPage: React.FC = () => {
   setErrors(prevErrors => ({ ...prevErrors, group: '' })); // 清除组错误
 
   // 调用API获取该组的资源列表
-  agent.Delete.getResource(subscription,group)
+  agent.Delete.getResource(subscription, group)
     .then(response => {
-      setResourceList(response);  // 保存资源列表
-      setShowResourceBox(true);    // 显示资源框
+      // 将键值对格式化为字符串数组，例如 "BVT-RebootBladeTest-1203-5675: Premium"
+      const resourceList = Object.keys(response).map(key => `${key}: ${response[key]}`);
+
+      // 保存资源列表（字符串数组）
+      setResourceList(resourceList);  
+      setShowResourceBox(true);  // 显示资源框
     })
     .catch(error => {
       console.log(error.response);
       setResourceList([]);  // 清空资源列表
       setShowResourceBox(false); // 隐藏资源框
     });
+
+
 };
 
   const handleInputChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

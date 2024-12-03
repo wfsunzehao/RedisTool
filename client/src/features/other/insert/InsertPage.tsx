@@ -83,14 +83,19 @@ const InsertPage: React.FC = () => {
     setErrors(prevErrors => ({ ...prevErrors, group: '' })); // 清除组错误
 
     // 调用API获取该组的资源列表
-    agent.Delete.getResource(subscription,group)
-      .then(response => {
-        setResourceList(response);  // 保存资源列表
-      })
-      .catch(error => {
-        console.log(error.response);
-        setResourceList([]);  // 清空资源列表
-      });
+    agent.Delete.getResource(subscription, group)
+    .then(response => {
+      // 提取出所有资源的 ID（即键），形成一个字符串数组
+      const resourceList = Object.keys(response);
+
+      // 保存资源列表（字符串数组）
+      setResourceList(resourceList);
+    })
+    .catch(error => {
+      console.log(error.response);
+      setResourceList([]);  // 清空资源列表
+    });
+
   };
   const handleInputChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { value } = event.target;
