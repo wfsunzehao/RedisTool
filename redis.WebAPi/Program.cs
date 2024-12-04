@@ -58,6 +58,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     containerBuilder.RegisterType<RedisCollectionService>().As<IRedisCollection>().SingleInstance();
     containerBuilder.RegisterType<StackExchangeService>().As<IStackExchangeService>().SingleInstance();
     containerBuilder.RegisterType<ResourceDeletionService>().As<IResourceDeletionService>().SingleInstance();
+    containerBuilder.RegisterType<ConnectionVMService>().As<IConnectionVMService>().SingleInstance();
 });
 
 var app = builder.Build();
