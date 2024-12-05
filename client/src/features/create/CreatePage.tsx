@@ -1,6 +1,6 @@
 import React from 'react';
 import { Assignment } from '@mui/icons-material';
-import { Button, List, ListItem, ListItemText, Paper, Box } from '@mui/material';
+import { Button, List, ListItem, ListItemText, Paper, Box, useTheme } from '@mui/material';
 import NavPage from '../../common/layout/NavPage'; // 使用 SignalContext hook 获取信号量
 import { useSignalContext } from '../../app/context/SignalContext';
 
@@ -15,6 +15,7 @@ const leftLinks = [
 // 主页面组件
 const CreatePage: React.FC = () => {
   const { randomObjects, clearRandomObjects, sendRandomObjectManually, startTimerManually, stopTimerManually } = useSignalContext();  // 使用 SignalContext hook 获取信号量
+  const theme = useTheme(); // 获取当前的主题
 
   return (
     <NavPage 
@@ -33,12 +34,20 @@ const CreatePage: React.FC = () => {
               padding: '20px',                 // 内边距
               marginTop: '125px',              // 上外边距
               marginBottom: '15px',            // 下外边距
-              backgroundColor: '#f9f9f9',      // 背景色
+              backgroundColor: theme.palette.mode === 'dark' ? '#303030' : '#f9f9f9',      // 背景色
               overflow: 'hidden',              // 隐藏溢出内容
             }}
           >
             {/* 用 Paper 组件将列表包裹起来，添加边框 */}
-            <Paper elevation={3} sx={{ padding: '20px', height: '100%', overflowY: 'auto' }}>
+            <Paper 
+              elevation={3} 
+              sx={{ 
+                padding: '20px', 
+                height: '100%', 
+                overflowY: 'auto',
+                backgroundColor: theme.palette.mode === 'dark' ? '#303030' : '#white',  // 根据主题设置背景色
+              }}
+            >
               <List>
                 {/* 动态展示从 SignalR 获取的 randomObjects 数据 */}
                 {randomObjects.slice().reverse().map((item, index) => (  // 使用 reverse() 使最新的数据显示在最上面
