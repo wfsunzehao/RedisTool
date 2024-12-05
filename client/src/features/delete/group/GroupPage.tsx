@@ -221,9 +221,16 @@ const GroupPage: React.FC = () => {
         )}
         
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-          <Button type="submit" variant="contained" color="primary" sx={{ mx: 1 }} disabled={loading}>
-          submit
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            sx={{ mx: 1 }}
+            disabled={loading || !showResourceBox}  // 添加 showResourceBox 作为禁用条件
+          >
+            submit
           </Button>
+
           <Button type="button" variant="outlined" color="secondary" onClick={handleCancel} sx={{ mx: 1 }} disabled={loading}>
           cancel
           </Button>
