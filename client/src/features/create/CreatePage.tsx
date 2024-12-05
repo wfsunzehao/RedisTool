@@ -1,6 +1,6 @@
-import React from 'react'; 
+import React from 'react';
 import { Assignment } from '@mui/icons-material';
-import { Button, List, ListItem, ListItemText, Paper } from '@mui/material';
+import { Button, List, ListItem, ListItemText, Paper, Box } from '@mui/material';
 import NavPage from '../../common/layout/NavPage'; // 使用 SignalContext hook 获取信号量
 import { useSignalContext } from '../../app/context/SignalContext';
 
@@ -20,38 +20,46 @@ const CreatePage: React.FC = () => {
     <NavPage 
       links={leftLinks} 
       defaultPath="/create/man" 
-      alertMessage="Now only BVT can create, MAN and PERF stay tuned!"
+      alertMessage="BVT: Client recommends manual creation"
       children={(
         <>
-          {/* 用 Paper 组件将列表包裹起来，添加边框 */}
-          <Paper 
-            elevation={3} 
-            sx={{ 
-              padding: '20px', 
-              marginTop: '125px', 
-              marginBottom: '15px', 
-              maxHeight: '400px', // 设置最大高度
-              overflowY: 'auto'   // 超过高度时出现垂直滚动条
+          {/* 使用 Box 组件给 children 区域添加一个固定大小 */}
+          <Box 
+            sx={{
+              width: '600px',                  // 设置固定宽度
+              height: '400px',                 // 设置固定高度
+              border: '1px solid #ddd',        // 添加边框
+              borderRadius: '8px',             // 圆角效果
+              padding: '20px',                 // 内边距
+              marginTop: '125px',              // 上外边距
+              marginBottom: '15px',            // 下外边距
+              backgroundColor: '#f9f9f9',      // 背景色
+              overflow: 'hidden',              // 隐藏溢出内容
             }}
           >
-            <List>
-              {/* 动态展示从 SignalR 获取的 randomObjects 数据 */}
-              {randomObjects.slice().reverse().map((item, index) => (  // 使用 reverse() 使最新的数据显示在最上面
-                <ListItem key={index}>
-                  <ListItemText 
-                    primary={`${item.name}`} 
-                    secondary={`Time: ${item.time} | Status: ${item.status}`} 
-                  />
-                </ListItem>
-              ))}
-            </List>
-          </Paper>
+            {/* 用 Paper 组件将列表包裹起来，添加边框 */}
+            <Paper elevation={3} sx={{ padding: '20px', height: '100%', overflowY: 'auto' }}>
+              <List>
+                {/* 动态展示从 SignalR 获取的 randomObjects 数据 */}
+                {randomObjects.slice().reverse().map((item, index) => (  // 使用 reverse() 使最新的数据显示在最上面
+                  <ListItem key={index}>
+                    <ListItemText 
+                      primary={`${item.name}`} 
+                      secondary={`Time: ${item.time} | Status: ${item.status}`} 
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            </Paper>
+          </Box>
 
           {/* 控制按钮 */}
-          <Button variant="contained" onClick={clearRandomObjects}>Clear Objects</Button>
-          <Button variant="contained" onClick={sendRandomObjectManually}>Get Random Object Manually</Button>
-          <Button variant="contained" onClick={startTimerManually}>Start Timer Manually</Button>
-          <Button variant="contained" onClick={stopTimerManually}>Stop Timer Manually</Button>
+          <Box sx={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+            <Button variant="contained" onClick={clearRandomObjects}>Clear Objects</Button>
+            <Button variant="contained" onClick={sendRandomObjectManually}>Get Random Object Manually</Button>
+            <Button variant="contained" onClick={startTimerManually}>Start Timer Manually</Button>
+            <Button variant="contained" onClick={stopTimerManually}>Stop Timer Manually</Button>
+          </Box>
         </>
       )}
       sidebarWidth="200px"   // 修改左侧导航栏宽度
