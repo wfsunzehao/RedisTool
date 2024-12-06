@@ -28,6 +28,7 @@
     "@reduxjs/toolkit": "^2.2.8",
     "antd": "^5.21.2",
     "axios": "^1.7.8",
+    "formik": "^2.4.6",
     "framer-motion": "^11.11.9",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -37,7 +38,8 @@
     "react-sidebar": "^3.0.2",
     "react-toastify": "^10.0.5",
     "redux": "^5.0.1",
-    "sweetalert": "^2.1.2"
+    "sweetalert": "^2.1.2",
+    "yup": "^1.5.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",

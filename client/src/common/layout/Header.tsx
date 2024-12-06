@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AppBar, Box, IconButton, List, ListItem, Popover, Badge, Avatar, Switch, MenuItem, Toolbar, Button, Divider } from "@mui/material";
+import { AppBar, Box, IconButton, List, ListItem, Popover, Badge, Avatar, MenuItem, Toolbar, Button, Divider } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import { NavLink } from "react-router-dom";
 import ChatIcon from '@mui/icons-material/Chat';
@@ -8,6 +8,9 @@ import logo from '../../../public/images/wicrecend3.png';
 import { useMessage } from "../../app/context/MessageContext";
 import { useAuth } from "../../app/context/AuthContext";
 import LoginPage from "../../features/login/LoginPage";
+import { Switch } from "@nextui-org/react";
+import { SunIcon } from "../icon/SunIcon";
+import { MoonIcon } from "../icon/MoonIcon";
  // 引入 LoginPage
 
 const midLinks = [
@@ -20,7 +23,7 @@ const midLinks = [
 const rightLinks = [
   { title: 'login', path: '/login' },
 ];
-
+//midLinks的样式
 const navStyles = {
   color: 'inherit',
   textDecoration: 'none',
@@ -68,11 +71,21 @@ export default function Header() {
     <AppBar position="sticky" sx={{ mb: 0 }}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Box display='flex' alignItems='center'>
-          <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-            <MenuIcon />
-          </IconButton>
           <img src={logo} alt="Logo" style={{ maxHeight: 40, marginRight: 16, objectFit: 'contain', filter: 'invert(100%) sepia(100%) saturate(0%) hue-rotate(180deg)' }} />
-          <Switch checked={isDarkMode} onChange={toggleTheme} />
+          {/* <Switch checked={isDarkMode} onChange={toggleTheme} /> */}
+          <Switch
+            defaultSelected
+            checked={isDarkMode}
+            onChange={toggleTheme}
+            size="lg"
+            thumbIcon={({ isSelected, className }) =>
+              isSelected ? (
+                <SunIcon className={className} style={{ fontSize: '50px' }} /> // 增大图标大小
+              ) : (
+                <MoonIcon className={className} style={{ fontSize: '50px' }} /> // 增大图标大小
+              )
+            }
+          />
         </Box>
         <Box display='flex' alignItems='center'>
           <List sx={{ display: 'flex' }}>
