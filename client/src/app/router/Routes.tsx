@@ -16,6 +16,7 @@ import GroupPage from "../../features/delete/group/GroupPage";
 import Signal from "../../features/other/signalR/Signal";
 import LoginPage from "../../features/login/LoginPage";
 import RegisterPage from "../../features/login/RegisterPage";
+import AuthLogin from "../../features/login/auth-forms/AuthLogin";
 
 export const router = createBrowserRouter([
   {
@@ -47,7 +48,6 @@ export const router = createBrowserRouter([
           { path: "signal", element: <Signal /> },
         ],
       },
-      { path: "login", element: <LoginPage /> },
       { path: "register", element: <RegisterPage /> },
       { path: "server-error", element: <ServerError /> },
       { path: "not-found", element: <NotFound /> }, //404

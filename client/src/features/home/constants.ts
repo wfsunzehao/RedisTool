@@ -4,7 +4,6 @@ import { Box } from "@mui/material";
 //主页轮换图
 export const images = [
     '../../../public/images/wicrecend.jpg',
-    '../../../public/images/wicrecend2.jpg',
   ];
 
 export const services = [

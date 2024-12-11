@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { AppBar, Box, IconButton, List, ListItem, Popover, Badge, Avatar, MenuItem, Toolbar, Button, Divider } from "@mui/material";
-import MenuIcon from '@mui/icons-material/Menu';
 import { NavLink } from "react-router-dom";
 import ChatIcon from '@mui/icons-material/Chat';
 import { useTheme } from "../../app/context/ThemeContext";
@@ -16,7 +15,7 @@ import { MoonIcon } from "../icon/MoonIcon";
 const midLinks = [
   { title: 'create', path: '/create' },
   { title: 'delete', path: '/delete' },
-  { title: 'benchmark', path: '/benchmark' },
+  { title: 'benchmark', path: '/test' },
   { title: 'other', path: '/other' },
 ];
 

@@ -1,15 +1,16 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Box, Typography, IconButton, Grid, Button, Container, Paper } from '@mui/material';
+import { Box, Typography, IconButton, Grid, useTheme } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import './HomePage.css';
-import { Hero, images, ImageWrapper, Indicator, IndicatorDot, services } from './constants';
+import { Hero, images, ImageWrapper, Indicator, IndicatorDot } from './constants';
+import LoginForm from '../login/LoginForm';
 
 
 const HomePage: React.FC = () => {
+  const theme = useTheme(); // 使用主题上下文
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
   const cardsRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -29,7 +30,7 @@ const HomePage: React.FC = () => {
       if (cardsRef.current) {
         const rect = cardsRef.current.getBoundingClientRect();
         if (rect.top <= window.innerHeight) {
-          setIsVisible(true);
+          setIsHovering(true);
         }
       }
     };
@@ -49,129 +50,104 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div>
-      <Hero
-        onMouseEnter={() => setIsHovering(true)}
-        onMouseLeave={() => setIsHovering(false)}
-      >
-        <ImageWrapper shift={-1}>
-          <img
-            src={images[(currentIndex - 1 + images.length) % images.length]}
-            alt="Previous"
-            className="image"
-          />
-        </ImageWrapper>
-
-        <ImageWrapper shift={0}>
-          <img
-            src={images[currentIndex]}
-            alt="Current"
-            className="image"
-          />
-        </ImageWrapper>
-
-        <ImageWrapper shift={1}>
-          <img
-            src={images[(currentIndex + 1) % images.length]}
-            alt="Next"
-            className="image"
-          />
-        </ImageWrapper>
-
-        {/* <Overlay visible={overlayVisible} />
-        <Typography variant="h3" align="center" sx={{ color: '#fff', position: 'relative', zIndex: 1 }}>
-          Welcome to My Website
-        </Typography> */}
-
-        {/* 左箭头 */}
-        <IconButton
-          onClick={handlePrev}
-          sx={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: '#fff' }}
+    <Grid
+      container
+      sx={{
+        backgroundColor: theme.palette.background.default, // 使用主题背景色
+        color: theme.palette.text.primary, // 使用主题文本颜色
+        minHeight: '100vh',
+      }}
+    >
+      {/* 左侧主页内容 */}
+      <Grid item xs={12} md={8}>
+        <Hero
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
         >
-          <ArrowBackIosIcon fontSize="large" />
-        </IconButton>
-
-        {/* 右箭头 */}
-        <IconButton
-          onClick={handleNext}
-          sx={{ position: 'absolute', right: 16, top: '50%', transform: 'translateY(-50%)', color: '#fff' }}
-        >
-          <ArrowForwardIosIcon fontSize="large" />
-        </IconButton>
-
-        {/* 指示器 */}
-        <Indicator>
-          {images.map((_, index) => (
-            <IndicatorDot
-              key={index}
-              active={index === currentIndex}
-              onClick={() => setCurrentIndex(index)}
-              sx={{ cursor: 'pointer' }}
+          <ImageWrapper shift={-1}>
+            <img
+              src={images[(currentIndex - 1 + images.length) % images.length]}
+              alt="Previous"
+              className="image"
             />
-          ))}
-        </Indicator>
-      </Hero>
+          </ImageWrapper>
 
-      {/* 关于我们的区域 */}
-      <Paper>
-        <Box
-        className="about-section"
+          <ImageWrapper shift={0}>
+            <img
+              src={images[currentIndex]}
+              alt="Current"
+              className="image"
+            />
+          </ImageWrapper>
+
+          <ImageWrapper shift={1}>
+            <img
+              src={images[(currentIndex + 1) % images.length]}
+              alt="Next"
+              className="image"
+            />
+          </ImageWrapper>
+
+          <IconButton
+            onClick={handlePrev}
+            sx={{
+              position: 'absolute',
+              left: 16,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: theme.palette.primary.main, // 使用主题的主色
+            }}
+          >
+            <ArrowBackIosIcon fontSize="large" />
+          </IconButton>
+
+          <IconButton
+            onClick={handleNext}
+            sx={{
+              position: 'absolute',
+              right: 16,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: theme.palette.primary.main,
+            }}
+          >
+            <ArrowForwardIosIcon fontSize="large" />
+          </IconButton>
+
+          <Indicator>
+            {images.map((_, index) => (
+              <IndicatorDot
+                key={index}
+                active={index === currentIndex}
+                onClick={() => setCurrentIndex(index)}
+                sx={{
+                  cursor: 'pointer',
+                  backgroundColor: index === currentIndex
+                    ? theme.palette.primary.main
+                    : theme.palette.grey[500],
+                }}
+              />
+            ))}
+          </Indicator>
+        </Hero>
+      </Grid>
+
+      {/* 右侧登录窗口 */}
+      <Grid
+        item
+        xs={12}
+        md={4}
         sx={{
           display: 'flex',
-          flexDirection: 'column',
           alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: theme.palette.background.paper, // 使用主题的纸张背景色
+          boxShadow: theme.shadows[3],
         }}
       >
-        <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold', textAlign: 'center' }}>
-          About Us
-        </Typography>
-        <Typography variant="body1" sx={{ mb: 2, fontSize: '1.1rem', lineHeight: 1.5 }}>
-          We are committed to providing the best possible service
-        </Typography>
-        <Typography variant="body1" sx={{ mb: 2, fontSize: '1.1rem', lineHeight: 1.5 }}>
-          More professional
-        </Typography>
-        <Typography variant="body1" sx={{ mb: 2, fontSize: '1.1rem', lineHeight: 1.5 }}>
-          More accurate
-        </Typography>
-        <Typography variant="body1" sx={{ mb: 2, fontSize: '1.1rem', lineHeight: 1.5 }}>
-          More efficient
-        </Typography>
-      </Box>
-
-      </Paper>
-      
-
-
-      {/* 卡片区域使用 Grid */}
-      <Paper >
-        <Container>
-          <Box ref={cardsRef} className={`cards-section ${isVisible ? 'visible' : ''}`} sx={{ display: 'flex', justifyContent: 'center', my: 0 }}>
-          <Grid container spacing={2} justifyContent="center">
-            {services.map((service, index) => (
-              <Grid item md={4} key={index}>
-                <Box className="card" sx={{ textAlign: 'center', padding: 2, border: '1px solid #ccc', borderRadius: 2 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-                    {/* {service.icon} */}
-                  </Box>
-                  <Typography variant="h6">{service.title}</Typography>
-                  <Typography variant="body2">{service.description}</Typography>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    href={service.link}
-                    sx={{ mt: 2 }}
-                  >
-                    Learn More
-                  </Button>
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-      </Container>
-    </Paper>  
-    </div>
+        <LoginForm />
+      </Grid>
+    </Grid>
   );
 };
 
