@@ -3,6 +3,7 @@ using Azure.Core;
 using Azure.ResourceManager;
 using Azure.ResourceManager.Redis;
 using Microsoft.AspNetCore.Mvc;
+using redis.WebAPi.Filters;
 using redis.WebAPi.Service.AzureShared;
 using redis.WebAPi.Service.IService;
 
@@ -10,6 +11,7 @@ namespace redis.WebAPi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [ServiceFilter(typeof(AuthFilter))]
     public class AzureClientController : ControllerBase
     {
         private readonly AzureClientFactory _client;

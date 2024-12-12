@@ -8,9 +8,12 @@ using redis.WebAPi.Model.UserModels;
 using redis.WebAPi.Repository.AppDbContext;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
+using redis.WebAPi.Service;
+using redis.WebAPi.Filters;
 
 [Route("api/[controller]")]
 [ApiController]
+[ServiceFilter(typeof(AuthFilter))]
 public class AuthController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
@@ -33,7 +36,10 @@ public class AuthController : ControllerBase
         }
 
         var token = GenerateJwtToken(user);
+        TokenStore.AddToken(token, user.Id);
+
         return Ok(new { token });
+
     }
 
     // Registration functionality
@@ -51,22 +57,23 @@ public class AuthController : ControllerBase
             return BadRequest(new { message = "Email is already in use." });
         }
 
+        var (hash, salt) = PasswordHasher.HashPassword(model.Password);
+
         // Password validation: Ensure password is at least 8 characters long and contains both letters and numbers
         if (!IsValidPassword(model.Password))
         {
             return BadRequest(new { message = "Password must be at least 8 characters long and contain both letters and numbers." });
         }
 
-        // Hash the password
-        var hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.Password);
 
         // Create a new user
         var user = new User
         {
             Username = model.Username,
-            PasswordHash = hashedPassword,
             Email = model.Email,
-            Role = model.Role ?? "user",  // Default role is "user" if not provided
+            PasswordHash = hash,
+            Salt = salt,
+            Role = "user"
         };
 
         // Add the user to the database

@@ -1,6 +1,7 @@
 using Azure.ResourceManager.Redis;
 using Azure.ResourceManager.RedisEnterprise;
 using Microsoft.AspNetCore.Mvc;
+using redis.WebAPi.Filters;
 using redis.WebAPi.Model;
 using redis.WebAPi.Service.IService;
 
@@ -8,6 +9,7 @@ namespace redis.WebAPi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [ServiceFilter(typeof(AuthFilter))]
     public class ResourceDeletionController : ControllerBase
     {
         private readonly IResourceDeletionService _resourceDeletionService;

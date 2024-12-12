@@ -18,12 +18,14 @@ using Azure.ResourceManager.Network.Models;
 using Azure.ResourceManager.RedisEnterprise;
 using Microsoft.Identity.Client;
 using redis.WebAPi.Service.CreationFunction;
+using redis.WebAPi.Filters;
 
 namespace redis.WebAPi.Controllers
 {
 
     [ApiController]
     [Route("api/[controller]")]
+    [ServiceFilter(typeof(AuthFilter))]
     public class CreationController : ControllerBase
     {
         private readonly IRedisCollection _redisCollection;

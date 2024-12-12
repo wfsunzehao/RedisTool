@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using redis.WebAPi.Filters;
 using redis.WebAPi.Service.AzureShared;
 using redis.WebAPi.Service.IService;
 namespace redis.WebAPi.Controllers
@@ -7,6 +8,7 @@ namespace redis.WebAPi.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
+    [ServiceFilter(typeof(AuthFilter))]
     public class SubscriptionController : ControllerBase
     {
 

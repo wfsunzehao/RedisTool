@@ -10,9 +10,11 @@ using redis.WebAPi.Service.AzureShared;
 using redis.WebAPi.Service;
 using redis.WebAPi.Repository.AppDbContext;
 using redis.WebAPI.Service;
+using redis.WebAPi.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddScoped<AuthFilter>();
 // Add services to the container.
 builder.Services.AddControllers();
 // Swagger/OpenAPI configuration

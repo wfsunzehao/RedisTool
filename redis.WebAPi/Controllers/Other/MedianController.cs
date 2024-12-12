@@ -5,11 +5,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using redis.WebAPi.Filters;
 
 namespace redis.WebAPi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [ServiceFilter(typeof(AuthFilter))]
     public class MedianController : ControllerBase
     {
         [HttpPost("sendMedianJson")]
