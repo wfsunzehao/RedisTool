@@ -40,7 +40,7 @@ export const router = createBrowserRouter([
         children: [{ path: "group", element: <GroupPage /> }],
       },
       {
-        path: "other",
+        path: "more",
         element: <OtherPage />,
         children: [
           { path: "insert", element: <InsertPage /> },

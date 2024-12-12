@@ -15,7 +15,6 @@ import { MoonIcon } from "../icon/MoonIcon";
 const midLinks = [
   { title: 'create', path: '/create' },
   { title: 'delete', path: '/delete' },
-  { title: 'benchmark', path: '/test' },
   { title: 'other', path: '/other' },
 ];
 
@@ -69,8 +68,19 @@ export default function Header() {
   return (
     <AppBar position="sticky" sx={{ mb: 0 }}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Box display='flex' alignItems='center'>
-          <img src={logo} alt="Logo" style={{ maxHeight: 40, marginRight: 16, objectFit: 'contain', filter: 'invert(100%) sepia(100%) saturate(0%) hue-rotate(180deg)' }} />
+        <Box display='flex' alignItems='center' >
+        <NavLink to="/" style={{ display: 'flex', alignItems: 'center' }}>
+          <img
+            src={logo}
+            alt="Logo"
+            style={{
+              maxHeight: 40,
+              marginRight: 16,
+              objectFit: 'contain',
+              filter: 'invert(100%) sepia(100%) saturate(0%) hue-rotate(180deg)',
+            }}
+          />
+        </NavLink>
           {/* <Switch checked={isDarkMode} onChange={toggleTheme} /> */}
           <Switch
             defaultSelected
@@ -88,9 +98,6 @@ export default function Header() {
         </Box>
         <Box display='flex' alignItems='center'>
           <List sx={{ display: 'flex' }}>
-            <ListItem component={NavLink} to="/" sx={navStyles}>
-              HOME
-            </ListItem>
             {midLinks.map(({ title, path }) => (
               <ListItem component={NavLink} to={path} key={path} sx={navStyles}>
                 {title.toUpperCase()}
