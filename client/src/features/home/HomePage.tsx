@@ -36,7 +36,7 @@ const HomePage: React.FC = () => {
       sx={{
         position: 'relative',
         minHeight: '90vh',
-        overflow: 'hidden', // 裁剪内容
+        overflow: 'hidden',
         backgroundColor: theme.palette.background.default,
         color: theme.palette.text.primary,
       }}
@@ -49,6 +49,21 @@ const HomePage: React.FC = () => {
           position: 'relative',
         }}
       >
+        {/* 黑暗模式下的遮罩 */}
+        {theme.palette.mode === 'dark' && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)', // 半透明黑色遮罩
+              zIndex: 11, // 确保遮罩在图片上方
+            }}
+          />
+        )}
+
         {/* LoginForm 组件 */}
         <Box
           sx={{
@@ -96,6 +111,7 @@ const HomePage: React.FC = () => {
             top: '50%',
             transform: 'translateY(-50%)',
             color: theme.palette.primary.main,
+            zIndex: 10, // 确保箭头在遮罩上方
           }}
         >
           <ArrowBackIosIcon fontSize="large" />
@@ -109,6 +125,7 @@ const HomePage: React.FC = () => {
             top: '50%',
             transform: 'translateY(-50%)',
             color: theme.palette.primary.main,
+            zIndex: 10, // 确保箭头在遮罩上方
           }}
         >
           <ArrowForwardIosIcon fontSize="large" />
