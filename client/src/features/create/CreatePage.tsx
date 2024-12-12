@@ -4,10 +4,10 @@ import NavPage from '../../common/layout/NavPage'; //
 
 // 左侧导航栏的链接
 const leftLinks = [
-  { title: 'MAN', path: '/create/man', icon: <Assignment /> },
-  { title: 'BVT', path: '/create/bvt', icon: <Assignment /> },
-  { title: 'PERF', path: '/create/perf', icon: <Assignment /> },
-  { title: "ALT", path: "/create/ALT", icon: <Assignment /> },
+  { title: 'Manual ', path: '/create/man', icon: <Assignment /> },
+  { title: 'Bvt', path: '/create/bvt', icon: <Assignment /> },
+  { title: 'Performance ', path: '/create/perf', icon: <Assignment /> },
+  { title: "Alt", path: "/create/alt", icon: <Assignment /> },
 ];
 
 // 主页面组件

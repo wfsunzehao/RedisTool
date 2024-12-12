@@ -222,18 +222,18 @@ const AltPage: React.FC = () => {
             type="submit"
             variant="contained"
             color="primary"
-            sx={{ mx: 1 }}
+            sx={{ mx: 1,textTransform: "none"  }}
           >
-            submit
+            Submit
           </Button>
           <Button
             type="button"
             variant="outlined"
             color="secondary"
             onClick={handleCancel}
-            sx={{ mx: 1 }}
+            sx={{ mx: 1,textTransform: "none"  }}
           >
-            cancel
+            Cancel
           </Button>
         </Box>
       </form>

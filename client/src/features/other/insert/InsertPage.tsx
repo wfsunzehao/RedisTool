@@ -196,11 +196,11 @@ const InsertPage: React.FC = () => {
           </FormControl>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-          <Button type="submit" variant="contained" color="primary" sx={{ mx: 1 }} disabled={loading}>
-          submit
+          <Button type="submit" variant="contained" color="primary" sx={{ mx: 1,textTransform: "none"  }} disabled={loading}>
+          Submit
           </Button>
-          <Button type="button" variant="outlined" color="secondary" onClick={handleCancel} sx={{ mx: 1 }} disabled={loading}>
-            cancel
+          <Button type="button" variant="outlined" color="secondary" onClick={handleCancel} sx={{ mx: 1,textTransform: "none"  }} disabled={loading}>
+            Cancel
           </Button>
         </Box>
       </form>

@@ -225,14 +225,14 @@ const GroupPage: React.FC = () => {
             type="submit"
             variant="contained"
             color="primary"
-            sx={{ mx: 1 }}
+            sx={{ mx: 1,textTransform: "none"  }}
             disabled={loading || !showResourceBox}  // 添加 showResourceBox 作为禁用条件
           >
-            submit
+            Submit
           </Button>
 
-          <Button type="button" variant="outlined" color="secondary" onClick={handleCancel} sx={{ mx: 1 }} disabled={loading}>
-          cancel
+          <Button type="button" variant="outlined" color="secondary" onClick={handleCancel} sx={{ mx: 1,textTransform: "none"  }} disabled={loading}>
+          Cancel
           </Button>
         </Box>
       </form>

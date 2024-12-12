@@ -4,7 +4,7 @@ import { Assignment } from '@mui/icons-material';
 import NavPage from '../../common/layout/NavPage';
 
 const leftLinks = [
-  { title: 'group', path: '/delete/group', icon: <Assignment /> },
+  { title: 'Group', path: '/delete/group', icon: <Assignment /> },
 ];
 
 const DeletePage: React.FC = () => {

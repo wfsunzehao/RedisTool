@@ -82,7 +82,7 @@ const MedianPage: React.FC = () => {
           />
         </Box>
         <Box sx={{ mt: 2 }}>
-          <Button type="submit" variant="contained" color="primary" disabled={loading}>
+          <Button type="submit" variant="contained" color="primary" disabled={loading} sx={{ mx: 1,textTransform: "none"  }}>
             Submit
           </Button>
         </Box>
