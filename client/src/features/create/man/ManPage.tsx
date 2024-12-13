@@ -34,11 +34,15 @@ const ManPage: React.FC = () => {
   const fetchGroupList = (subscriptionId: string) => {
     agent.Create.getGroup(subscriptionId)
       .then((response) => {
-        setGroupList(response);
-        setFilteredGroupList(response); // 初始化过滤列表
+        const sortedResponse = response.sort((a: string, b: string) => 
+          a.toLowerCase().localeCompare(b.toLowerCase()) // 忽略大小写排序
+        );
+        setGroupList(sortedResponse);
+        setFilteredGroupList(sortedResponse); // 初始化过滤列表
       })
       .catch((error) => console.error(error));
   };
+  
 
   // 表单校验
   const checkForm = () => {
