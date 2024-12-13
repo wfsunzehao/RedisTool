@@ -10,7 +10,6 @@ import {
 import { Autocomplete } from '@mui/material';
 import agent from '../../../app/api/agent';
 import { ManModel } from '../../../common/models/DataModel';
-import LoadingComponent from '../../../common/components/CustomLoading';
 import { useMessage } from '../../../app/context/MessageContext';
 import { handleGenericSubmit } from '../../../app/util/util';
 
@@ -19,30 +18,27 @@ const ManPage: React.FC = () => {
   const [group, setGroup] = useState('');
   const [region, setRegion] = useState('');
   const [groupList, setGroupList] = useState<string[]>([]);
-  const [filteredGroupList, setFilteredGroupList] = useState<string[]>([]); // 过滤后的组列表
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const { addMessage } = useMessage();
 
   // 初始化加载
   useEffect(() => {
-    setSubscription('1e57c478-0901-4c02-8d35-49db234b78d2');
-    fetchGroupList('1e57c478-0901-4c02-8d35-49db234b78d2');
+    setSubscription("1e57c478-0901-4c02-8d35-49db234b78d2");
+    fetchGroupList("1e57c478-0901-4c02-8d35-49db234b78d2");
   }, []);
 
   // 获取组列表
   const fetchGroupList = (subscriptionId: string) => {
     agent.Create.getGroup(subscriptionId)
       .then((response) => {
-        const sortedResponse = response.sort((a: string, b: string) => 
+        const sortedResponse = response.sort((a: string, b: string) =>
           a.toLowerCase().localeCompare(b.toLowerCase()) // 忽略大小写排序
         );
         setGroupList(sortedResponse);
-        setFilteredGroupList(sortedResponse); // 初始化过滤列表
       })
       .catch((error) => console.error(error));
   };
-  
 
   // 表单校验
   const checkForm = () => {
@@ -64,14 +60,6 @@ const ManPage: React.FC = () => {
     handleGenericSubmit(event, data, () => agent.Create.sendManJson(data), checkForm, setLoading, customMessage);
   };
 
-  // 下拉框和搜索框处理
-  const handleGroupInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const searchValue = event.target.value.toLowerCase();
-    setFilteredGroupList(
-      groupList.filter((item) => item.toLowerCase().includes(searchValue))
-    );
-  };
-
   return (
     <Box>
       <p style={{ color: '#1976d2', fontSize: '30px', textAlign: 'center' }}>
@@ -89,9 +77,12 @@ const ManPage: React.FC = () => {
               helperText={errors.subscription}
               fullWidth
             >
-              {['1e57c478-0901-4c02-8d35-49db234b78d2'].map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
+              {[{
+                value: '1e57c478-0901-4c02-8d35-49db234b78d2',
+                label: 'Cache Team - Vendor CTI Testing 2',
+              }].map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
                 </MenuItem>
               ))}
             </TextField>
@@ -99,12 +90,10 @@ const ManPage: React.FC = () => {
 
           <FormControl sx={{ width: '100%', marginTop: 2 }}>
             <Autocomplete
-              freeSolo
-              options={filteredGroupList}
+              freeSolo={false} // 禁止自定义输入
+              options={groupList}
               value={group}
               onChange={(e, newValue) => setGroup(newValue || '')}
-              inputValue={group}
-              onInputChange={(e, value) => setGroup(value)}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -112,7 +101,6 @@ const ManPage: React.FC = () => {
                   variant="outlined"
                   error={!!errors.group}
                   helperText={errors.group}
-                  onChange={handleGroupInputChange} // 处理输入以筛选列表
                 />
               )}
             />
