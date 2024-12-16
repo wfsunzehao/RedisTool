@@ -97,8 +97,10 @@ const BvtPage: React.FC = () => {
     setErrors((prevErrors) => ({ ...prevErrors, subscription: '' }));
     agent.Create.getGroup(subscriptionid)
       .then((response) => {
-        const sortedList = response.sort((a:string, b:string) => a.localeCompare(b));
-        setGroupList(sortedList);
+        const sortedResponse = response.sort((a: string, b: string) =>
+          a.toLowerCase().localeCompare(b.toLowerCase()) // 忽略大小写排序
+        );
+        setGroupList(sortedResponse);
       })
       .catch((error) => console.log(error.response));
   };

@@ -28,7 +28,12 @@ const InsertPage: React.FC = () => {
     //默认显示Cache Team - Vendor CTI Testing 2
     setSubscription("1e57c478-0901-4c02-8d35-49db234b78d2");
     agent.Create.getGroup("1e57c478-0901-4c02-8d35-49db234b78d2")
-    .then(response => { setGroupList(response);})
+    .then(response => { 
+      const sortedResponse = response.sort((a: string, b: string) =>
+        a.toLowerCase().localeCompare(b.toLowerCase()) // 忽略大小写排序
+      );
+      setGroupList(sortedResponse);
+    })
     .catch(error => console.log(error.response))
   },[])
 
@@ -74,7 +79,12 @@ const InsertPage: React.FC = () => {
     setSubscription(subscriptionid);
     setErrors(prevErrors => ({ ...prevErrors, subscription: '' })); // 清除订阅错误
     agent.Create.getGroup(subscriptionid)
-      .then(response => { setGroupList(response); })
+      .then(response => { 
+        const sortedResponse = response.sort((a: string, b: string) =>
+          a.toLowerCase().localeCompare(b.toLowerCase()) // 忽略大小写排序
+        );
+        setGroupList(sortedResponse);
+      })
       .catch(error => console.log(error.response));
   };
   // 组选择改变时
