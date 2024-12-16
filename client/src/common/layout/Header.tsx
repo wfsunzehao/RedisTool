@@ -8,7 +8,6 @@ import {
   ListItem,
   Badge,
   Avatar,
-  Button,
   Popover,
   Divider,
   Typography,
@@ -23,7 +22,7 @@ import { useAuth } from "../../app/context/AuthContext";
 import { Switch } from "@nextui-org/react";
 import { SunIcon } from "../icon/SunIcon";
 import { MoonIcon } from "../icon/MoonIcon";
-import LoginPage from "../../features/login/LoginPage";
+import { loginTextStyles } from "../constants/constants";
 
 const midLinks = [
   { title: "Create", path: "/create" },
@@ -51,7 +50,6 @@ export default function Header() {
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [logoutAnchorEl, setLogoutAnchorEl] = useState<HTMLElement | null>(null);
-  const [openLoginDialog, setOpenLoginDialog] = useState(false);
 
   const handleChatIconClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -80,7 +78,7 @@ export default function Header() {
   return (
     <AppBar position="sticky" sx={{ boxShadow: 2 }}>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", px: 2 }}>
-        {/* Left Section: Logo and Theme Switch */}
+        {/* 左侧 Logo 和主题切换 */}
         <Box display="flex" alignItems="center">
           <NavLink to="/" style={{ display: "flex", alignItems: "center" }}>
             <img
@@ -103,23 +101,35 @@ export default function Header() {
           />
         </Box>
 
-        {/* Middle Section: Navigation Links */}
-        <List sx={{ display: "flex", padding: 0 }}>
-          {midLinks.map(({ title, path }) => (
-            <ListItem component={NavLink} to={path} key={path} sx={navStyles}>
-              {title}
-            </ListItem>
-          ))}
-        </List>
+        {/* 中间导航链接，仅在用户登录时显示 */}
+        {isLoggedIn && (
+          <List sx={{ display: "flex", padding: 0 }}>
+            {midLinks.map(({ title, path }) => (
+              <ListItem component={NavLink} to={path} key={path} sx={navStyles}>
+                {title}
+              </ListItem>
+            ))}
+          </List>
+        )}
 
-        {/* Right Section: User Controls */}
+        {/* 右侧消息和用户头像 */}
+        {/* 右侧部分：用户控制区域 */}
         <Box display="flex" alignItems="center">
-          {/* Messages */}
-          <IconButton size="large" edge="start" color="inherit" sx={{ mr: 2 }} onClick={handleChatIconClick}>
-            <Badge badgeContent={messages.length} color="secondary">
-              <ChatIcon />
-            </Badge>
-          </IconButton>
+          {/* 消息图标 - 仅登录状态下显示 */}
+          {isLoggedIn && (
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              sx={{ mr: 2 }}
+              onClick={handleChatIconClick}
+            >
+              <Badge badgeContent={messages.length} color="secondary">
+                <ChatIcon />
+              </Badge>
+            </IconButton>
+          )}
+          {/* 消息弹窗 */}
           <Popover
             id={id}
             open={open}
@@ -129,6 +139,7 @@ export default function Header() {
             transformOrigin={{ vertical: "top", horizontal: "center" }}
           >
             <Box sx={{ width: "300px" }}>
+              {/* 如果有消息，则显示消息列表 */}
               {messages.length > 0 ? (
                 <List>
                   {messages.map(({ text, timestamp }, index) => (
@@ -144,6 +155,7 @@ export default function Header() {
                   ))}
                 </List>
               ) : (
+                // 没有消息时显示提示
                 <Typography variant="body1" align="center" sx={{ padding: 2 }}>
                   No messages
                 </Typography>
@@ -151,14 +163,25 @@ export default function Header() {
             </Box>
           </Popover>
 
-          {/* User Avatar or Login Button */}
+          {/* 用户头像或登录提示 */}
           {isLoggedIn ? (
-            <Avatar sx={{ marginLeft: 2 }} src="/path-to-avatar.jpg" alt="User Avatar" onClick={handleAvatarClick} />
+            // 登录后显示头像
+            <Avatar
+              sx={{ marginLeft: 2 }}
+              src="/path-to-avatar.jpg"
+              alt="User Avatar"
+              onClick={handleAvatarClick}
+            />
           ) : (
-            <Button onClick={() => setOpenLoginDialog(true)} variant="outlined" color="inherit" sx={{ textTransform: "none" }} >
-              Sign In
-            </Button>
+            // 未登录时显示 "Please log in" 提示
+            <Typography
+              variant="body2"
+              sx={loginTextStyles}
+            >
+              Please log in
+            </Typography>
           )}
+          {/* 登出弹窗 */}
           <Popover
             id={logoutId}
             open={openLogoutMenu}
@@ -170,10 +193,8 @@ export default function Header() {
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Popover>
         </Box>
-      </Toolbar>
 
-      {/* Login Dialog */}
-      {openLoginDialog && <LoginPage onClose={() => setOpenLoginDialog(false)} />}
+      </Toolbar>
     </AppBar>
   );
 }

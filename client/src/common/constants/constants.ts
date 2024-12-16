@@ -1,4 +1,4 @@
-import { Box, createTheme } from "@mui/material";
+import { Box, createTheme, Theme } from "@mui/material";
 import { Button, keyframes, ListItem, ListItemText, Paper, styled } from "@mui/material";
 
 
@@ -60,6 +60,21 @@ export const Overlay = styled(Box)({
   alignItems: 'center',
   zIndex: 1000, // 确保覆盖在其他元素之上
 });
+// constants.ts
+
+export const loginTextStyles = {
+  ml: 2,
+  color: (theme: Theme) => theme.palette.common.white, // 使用 theme 动态设置颜色
+  fontWeight: 'bold', // 加粗
+  fontSize: '1rem', // 字体大小
+  //textTransform: 'uppercase', // 转换为大写
+  letterSpacing: 1.0, // 字母间距
+  textAlign: 'center', // 居中对齐
+  //backgroundColor: 'rgba(0, 0, 0, 0.3)', // 背景透明色
+  padding: '5px 15px', // 内边距
+  borderRadius: '20px', // 圆角
+};
+
 // 创建主题
 export const theme = createTheme({
     palette: {
