@@ -5,11 +5,16 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import './HomePage.css';
 import { Hero, images, ImageWrapper, Indicator, IndicatorDot } from './constants';
 import LoginForm from '../login/LoginForm';
+import SignUpForm from '../login/SignUpForm';
+import ForgotPasswordForm from '../login/ForgotPasswordForm';
+import { useAuthState } from '../../app/context/AuthStateContext';
+
 
 const HomePage: React.FC = () => {
   const theme = useTheme();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
+  const { currentForm } = useAuthState();  // 使用新命名的 hook
 
   useEffect(() => {
     const interval = isHovering ? null : setInterval(() => {
@@ -74,7 +79,9 @@ const HomePage: React.FC = () => {
             zIndex: 10, // 确保 LoginForm 显示在图片上方
           }}
         >
-          <LoginForm />
+          {currentForm === 'login' && <LoginForm />}
+          {currentForm === 'signup' && <SignUpForm />}
+          {currentForm === 'forgotPassword' && <ForgotPasswordForm />}
         </Box>
 
         {/* 图片轮播 */}
