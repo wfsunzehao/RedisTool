@@ -5,7 +5,7 @@ import { HeartIcon } from '../../common/icon/MyIcon';
 
 // 左侧导航栏的链接
 const leftLinks = [
-  { title: 'Manual ', path: '/create/man', icon: <HeartIcon /> },
+  { title: 'Manual  ', path: '/create/man', icon: <HeartIcon /> },
   { title: 'Bvt', path: '/create/bvt', icon: <Assignment /> },
   { title: 'Performance ', path: '/create/perf', icon: <Assignment /> },
   { title: "Alt", path: "/create/alt", icon: <Assignment /> },
