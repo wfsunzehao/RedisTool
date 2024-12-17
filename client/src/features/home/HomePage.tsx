@@ -8,10 +8,12 @@ import LoginForm from '../login/LoginForm';
 import SignUpForm from '../login/SignUpForm';
 import ForgotPasswordForm from '../login/ForgotPasswordForm';
 import { useAuthState } from '../../app/context/AuthStateContext';
+import { useAuth } from '../../app/context/AuthContext';
 
 
 const HomePage: React.FC = () => {
   const theme = useTheme();
+  const { isLoggedIn } = useAuth();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
   const { currentForm } = useAuthState();  // 使用新命名的 hook
@@ -79,7 +81,7 @@ const HomePage: React.FC = () => {
             zIndex: 10, // 确保 LoginForm 显示在图片上方
           }}
         >
-          {currentForm === 'login' && <LoginForm />}
+          {currentForm === 'login'&&!isLoggedIn && <LoginForm />}
           {currentForm === 'signup' && <SignUpForm />}
           {currentForm === 'forgotPassword' && <ForgotPasswordForm />}
         </Box>

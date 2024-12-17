@@ -1,8 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Link, useTheme } from '@mui/material';
+import { useAuth } from '../../app/context/AuthContext';
+import agent from '../../app/api/agent';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm: React.FC = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const { setIsLoggedIn, setToken } = useAuth();
+
+  const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setIsLoading(true);
+    setError('');
+    setSuccess('');
+    try {
+      const response = await agent.Auth.login(username, password);
+      localStorage.setItem('authToken', response.token);
+      setToken(response.token);
+      setIsLoggedIn(true);
+      setSuccess('Login successful!');
+      navigate('/create');
+    } catch (error) {
+      const errorMessage = (error as { data: { message: string } })?.data?.message || 'Invalid username or password.';
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Box
@@ -66,96 +96,109 @@ const LoginForm: React.FC = () => {
           </Link>
         </Typography>
 
-        {/* 输入框部分 */}
-        <TextField
-          fullWidth
-          label="Email address"
-          margin="normal"
-          type="email"
-          variant="outlined"
-          InputProps={{
-            style: { color: theme.palette.text.primary },
-          }}
-          InputLabelProps={{
-            style: { color: theme.palette.text.secondary },
-          }}
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: theme.palette.grey[400],
+        <form onSubmit={handleLogin}>
+          {/* 输入框部分 */}
+          <TextField
+            fullWidth
+            required
+            label="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            margin="normal"
+            type="Username"
+            variant="outlined"
+            InputProps={{
+              style: { color: theme.palette.text.primary },
+            }}
+            InputLabelProps={{
+              style: { color: theme.palette.text.secondary },
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: theme.palette.grey[400],
+                },
+                '&:hover fieldset': {
+                  borderColor: theme.palette.primary.main,
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: theme.palette.primary.dark,
+                },
               },
-              '&:hover fieldset': {
-                borderColor: theme.palette.primary.main,
+            }}
+          />
+          <TextField
+            fullWidth
+            required
+            label="Password"
+            margin="normal"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            variant="outlined"
+            InputProps={{
+              style: { color: theme.palette.text.primary },
+            }}
+            InputLabelProps={{
+              style: { color: theme.palette.text.secondary },
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: theme.palette.grey[400],
+                },
+                '&:hover fieldset': {
+                  borderColor: theme.palette.primary.main,
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: theme.palette.primary.dark,
+                },
               },
-              '&.Mui-focused fieldset': {
-                borderColor: theme.palette.primary.dark,
-              },
-            },
-          }}
-        />
-        <TextField
-          fullWidth
-          label="Password"
-          margin="normal"
-          type="password"
-          variant="outlined"
-          InputProps={{
-            style: { color: theme.palette.text.primary },
-          }}
-          InputLabelProps={{
-            style: { color: theme.palette.text.secondary },
-          }}
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: theme.palette.grey[400],
-              },
-              '&:hover fieldset': {
-                borderColor: theme.palette.primary.main,
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: theme.palette.primary.dark,
-              },
-            },
-          }}
-        />
+            }}
+          />
 
-        {/* 忘记密码链接 */}
-        <Link
-          href="#"
-          variant="body2"
-          sx={{
-            display: 'block',
-            marginBottom: 3,
-            textAlign: 'right',
-            color: theme.palette.text.secondary,
-            '&:hover': {
-              textDecoration: 'underline',
-              color: theme.palette.primary.main,
-            },
-          }}
-        >
-          Forgot password?
-        </Link>
+          {/* 忘记密码链接 */}
+          <Link
+            href="#"
+            variant="body2"
+            sx={{
+              display: 'block',
+              marginBottom: 3,
+              textAlign: 'right',
+              color: theme.palette.text.secondary,
+              '&:hover': {
+                textDecoration: 'underline',
+                color: theme.palette.primary.main,
+              },
+            }}
+          >
+            Forgot password?
+          </Link>
 
-        {/* 按钮部分 */}
-        <Button
-          fullWidth
-          variant="contained"
-          sx={{
-            backgroundColor: theme.palette.primary.main,
-            color: theme.palette.primary.contrastText,
-            fontWeight: 'bold',
-            textTransform: 'none',
-            fontSize: '1.2rem', // 增大字体
-            padding: '12px', // 增大按钮
-            '&:hover': {
-              backgroundColor: theme.palette.primary.dark,
-            },
-          }}
-        >
-          Sign in
-        </Button>
+          {/* 按钮部分 */}
+          <Button
+            fullWidth
+            type="submit"
+            disabled={isLoading}
+            variant="contained"
+            sx={{
+              backgroundColor: theme.palette.primary.main,
+              color: theme.palette.primary.contrastText,
+              fontWeight: 'bold',
+              textTransform: 'none',
+              fontSize: '1.2rem', // 增大字体
+              padding: '12px', // 增大按钮
+              '&:hover': {
+                backgroundColor: theme.palette.primary.dark,
+              },
+            }}
+          >
+            Sign in
+          </Button>
+
+        </form>
+
+        
 
         {/* 底部说明文字 */}
         <Typography

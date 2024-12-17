@@ -13,7 +13,7 @@ import {
   Typography,
   MenuItem,
 } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import ChatIcon from "@mui/icons-material/Chat";
 import { useTheme } from "../../app/context/ThemeContext";
 import logo from "../../../public/images/wicrecend3.png";
@@ -47,6 +47,7 @@ export default function Header() {
   const { toggleTheme, isDarkMode } = useTheme();
   const { messages } = useMessage();
   const { isLoggedIn, setIsLoggedIn } = useAuth();
+  const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [logoutAnchorEl, setLogoutAnchorEl] = useState<HTMLElement | null>(null);
@@ -67,6 +68,7 @@ export default function Header() {
     localStorage.removeItem("authToken");
     setIsLoggedIn(false);
     setLogoutAnchorEl(null);
+    navigate('/');
   };
 
   const open = Boolean(anchorEl);
