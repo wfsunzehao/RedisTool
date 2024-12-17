@@ -3,8 +3,8 @@ import { Assignment } from '@mui/icons-material';
 import NavPage from '../../common/layout/NavPage';
 
 const leftLinks = [
-  { title: 'Insert', path: '/more/insert', icon: <Assignment /> },
-  { title: 'Median', path: '/more/median', icon: <Assignment /> },
+  { title: 'Insert Data', path: '/more/insert', icon: <Assignment /> },
+  { title: 'Find Median', path: '/more/median', icon: <Assignment /> },
 ];
 
 const OtherPage: React.FC = () => {

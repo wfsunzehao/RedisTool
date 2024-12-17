@@ -130,7 +130,7 @@ const ManPage: React.FC = () => {
               variant="contained"
               color="primary"
               disabled={loading}
-              sx={{ mx: 1 }}
+              sx={{ mx: 1,textTransform: 'none'  }}
             >
               Submit
             </Button>
@@ -145,7 +145,7 @@ const ManPage: React.FC = () => {
                 setRegion('');
                 setErrors({});
               }}
-              sx={{ mx: 1 }}
+              sx={{ mx: 1,textTransform: 'none'  }}
             >
               Cancel
             </Button>

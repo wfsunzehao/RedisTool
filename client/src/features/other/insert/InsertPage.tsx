@@ -129,7 +129,7 @@ const InsertPage: React.FC = () => {
 
   return (
     <Box>
-      <p style={{ color: '#1976d2', fontSize: '30px', textAlign: 'center' }}>insert data</p>
+      <p style={{ color: '#1976d2', fontSize: '30px', textAlign: 'center' }}>Insert Data</p>
       <form className="submit-box" onSubmit={handleSubmit}>
         <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
         
