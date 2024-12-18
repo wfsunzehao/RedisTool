@@ -13,7 +13,7 @@ import {
   Typography,
   MenuItem,
 } from "@mui/material";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import ChatIcon from "@mui/icons-material/Chat";
 import { useTheme } from "../../app/context/ThemeContext";
 import logo from "../../../public/images/wicrecend3.png";
@@ -43,11 +43,47 @@ const navStyles = {
   },
 };
 
+// 获取头部样式的逻辑
+const getHeaderStyles = (isHomePage: boolean, isDarkMode: boolean) => {
+  return {
+    backgroundColor: isHomePage
+      ? isDarkMode
+        ? "#333333" // 主页且黑暗模式
+        : "#1976d2" // 主页且亮色模式
+      : isDarkMode
+      ? "#333333" // 非主页且黑暗模式
+      : "#ffffff", // 非主页且亮色模式
+    color: isHomePage
+      ? isDarkMode
+        ? "#ffffff" // 主页且黑暗模式
+        : "#ffffff" // 主页且亮色模式
+      : isDarkMode
+      ? "#ffffff" // 非主页且黑暗模式
+      : "#333333", // 非主页且亮色模式
+  };
+};
+
+// 获取Logo过滤色的逻辑
+const getLogoFilter = (isHomePage: boolean, isDarkMode: boolean) => {
+  // 主页时，Logo总是使用反色滤镜
+  if (isHomePage) {
+    return "invert(100%) sepia(100%) saturate(0%) hue-rotate(180deg)";
+  }
+  
+  // 非主页时，根据黑暗模式决定是否使用反色滤镜
+  return isDarkMode
+    ? "invert(100%) sepia(100%) saturate(0%) hue-rotate(180deg)" // 黑暗模式使用反色滤镜
+    : "none"; // 亮色模式不使用滤镜
+};
+
 export default function Header() {
   const { toggleTheme, isDarkMode } = useTheme();
   const { messages } = useMessage();
   const { isLoggedIn, setIsLoggedIn } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isHomePage = location.pathname === "/";
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [logoutAnchorEl, setLogoutAnchorEl] = useState<HTMLElement | null>(null);
@@ -68,7 +104,7 @@ export default function Header() {
     localStorage.removeItem("authToken");
     setIsLoggedIn(false);
     setLogoutAnchorEl(null);
-    navigate('/');
+    navigate("/");
   };
 
   const open = Boolean(anchorEl);
@@ -77,15 +113,12 @@ export default function Header() {
   const openLogoutMenu = Boolean(logoutAnchorEl);
   const logoutId = openLogoutMenu ? "logout-popover" : undefined;
 
+  // 获取头部的样式
+  const headerStyles = getHeaderStyles(isHomePage, isDarkMode);
+  const logoFilter = getLogoFilter(isHomePage, isDarkMode);
+
   return (
-    <AppBar position="sticky" 
-            sx={{ 
-                  boxShadow: 2 ,
-                  backgroundColor: isDarkMode ? "#333333" : "#1976d2", // 深色模式使用深蓝色，浅色模式使用浅蓝色
-                  color: "#ffffff", // 文字颜色始终为白色，以确保在蓝色背景上清晰可见
-                  paddingLeft: "40px", // 左侧留空
-                  paddingRight: "40px", // 右侧留空
-                }}>
+    <AppBar position="sticky" sx={{ ...headerStyles, boxShadow: 1}}>{/*, paddingLeft: "40px", paddingRight: "40px"  */}
       <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", px: 2 }}>
         {/* 左侧 Logo 和主题切换 */}
         <Box display="flex" alignItems="center">
@@ -96,7 +129,7 @@ export default function Header() {
               style={{
                 maxHeight: 40,
                 objectFit: "contain",
-                filter: "invert(100%) sepia(100%) saturate(0%) hue-rotate(180deg)",
+                filter: logoFilter, // 应用过滤逻辑
               }}
             />
           </NavLink>
@@ -110,21 +143,26 @@ export default function Header() {
           />
         </Box>
 
-        {/* 中间导航链接，仅在用户登录时显示 */}
-        {isLoggedIn && (
-          <List sx={{ display: "flex", padding: 0 }}>
-            {midLinks.map(({ title, path }) => (
-              <ListItem component={NavLink} to={path} key={path} sx={navStyles}>
-                {title}
-              </ListItem>
-            ))}
-          </List>
-        )}
-
-        {/* 右侧消息和用户头像 */}
-        {/* 右侧部分：用户控制区域 */}
+        {/* 右侧用户头像和消息图标 */}
         <Box display="flex" alignItems="center">
-          {/* 消息图标 - 仅登录状态下显示 */}
+          {isLoggedIn && (
+            <>
+              
+
+              {/* 中间导航链接，仅在用户登录时显示 */}
+              <List sx={{ display: "flex", padding: 0 }}>
+                {midLinks.map(({ title, path }) => (
+                  <ListItem component={NavLink} to={path} key={path} sx={navStyles}>
+                    {title}
+                  </ListItem>
+                ))}
+              </List>
+            </>
+          )}
+
+          {/* 分割线 */}
+          <Divider orientation="vertical" sx={{ height: "25px", marginRight: 2 }} />
+
           {isLoggedIn && (
             <IconButton
               size="large"
@@ -138,71 +176,32 @@ export default function Header() {
               </Badge>
             </IconButton>
           )}
-          {/* 消息弹窗 */}
-          <Popover
-            id={id}
-            open={open}
-            anchorEl={anchorEl}
-            onClose={handlePopoverClose}
-            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-            transformOrigin={{ vertical: "top", horizontal: "center" }}
-          >
-            <Box sx={{ width: "300px" }}>
-              {/* 如果有消息，则显示消息列表 */}
-              {messages.length > 0 ? (
-                <List>
-                  {messages.map(({ text, timestamp }, index) => (
-                    <React.Fragment key={index}>
-                      <ListItem>
-                        <Typography variant="body2">{text}</Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {new Date(timestamp).toLocaleString()}
-                        </Typography>
-                      </ListItem>
-                      {index < messages.length - 1 && <Divider />}
-                    </React.Fragment>
-                  ))}
-                </List>
-              ) : (
-                // 没有消息时显示提示
-                <Typography variant="body1" align="center" sx={{ padding: 2 }}>
-                  No messages
-                </Typography>
-              )}
-            </Box>
-          </Popover>
 
-          {/* 用户头像或登录提示 */}
           {isLoggedIn ? (
             <Box display="flex" alignItems="center" sx={{ marginLeft: 2 }}>
-            {/* 用户名和头像的容器 */}
-            <Box display="flex" alignItems="center">
-              {/* 用户名部分 */}
-              <Typography 
-                variant="body2" 
+              <Typography
+                variant="body2"
                 sx={{
-                  fontWeight: "500",  // 改为适中的字体粗细
-                  fontSize: "16px",  // 增大字体
-                  color:  "#ffffff",  // 根据主题调整字体颜色
-                  marginRight: "10px", // 头像与用户名之间的间距
+                  fontWeight: "500",
+                  fontSize: "16px",
+                  color: headerStyles.color, // 使用动态颜色
+                  marginRight: "10px",
                 }}
               >
                 {user.username}
               </Typography>
-              
-              {/* 头像部分 */}
               <Avatar
                 sx={{
                   width: 42,
                   height: 42,
                   cursor: "pointer",
-                  borderRadius: "50%",  // 确保头像是圆形的
-                  border: "2px solid",  // 给头像加个边框
-                  borderColor: isDarkMode ? "#ffffff" : "#1976d2",  // 根据主题调整边框颜色
-                  transition: "transform 0.3s ease, box-shadow 0.3s ease",  // 添加过渡效果
+                  borderRadius: "50%",
+                  border: "2px solid",
+                  borderColor: isDarkMode ? "#ffffff" : "#1976d2",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
                   "&:hover": {
-                    transform: "scale(1.1)",  // 悬停时放大头像
-                    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",  // 悬停时添加阴影
+                    transform: "scale(1.1)",
+                    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
                   },
                 }}
                 src={user.avatar}
@@ -210,14 +209,12 @@ export default function Header() {
                 onClick={handleAvatarClick}
               />
             </Box>
-          </Box>
-          
           ) : (
             <Typography variant="body2" sx={loginTextStyles}>
               Please log in
             </Typography>
           )}
-          {/* 登出弹窗 */}
+
           <Popover
             id={logoutId}
             open={openLogoutMenu}
@@ -229,7 +226,6 @@ export default function Header() {
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Popover>
         </Box>
-
       </Toolbar>
     </AppBar>
   );
