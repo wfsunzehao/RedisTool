@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'; 
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Box, Paper, List, ListItemText, ListItemIcon, Collapse, ListItemButton } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
@@ -36,7 +36,7 @@ const NavPage: React.FC<NavPageProps> = ({ links, defaultPath }) => {
   };
 
   return (
-    <Paper elevation={10} sx={{ display: 'flex', height: '100vh' }}>
+    <Paper elevation={10} sx={{ display: 'flex', height: '100vh', paddingLeft: '40px', paddingRight: '40px' }}>
       {/* 左侧导航栏 */}
       <Box
         sx={{
@@ -46,6 +46,7 @@ const NavPage: React.FC<NavPageProps> = ({ links, defaultPath }) => {
           flexDirection: 'column',
           height: '100%',
           overflowY: 'auto',
+          paddingRight: '40px', // 右侧留白
         }}
       >
         <List>
@@ -72,7 +73,7 @@ const NavPage: React.FC<NavPageProps> = ({ links, defaultPath }) => {
                         component={Link}
                         to={path}
                         selected={isSelected(path)}
-                        sx={{ pl: 4 }}
+                        sx={{ pl: 10 }}
                       >
                         <ListItemText primary={title} />
                       </ListItemButton>
