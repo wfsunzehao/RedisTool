@@ -20,14 +20,15 @@ namespace redis.WebAPi.Service
         {
             try
             {
+                string fileName = "/home/azureuser/output-1211.json";
                 var armClient = _client.ArmClient;
                 var subResource = armClient.GetSubscriptionResource(new ResourceIdentifier("/subscriptions/" + "fc2f20f5-602a-4ebd-97e6-4fae3f1f6424"));
-                var vm1 = (await subResource.GetResourceGroupAsync("MemtierbenchmarkTest")).Value.GetVirtualMachine("MemtierBenchmarkM1-Basic-C0C1");
+                var vm1 = (await subResource.GetResourceGroupAsync("MemtierbenchmarkTest")).Value.GetVirtualMachine("MemtierBenchmarkM3-Premium-P5");
 
                 var runCommandInput = new RunCommandInput("RunShellScript")
                 {
                 };
-                runCommandInput.Script.Add("ls");
+                runCommandInput.Script.Add($"python3 /home/azureuser/read_result.py {fileName}");
 
                 var response = (await vm1.Value.RunCommandAsync(WaitUntil.Completed,runCommandInput)).Value;
 
