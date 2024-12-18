@@ -1,5 +1,6 @@
 import { Box, createTheme, Theme } from "@mui/material";
 import { Button, keyframes, ListItem, ListItemText, Paper, styled } from "@mui/material";
+import md5 from "md5";
 
 
 
@@ -48,6 +49,12 @@ export const  ManualTestCaseNames = [
   "8659",
   "8673"
 ];
+export const user = {
+  avatar: `https://www.gravatar.com/avatar/${md5('v-youjunzhou@microsoft.com')}?d=identicon`, // d=identicon 代表如果没有找到对应的头像，会返回一个默认的图标头像
+  username: "Zhou Youjun",         // 用户名
+  email: "v-youjunzhou@microsoft.com",  // 用户邮箱
+};
+
 export const Overlay = styled(Box)({
   position: 'fixed',
   top: 0,

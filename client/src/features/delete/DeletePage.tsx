@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { Assignment } from '@mui/icons-material';
 import NavPage from '../../common/layout/NavPage';
+import { IconHttpDelete } from '@tabler/icons-react';
 
 const leftLinks = [
-  { title: 'Group', path: '/delete/group', icon: <Assignment /> },
+  { title: 'Delete by group', path: '/delete/group', icon: <IconHttpDelete stroke={2} />},
 ];
 
 const DeletePage: React.FC = () => {

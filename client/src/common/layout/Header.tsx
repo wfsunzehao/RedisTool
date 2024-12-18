@@ -22,12 +22,12 @@ import { useAuth } from "../../app/context/AuthContext";
 import { Switch } from "@nextui-org/react";
 import { SunIcon } from "../icon/SunIcon";
 import { MoonIcon } from "../icon/MoonIcon";
-import { loginTextStyles } from "../constants/constants";
+import { loginTextStyles, user } from "../constants/constants";
 
 const midLinks = [
-  { title: "Create", path: "/create" },
-  { title: "Delete", path: "/delete" },
-  { title: "More", path: "/more" },
+  { title: "Tests", path: "/create" },
+  { title: "Actions", path: "/delete" },
+  { title: "Tools", path: "/more" },
 ];
 
 const navStyles = {
@@ -78,7 +78,14 @@ export default function Header() {
   const logoutId = openLogoutMenu ? "logout-popover" : undefined;
 
   return (
-    <AppBar position="sticky" sx={{ boxShadow: 2 }}>
+    <AppBar position="sticky" 
+            sx={{ 
+                  boxShadow: 2 ,
+                  backgroundColor: isDarkMode ? "#333333" : "#1976d2", // 深色模式使用深蓝色，浅色模式使用浅蓝色
+                  color: "#ffffff", // 文字颜色始终为白色，以确保在蓝色背景上清晰可见
+                  paddingLeft: "40px", // 左侧留空
+                  paddingRight: "40px", // 右侧留空
+                }}>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", px: 2 }}>
         {/* 左侧 Logo 和主题切换 */}
         <Box display="flex" alignItems="center">
@@ -167,19 +174,46 @@ export default function Header() {
 
           {/* 用户头像或登录提示 */}
           {isLoggedIn ? (
-            // 登录后显示头像
-            <Avatar
-              sx={{ marginLeft: 2 }}
-              src="/path-to-avatar.jpg"
-              alt="User Avatar"
-              onClick={handleAvatarClick}
-            />
+            <Box display="flex" alignItems="center" sx={{ marginLeft: 2 }}>
+            {/* 用户名和头像的容器 */}
+            <Box display="flex" alignItems="center">
+              {/* 用户名部分 */}
+              <Typography 
+                variant="body2" 
+                sx={{
+                  fontWeight: "500",  // 改为适中的字体粗细
+                  fontSize: "16px",  // 增大字体
+                  color:  "#ffffff",  // 根据主题调整字体颜色
+                  marginRight: "10px", // 头像与用户名之间的间距
+                }}
+              >
+                {user.username}
+              </Typography>
+              
+              {/* 头像部分 */}
+              <Avatar
+                sx={{
+                  width: 42,
+                  height: 42,
+                  cursor: "pointer",
+                  borderRadius: "50%",  // 确保头像是圆形的
+                  border: "2px solid",  // 给头像加个边框
+                  borderColor: isDarkMode ? "#ffffff" : "#1976d2",  // 根据主题调整边框颜色
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",  // 添加过渡效果
+                  "&:hover": {
+                    transform: "scale(1.1)",  // 悬停时放大头像
+                    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",  // 悬停时添加阴影
+                  },
+                }}
+                src={user.avatar}
+                alt="User Avatar"
+                onClick={handleAvatarClick}
+              />
+            </Box>
+          </Box>
+          
           ) : (
-            // 未登录时显示 "Please log in" 提示
-            <Typography
-              variant="body2"
-              sx={loginTextStyles}
-            >
+            <Typography variant="body2" sx={loginTextStyles}>
               Please log in
             </Typography>
           )}

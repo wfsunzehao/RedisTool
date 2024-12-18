@@ -16,7 +16,7 @@ import GroupPage from "../../features/delete/group/GroupPage";
 import Signal from "../../features/other/signalR/Signal";
 import LoginPage from "../../features/login/LoginPage";
 import RegisterPage from "../../features/login/RegisterPage";
-import AuthLogin from "../../features/login/auth-forms/AuthLogin";
+
 
 export const router = createBrowserRouter([
   {

@@ -145,7 +145,7 @@ const ManPage: React.FC = () => {
                 setRegion('');
                 setErrors({});
               }}
-              sx={{ mx: 1,textTransform: 'none'  }}
+              sx={{ mx: 1, textTransform: 'none'  }}
             >
               Cancel
             </Button>

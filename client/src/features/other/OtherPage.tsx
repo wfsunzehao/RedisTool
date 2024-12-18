@@ -1,10 +1,11 @@
 import React from 'react';
-import { Assignment } from '@mui/icons-material';
 import NavPage from '../../common/layout/NavPage';
+import { IconDatabaseImport } from '@tabler/icons-react';
+import { IconStackMiddle } from '@tabler/icons-react';
 
 const leftLinks = [
-  { title: 'Insert Data', path: '/more/insert', icon: <Assignment /> },
-  { title: 'Find Median', path: '/more/median', icon: <Assignment /> },
+  { title: 'Insert Data', path: '/more/insert', icon: <IconDatabaseImport stroke={2} /> },
+  { title: 'Find Median', path: '/more/median', icon: <IconStackMiddle stroke={2} /> },
 ];
 
 const OtherPage: React.FC = () => {
