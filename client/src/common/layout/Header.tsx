@@ -43,7 +43,7 @@ const navStyles = {
   },
 };
 
-// 新增：获取头部样式的逻辑
+// 获取头部样式的逻辑
 const getHeaderStyles = (isHomePage: boolean, isDarkMode: boolean) => {
   return {
     backgroundColor: isHomePage
@@ -75,7 +75,6 @@ const getLogoFilter = (isHomePage: boolean, isDarkMode: boolean) => {
     ? "invert(100%) sepia(100%) saturate(0%) hue-rotate(180deg)" // 黑暗模式使用反色滤镜
     : "none"; // 亮色模式不使用滤镜
 };
-
 
 export default function Header() {
   const { toggleTheme, isDarkMode } = useTheme();
@@ -119,7 +118,7 @@ export default function Header() {
   const logoFilter = getLogoFilter(isHomePage, isDarkMode);
 
   return (
-    <AppBar position="sticky" sx={{ ...headerStyles, boxShadow: 0, paddingLeft: "40px", paddingRight: "40px" }}>
+    <AppBar position="sticky" sx={{ ...headerStyles, boxShadow: 1}}>{/*, paddingLeft: "40px", paddingRight: "40px"  */}
       <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", px: 2 }}>
         {/* 左侧 Logo 和主题切换 */}
         <Box display="flex" alignItems="center">
@@ -144,19 +143,26 @@ export default function Header() {
           />
         </Box>
 
-        {/* 中间导航链接，仅在用户登录时显示 */}
-        {isLoggedIn && (
-          <List sx={{ display: "flex", padding: 0 }}>
-            {midLinks.map(({ title, path }) => (
-              <ListItem component={NavLink} to={path} key={path} sx={navStyles}>
-                {title}
-              </ListItem>
-            ))}
-          </List>
-        )}
-
-        {/* 右侧消息和用户头像 */}
+        {/* 右侧用户头像和消息图标 */}
         <Box display="flex" alignItems="center">
+          {isLoggedIn && (
+            <>
+              
+
+              {/* 中间导航链接，仅在用户登录时显示 */}
+              <List sx={{ display: "flex", padding: 0 }}>
+                {midLinks.map(({ title, path }) => (
+                  <ListItem component={NavLink} to={path} key={path} sx={navStyles}>
+                    {title}
+                  </ListItem>
+                ))}
+              </List>
+            </>
+          )}
+
+          {/* 分割线 */}
+          <Divider orientation="vertical" sx={{ height: "25px", marginRight: 2 }} />
+
           {isLoggedIn && (
             <IconButton
               size="large"
@@ -170,6 +176,7 @@ export default function Header() {
               </Badge>
             </IconButton>
           )}
+
           {isLoggedIn ? (
             <Box display="flex" alignItems="center" sx={{ marginLeft: 2 }}>
               <Typography
@@ -207,6 +214,7 @@ export default function Header() {
               Please log in
             </Typography>
           )}
+
           <Popover
             id={logoutId}
             open={openLogoutMenu}

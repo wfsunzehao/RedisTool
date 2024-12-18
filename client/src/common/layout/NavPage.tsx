@@ -36,7 +36,7 @@ const NavPage: React.FC<NavPageProps> = ({ links, defaultPath }) => {
   };
 
   return (
-    <Paper elevation={10} sx={{ display: 'flex', height: '100vh', paddingLeft: '40px', paddingRight: '40px' }}>
+    <Paper elevation={10} sx={{ display: 'flex', height: '100vh'}}>{/*paddingLeft: '40px', paddingRight: '40px'  *}
       {/* 左侧导航栏 */}
       <Box
         sx={{
@@ -55,13 +55,28 @@ const NavPage: React.FC<NavPageProps> = ({ links, defaultPath }) => {
               <ListItemButton
                 component={Link}
                 to={path}
-                selected={isSelected(path)}
                 onClick={() => subLinks && toggleSubMenu(path)}
+                sx={{
+                  transition: 'none', // 去除点击时的动画效果
+                  '&.Mui-selected': {
+                    backgroundColor: 'transparent', // 去除选中时的背景色
+                  },
+                  '&:hover': {
+                    backgroundColor: 'transparent', // 去除悬停时的背景色
+                  },
+                }}
               >
                 <ListItemIcon>{icon}</ListItemIcon>
-                <ListItemText primary={title} />
+                <ListItemText
+                  primary={title}
+                  sx={{
+                    color: isSelected(path) ? 'primary.main' : 'inherit', // 选中时，title变为蓝色
+                  }}
+                />
                 {subLinks && (openMenus[path] ? <ExpandLess /> : <ExpandMore />)}
               </ListItemButton>
+
+
 
               {/* 二级菜单 */}
               {subLinks && (
@@ -73,7 +88,17 @@ const NavPage: React.FC<NavPageProps> = ({ links, defaultPath }) => {
                         component={Link}
                         to={path}
                         selected={isSelected(path)}
-                        sx={{ pl: 10 }}
+                        
+                        sx={{
+                          pl: 10 ,
+                          transition: 'none', // 去除点击时的动画效果
+                          '&.Mui-selected': {
+                            backgroundColor: 'transparent', // 去除选中时的背景色
+                          },
+                          '&:hover': {
+                            backgroundColor: 'transparent', // 去除悬停时的背景色
+                          },
+                        }}
                       >
                         <ListItemText primary={title} />
                       </ListItemButton>
