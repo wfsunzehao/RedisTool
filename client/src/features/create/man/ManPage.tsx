@@ -6,6 +6,7 @@ import {
   TextField,
   CircularProgress,
   MenuItem,
+  Divider,
 } from '@mui/material';
 import { Autocomplete } from '@mui/material';
 import agent from '../../../app/api/agent';
@@ -61,13 +62,13 @@ const ManPage: React.FC = () => {
   };
 
   return (
-    <Box>
-      <p style={{ color: '#1976d2', fontSize: '30px', textAlign: 'center' }}>
+    <Box sx={{ maxWidth: 600, margin: 'auto', padding: 3 }}>
+      <p style={{ color: '#1976d2', fontSize: '30px', textAlign: 'center', marginBottom: '20px' }}>
         Create：Manual Cache
       </p>
       <form className="submit-box" onSubmit={handleSubmit}>
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
+          <FormControl variant="outlined" sx={{ width: '100%', marginBottom: 2 }}>
             <TextField
               select
               label="Subscription"
@@ -76,6 +77,7 @@ const ManPage: React.FC = () => {
               error={!!errors.subscription}
               helperText={errors.subscription}
               fullWidth
+              variant="outlined"
             >
               {[{
                 value: '1e57c478-0901-4c02-8d35-49db234b78d2',
@@ -88,7 +90,7 @@ const ManPage: React.FC = () => {
             </TextField>
           </FormControl>
 
-          <FormControl sx={{ width: '100%', marginTop: 2 }}>
+          <FormControl sx={{ width: '100%', marginBottom: 2 }}>
             <Autocomplete
               freeSolo={false} // 禁止自定义输入
               options={groupList}
@@ -106,7 +108,7 @@ const ManPage: React.FC = () => {
             />
           </FormControl>
 
-          <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
+          <FormControl variant="outlined" sx={{ width: '100%', marginBottom: 2 }}>
             <TextField
               select
               label="Region"
@@ -115,6 +117,7 @@ const ManPage: React.FC = () => {
               error={!!errors.region}
               helperText={errors.region}
               fullWidth
+              variant="outlined"
             >
               {['East US 2 EUAP', 'Central US EUAP', 'East US'].map((item) => (
                 <MenuItem key={item} value={item}>
@@ -124,13 +127,13 @@ const ManPage: React.FC = () => {
             </TextField>
           </FormControl>
 
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
             <Button
               type="submit"
               variant="contained"
               color="primary"
               disabled={loading}
-              sx={{ mx: 1,textTransform: 'none'  }}
+              sx={{ width: 120, textTransform: 'none' }}
             >
               Submit
             </Button>
@@ -145,7 +148,7 @@ const ManPage: React.FC = () => {
                 setRegion('');
                 setErrors({});
               }}
-              sx={{ mx: 1, textTransform: 'none'  }}
+              sx={{ width: 120, textTransform: 'none' }}
             >
               Cancel
             </Button>
@@ -153,7 +156,7 @@ const ManPage: React.FC = () => {
         </Box>
       </form>
       {loading && (
-        <Box sx={{ mt: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
           <CircularProgress />
         </Box>
       )}

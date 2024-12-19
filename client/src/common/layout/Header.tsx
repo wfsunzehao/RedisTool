@@ -62,6 +62,13 @@ const getHeaderStyles = (isHomePage: boolean, isDarkMode: boolean) => {
       : "#333333", // 非主页且亮色模式
   };
 };
+const getHeaderStyles2 = (isHomePage: boolean, isDarkMode: boolean) => {
+  return {
+    backgroundColor: isDarkMode
+      ? "#333333" // 黑暗模式
+      : "#1976d2", // 亮色模式
+  };
+};
 
 // 获取Logo过滤色的逻辑
 const getLogoFilter = (isHomePage: boolean, isDarkMode: boolean) => {
@@ -74,6 +81,14 @@ const getLogoFilter = (isHomePage: boolean, isDarkMode: boolean) => {
   return isDarkMode
     ? "invert(100%) sepia(100%) saturate(0%) hue-rotate(180deg)" // 黑暗模式使用反色滤镜
     : "none"; // 亮色模式不使用滤镜
+};
+const getLogoFilter2 = (isHomePage: boolean, isDarkMode: boolean) => {
+  // 主页时，Logo总是使用反色滤镜
+  
+  
+  // 非主页时，根据黑暗模式决定是否使用反色滤镜
+  return "invert(100%) sepia(100%) saturate(0%) hue-rotate(180deg)" // 黑暗模式使用反色滤镜
+    // 亮色模式不使用滤镜
 };
 
 export default function Header() {
@@ -114,11 +129,11 @@ export default function Header() {
   const logoutId = openLogoutMenu ? "logout-popover" : undefined;
 
   // 获取头部的样式
-  const headerStyles = getHeaderStyles(isHomePage, isDarkMode);
-  const logoFilter = getLogoFilter(isHomePage, isDarkMode);
+  const headerStyles = getHeaderStyles2(isHomePage, isDarkMode);
+  const logoFilter = getLogoFilter2(isHomePage, isDarkMode);
 
   return (
-    <AppBar position="sticky" sx={{ ...headerStyles, boxShadow: 1}}>{/*, paddingLeft: "40px", paddingRight: "40px"  */}
+    <AppBar position="sticky" sx={{ ...headerStyles, boxShadow: 2}}>{/*, paddingLeft: "40px", paddingRight: "40px"  */}
       <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", px: 2 }}>
         {/* 左侧 Logo 和主题切换 */}
         <Box display="flex" alignItems="center">
