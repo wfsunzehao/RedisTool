@@ -23,6 +23,7 @@ const CreatePage: React.FC = () => {
     <NavPage 
       links={leftLinks} 
       defaultPath="/create/man"
+      alertMessage="Customers recommend manually creating the cache for bvt tests"
     />
   );
 };

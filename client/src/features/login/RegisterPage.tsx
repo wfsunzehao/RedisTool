@@ -1,6 +1,7 @@
 // src/components/LoginPage.tsx
 import React, { useState } from 'react';
 import { getAccessToken, sendTokenToBackend } from '../../app/services/authService';
+import { Button } from '@nextui-org/react';
 
 const RegisterPage: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -29,6 +30,11 @@ const RegisterPage: React.FC = () => {
       ) : (
         <p>Logged in successfully!</p>
       )}
+      <div className="flex justify-center items-center h-screen">
+      <Button color="primary" radius="full">
+        NextUI Button
+      </Button>
+    </div>
     </div>
   );
 };

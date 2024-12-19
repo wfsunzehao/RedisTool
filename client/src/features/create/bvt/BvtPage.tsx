@@ -225,9 +225,9 @@ const BvtPage: React.FC = () => {
             </>
           )}
  
-          <Alert sx={{ mt: 2 }} severity="warning">
+          {/* <Alert sx={{ mt: 2 }} severity="warning">
             Please proceed with caution. A cache will be created after submission.
-          </Alert>
+          </Alert> */}
         </Box>
  
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
