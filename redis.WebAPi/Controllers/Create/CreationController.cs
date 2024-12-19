@@ -19,6 +19,7 @@ using Azure.ResourceManager.RedisEnterprise;
 using Microsoft.Identity.Client;
 using redis.WebAPi.Service.CreationFunction;
 using redis.WebAPi.Filters;
+using OfficeOpenXml.FormulaParsing.LexicalAnalysis;
 
 namespace redis.WebAPi.Controllers
 {
@@ -31,13 +32,16 @@ namespace redis.WebAPi.Controllers
         private readonly IRedisCollection _redisCollection;
         private readonly IAzureClient _azureClient;
         private readonly ISubscriptionResourceService _subscriptionResourceService;
+        // test 
+        private readonly IConnectionVMService _connectionVMService;
 
         private static Random random = new Random();
 
-        public CreationController(IRedisCollection redisCollection, ISubscriptionResourceService subscriptionResourceService)
+        public CreationController(IConnectionVMService connectionVMService, IRedisCollection redisCollection, ISubscriptionResourceService subscriptionResourceService)
         {
             this._redisCollection = redisCollection;
             this._subscriptionResourceService = subscriptionResourceService;
+            this._connectionVMService = connectionVMService;
         }
 
 
@@ -55,7 +59,14 @@ namespace redis.WebAPi.Controllers
             return Ok();
         }
 
-        [HttpPost("CreateManualCache")]
+        [HttpPost("VMConnection")]
+        public async Task<IActionResult> VMConnection()
+        {
+            return Ok( await _connectionVMService.ConnectionVM());
+        
+        }
+
+            [HttpPost("CreateManualCache")]
         public async Task<IActionResult> CreateManualCache([FromBody] RedisRequestModel redisReques)
         {
 
