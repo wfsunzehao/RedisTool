@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using redis.WebAPI.Service;
-using System;
-using System.Threading.Tasks;
 
-namespace redis.WebAPI.Controllers.Create
+namespace redis.WebAPi.Hubs
 {
     public class CreateHub : Hub
     {

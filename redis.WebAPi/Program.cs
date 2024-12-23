@@ -4,14 +4,13 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
-using redis.WebAPI.Controllers.Create;
 using redis.WebAPi.Service.IService;
 using redis.WebAPi.Service.AzureShared;
 using redis.WebAPi.Service;
 using redis.WebAPi.Repository.AppDbContext;
 using redis.WebAPI.Service;
 using redis.WebAPi.Filters;
-using Autofac.Core;
+using redis.WebAPi.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
