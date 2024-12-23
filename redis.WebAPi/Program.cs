@@ -11,6 +11,7 @@ using redis.WebAPi.Service;
 using redis.WebAPi.Repository.AppDbContext;
 using redis.WebAPI.Service;
 using redis.WebAPi.Filters;
+using Autofac.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,7 +62,8 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     containerBuilder.RegisterType<StackExchangeService>().As<IStackExchangeService>().SingleInstance();
     containerBuilder.RegisterType<ResourceDeletionService>().As<IResourceDeletionService>().SingleInstance();
     containerBuilder.RegisterType<ConnectionVMService>().As<IConnectionVMService>().SingleInstance();
-    containerBuilder.RegisterType<MedianService>().As<IMedianService>().SingleInstance(); 
+    containerBuilder.RegisterType<MedianService>().As<IMedianService>().SingleInstance();
+    containerBuilder.RegisterType<CreationService>().As<ICreationService>().SingleInstance();
 });
 
 var app = builder.Build();
@@ -77,7 +79,7 @@ if (app.Environment.IsDevelopment())
 app.UseCors(opt =>
 {
     opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000").AllowCredentials();
-    opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000").AllowCredentials();
+    opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:3000").AllowCredentials();
     opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://172.29.20.156:3000");
 });
 
