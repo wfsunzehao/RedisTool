@@ -12,6 +12,7 @@ import {
   Divider,
   Typography,
   MenuItem,
+  Menu,
 } from "@mui/material";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import ChatIcon from "@mui/icons-material/Chat";
@@ -19,9 +20,11 @@ import { useTheme } from "../../app/context/ThemeContext";
 import logo from "../../../public/images/wicrecend3.png";
 import { useMessage } from "../../app/context/MessageContext";
 import { useAuth } from "../../app/context/AuthContext";
-import { Switch } from "@nextui-org/react";
+import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Switch } from "@nextui-org/react";
 import { SunIcon } from "../icon/SunIcon";
 import { MoonIcon } from "../icon/MoonIcon";
+import { IconBrandAzure } from '@tabler/icons-react';
+import { IconSun, IconMoon,IconLinkPlus  } from '@tabler/icons-react';
 import { loginTextStyles, user } from "../constants/constants";
 
 const midLinks = [
@@ -131,6 +134,9 @@ export default function Header() {
   // 获取头部的样式
   const headerStyles = getHeaderStyles2(isHomePage, isDarkMode);
   const logoFilter = getLogoFilter2(isHomePage, isDarkMode);
+  const handleAzureClick = () => {
+    window.open("https://ms.portal.azure.com/?l=en.en-us#home", "_blank");
+  };
 
   return (
     <AppBar position="sticky" sx={{ ...headerStyles, boxShadow: 2}}>{/*, paddingLeft: "40px", paddingRight: "40px"  */}
@@ -148,22 +154,65 @@ export default function Header() {
               }}
             />
           </NavLink>
+          <Box sx={{ mx: 1 }} /> {/* 添加统一间距 */}
           <Switch
             checked={isDarkMode}
             onChange={toggleTheme}
             size="lg"
             thumbIcon={({ isSelected }) =>
-              isSelected ? <SunIcon style={{ fontSize: "20px" }} /> : <MoonIcon style={{ fontSize: "20px" }} />
+              isSelected ? <IconMoon stroke={2} /> : <IconSun stroke={2} />
             }
           />
+          <Box sx={{ mx: 1 }} /> {/* 添加统一间距 */}
+          <IconButton
+            size="large"
+            edge="end"
+            color="inherit"
+            onClick={handleAzureClick} // 点击时跳转到 Azure
+          >
+            <IconBrandAzure stroke={2} />
+          </IconButton>
+          <Box sx={{ mx: 2 }} /> {/* 添加统一间距 */}
+          <Dropdown>
+            <DropdownTrigger>
+            <IconLinkPlus stroke={2} />
+            </DropdownTrigger>
+            <DropdownMenu aria-label="Dropdown menu with icons" variant="faded">
+              <DropdownItem
+                key="new"
+                shortcut="⌘N"
+                startContent={<IconBrandAzure stroke={2} />}
+              >    
+              </DropdownItem>
+              <DropdownItem
+                key="copy"
+                shortcut="⌘C"
+                startContent={<IconBrandAzure stroke={2} />}
+              >    
+              </DropdownItem>
+              <DropdownItem
+                key="edit"
+                shortcut="⌘⇧E"
+                startContent={<IconBrandAzure stroke={2} />}
+              >   
+              </DropdownItem>
+              <DropdownItem
+                key="delete"
+                className="text-danger"
+                color="danger"
+                shortcut="⌘⇧D"
+                startContent={<IconBrandAzure stroke={2} />}
+              >
+               
+              </DropdownItem>
+            </DropdownMenu>
+        </Dropdown>
         </Box>
 
         {/* 右侧用户头像和消息图标 */}
         <Box display="flex" alignItems="center">
           {isLoggedIn && (
-            <>
-              
-
+            <>             
               {/* 中间导航链接，仅在用户登录时显示 */}
               <List sx={{ display: "flex", padding: 0 }}>
                 {midLinks.map(({ title, path }) => (

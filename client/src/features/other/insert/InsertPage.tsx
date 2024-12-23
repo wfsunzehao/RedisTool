@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Autocomplete,
   Box,
   Button,
   FormControl,
@@ -154,23 +155,21 @@ const InsertPage: React.FC = () => {
           </FormControl>
 
           <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
-            <TextField
-              select
-              label="Group"
+            <Autocomplete
+              options={groupList}
               value={group}
-              onChange={handleInputChange('group')} // 使用通用方法
-              variant="outlined"
-              error={!!errors.group}
-              helperText={errors.group}
-              fullWidth
-              disabled={loading || !subscription}  // 只有选择了subscription后才能选择group
-            >
-              {groupList.map((item) => (
-                <MenuItem key={item} value={item}>
-                  {item}
-                </MenuItem>
-              ))}
-            </TextField>
+              onChange={(event, value) => handleInputChange("group")(event as React.ChangeEvent<HTMLInputElement>, value)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Group"
+                  variant="outlined"
+                  error={!!errors.group}
+                  helperText={errors.group}
+                  fullWidth
+                />
+              )}                                           
+            />
           </FormControl>
           <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
             <TextField

@@ -9,6 +9,7 @@ import {
   ListItem,
   ListItemText,
   Divider,
+  Autocomplete,
 } from '@mui/material';
 import agent from '../../../app/api/agent';
 import LoadingComponent from '../../../common/components/CustomLoading';
@@ -179,23 +180,22 @@ const GroupPage: React.FC = () => {
           </FormControl>
 
           <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
-            <TextField
-              select
-              label="Group"
-              value={group}
-              onChange={handleInputChange('group')}
-              variant="outlined"
-              error={!!errors.group}
-              helperText={errors.group}
-              fullWidth
-              disabled={loading}
-            >
-              {groupList.map((item) => (
-                <MenuItem key={item} value={item}>
-                  {item}
-                </MenuItem>
-              ))}
-            </TextField>
+            <Autocomplete
+                options={groupList}
+                value={group}
+                onChange={(event, value) => handleInputChange("group")(event as React.ChangeEvent<HTMLInputElement>, value)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Group"
+                    variant="outlined"
+                    error={!!errors.group}
+                    helperText={errors.group}
+                    fullWidth
+                  />
+                )}
+                        
+            />
           </FormControl>
         </Box>
         
