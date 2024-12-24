@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Autocomplete,
   Box,
   Button,
   CircularProgress,
@@ -87,8 +88,9 @@ const PerfPage: React.FC = () => {
     setRegion("");
     setErrors({}); // 重置错误信息
   };
-  const handleInputChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { value } = event.target;
+  const handleInputChange = (field: string) => 
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,value:string) => {
+    //const { value } = event.target;
 
     switch (field) {
       case 'group':
@@ -165,22 +167,21 @@ const PerfPage: React.FC = () => {
           </FormControl>
 
           <FormControl variant="outlined" sx={{ width: "100%", marginTop: 2 }}>
-            <TextField
-              select
-              label="Group"
+            <Autocomplete
+              options={groupList}
               value={group}
-              onChange={handleInputChange('group')}
-              variant="outlined"
-              error={!!errors.group} // 判断是否有错误
-              helperText={errors.group} // 显示错误信息
-              fullWidth
-            >
-              {groupList.map((item) => (
-                <MenuItem key={item} value={item}>
-                  {item}
-                </MenuItem>
-              ))}
-            </TextField>
+              onChange={(event, value) => handleInputChange("group")(event as React.ChangeEvent<HTMLInputElement>, value as string)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Group"
+                  variant="outlined"
+                  error={!!errors.group}
+                  helperText={errors.group}
+                  fullWidth
+                />
+              )}                                        
+            />
           </FormControl>
           <FormControl variant="outlined" sx={{ width: "100%", marginTop: 2 }}>
             <TextField

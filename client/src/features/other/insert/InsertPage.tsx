@@ -108,8 +108,9 @@ const InsertPage: React.FC = () => {
     });
 
   };
-  const handleInputChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { value } = event.target;
+  const handleInputChange = (field: string) => 
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,value: string) => {
+    //const { value } = event.target;
 
     switch (field) {
       case 'group':
@@ -158,7 +159,7 @@ const InsertPage: React.FC = () => {
             <Autocomplete
               options={groupList}
               value={group}
-              onChange={(event, value) => handleInputChange("group")(event as React.ChangeEvent<HTMLInputElement>, value)}
+              onChange={(event,value) => handleInputChange("group")(event as React.ChangeEvent<HTMLInputElement>,value as string)}
               renderInput={(params) => (
                 <TextField
                   {...params}
