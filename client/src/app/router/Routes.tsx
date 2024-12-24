@@ -1,21 +1,21 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import App from "../../layout/App";
-import HomePage from "../../features/home/HomePage";
+import HomePage from "../../pages/home/HomePage";
 import ServerError from "../errors/ServerError";
 import NotFound from "../errors/NotFound";
-import CreatePage from "../../features/create/CreatePage";
-import OtherPage from "../../features/other/OtherPage";
-import BvtPage from "../../features/create/bvt/BvtPage";
-import ManPage from "../../features/create/man/ManPage";
-import PerfPage from "../../features/create/perf/PerfPage";
-import AltPage from "../../features/create/alt/AltPage";
-import DeletePage from "../../features/delete/DeletePage";
-import InsertPage from "../../features/other/insert/InsertPage";
-import MedianPage from "../../features/other/median/MedianPage";
-import GroupPage from "../../features/delete/group/GroupPage";
-import Signal from "../../features/other/signalR/Signal";
-import LoginPage from "../../features/login/LoginPage";
-import RegisterPage from "../../features/login/RegisterPage";
+import CreatePage from "../../pages/create/CreatePage";
+import OtherPage from "../../pages/other/OtherPage";
+import BvtPage from "../../pages/create/bvt/BvtPage";
+import ManPage from "../../pages/create/man/ManPage";
+import PerfPage from "../../pages/create/perf/PerfPage";
+import AltPage from "../../pages/create/alt/AltPage";
+import DeletePage from "../../pages/delete/DeletePage";
+import InsertPage from "../../pages/other/insert/InsertPage";
+import MedianPage from "../../pages/other/median/MedianPage";
+import GroupPage from "../../pages/delete/group/GroupPage";
+import Signal from "../../pages/other/signalR/Signal";
+import LoginPage from "../../pages/login/LoginPage";
+import RegisterPage from "../../pages/login/RegisterPage";
 
 
 export const router = createBrowserRouter([

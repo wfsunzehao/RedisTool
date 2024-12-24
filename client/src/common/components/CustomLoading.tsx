@@ -1,5 +1,6 @@
 import React from 'react';
 import { Backdrop, Box, CircularProgress, Typography } from '@mui/material';
+import defaultImageUrl from '@/assets/images/loadingwic.png';
 
 interface Props {
   message?: string;
@@ -7,7 +8,6 @@ interface Props {
 }
 
 export default function LoadingComponent({ message, imageUrl }: Props) {
-  const defaultImageUrl = '../../../public/images/loadingwic.png';
 
   return (
     <Backdrop
