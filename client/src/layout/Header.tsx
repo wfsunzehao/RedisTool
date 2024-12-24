@@ -12,20 +12,19 @@ import {
   Divider,
   Typography,
   MenuItem,
-  Menu,
+  Tooltip,
 } from "@mui/material";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import ChatIcon from "@mui/icons-material/Chat";
-import { useTheme } from "../../app/context/ThemeContext";
-import logo from "../../../public/images/wicrecend3.png";
-import { useMessage } from "../../app/context/MessageContext";
-import { useAuth } from "../../app/context/AuthContext";
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Switch } from "@nextui-org/react";
-import { SunIcon } from "../icon/SunIcon";
-import { MoonIcon } from "../icon/MoonIcon";
+import { useTheme } from "../app/context/ThemeContext";
+import logo from "../../public/images/wicrecend3.png";
+import { useMessage } from "../app/context/MessageContext";
+import { useAuth } from "../app/context/AuthContext";
+import {Switch } from "@nextui-org/react";
+
 import { IconBrandAzure } from '@tabler/icons-react';
 import { IconSun, IconMoon,IconLinkPlus  } from '@tabler/icons-react';
-import { loginTextStyles, user } from "../constants/constants";
+import { loginTextStyles, user } from "../common/constants/constants";
 
 const midLinks = [
   { title: "Tests", path: "/create" },
@@ -137,6 +136,9 @@ export default function Header() {
   const handleAzureClick = () => {
     window.open("https://ms.portal.azure.com/?l=en.en-us#home", "_blank");
   };
+  const handleLinksClick = () => {
+    window.open("https://msazure.visualstudio.com/RedisCache/_testPlans/execute?planId=15317840&suiteId=15317858", "_blank");
+  };
 
   return (
     <AppBar position="sticky" sx={{ ...headerStyles, boxShadow: 2}}>{/*, paddingLeft: "40px", paddingRight: "40px"  */}
@@ -155,58 +157,53 @@ export default function Header() {
             />
           </NavLink>
           <Box sx={{ mx: 1 }} /> {/* 添加统一间距 */}
-          <Switch
-            checked={isDarkMode}
-            onChange={toggleTheme}
-            size="lg"
-            thumbIcon={({ isSelected }) =>
-              isSelected ? <IconMoon stroke={2} /> : <IconSun stroke={2} />
-            }
-          />
+          <Tooltip title="Toggle Dark Mode" 
+              slotProps={{
+              tooltip: {
+                sx: {
+                  backgroundColor: "rgba(221, 225, 230, 0.9)", // 设置带透明度的背景颜色
+                  backdropFilter: 'blur(10px)', // 背景模糊效果
+                  color: "#ffffff", // 文字颜色
+                  fontSize: "14px", // 文字大小
+                  fontWeight: "bold", // 文字加粗
+                  borderRadius: 4, // 更圆滑的边框
+                  padding: "8px 12px", // 内边距
+                  border: `1px solid rgba(255, 255, 255, 0.6)`, // 半透明边框
+                  //boxShadow: "0px 4px 10px rgba(245, 241, 241, 0.80)", // 阴影
+                },
+              },
+            }}>
+            <Switch
+              checked={isDarkMode}
+              onChange={toggleTheme}
+              size="lg"
+              thumbIcon={({ isSelected }) =>
+                isSelected ? <IconMoon stroke={2} /> : <IconSun stroke={2} />
+              }
+            />
+          </Tooltip>
           <Box sx={{ mx: 1 }} /> {/* 添加统一间距 */}
-          <IconButton
-            size="large"
-            edge="end"
-            color="inherit"
-            onClick={handleAzureClick} // 点击时跳转到 Azure
-          >
-            <IconBrandAzure stroke={2} />
-          </IconButton>
-          <Box sx={{ mx: 2 }} /> {/* 添加统一间距 */}
-          <Dropdown>
-            <DropdownTrigger>
-            <IconLinkPlus stroke={2} />
-            </DropdownTrigger>
-            <DropdownMenu aria-label="Dropdown menu with icons" variant="faded">
-              <DropdownItem
-                key="new"
-                shortcut="⌘N"
-                startContent={<IconBrandAzure stroke={2} />}
-              >    
-              </DropdownItem>
-              <DropdownItem
-                key="copy"
-                shortcut="⌘C"
-                startContent={<IconBrandAzure stroke={2} />}
-              >    
-              </DropdownItem>
-              <DropdownItem
-                key="edit"
-                shortcut="⌘⇧E"
-                startContent={<IconBrandAzure stroke={2} />}
-              >   
-              </DropdownItem>
-              <DropdownItem
-                key="delete"
-                className="text-danger"
-                color="danger"
-                shortcut="⌘⇧D"
-                startContent={<IconBrandAzure stroke={2} />}
-              >
-               
-              </DropdownItem>
-            </DropdownMenu>
-        </Dropdown>
+          <Tooltip title="Open Azure Portal">
+            <IconButton
+              size="large"
+              edge="end"
+              color="inherit"
+              onClick={handleAzureClick} // 点击时跳转到 Azure
+            >
+              <IconBrandAzure stroke={2} />
+            </IconButton>
+          </Tooltip>
+          <Box sx={{ mx: 1 }} /> {/* 添加统一间距 */}
+          <Tooltip title="View More Links">
+            <IconButton
+              size="large"
+              edge="end"
+              color="inherit"
+              onClick={handleLinksClick} // 点击时跳转到相关链接
+            >
+              <IconLinkPlus stroke={2} />
+            </IconButton>
+          </Tooltip>
         </Box>
 
         {/* 右侧用户头像和消息图标 */}

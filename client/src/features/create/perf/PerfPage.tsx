@@ -3,19 +3,17 @@ import {
   Autocomplete,
   Box,
   Button,
-  CircularProgress,
   FormControl,
   MenuItem,
   TextField,
 } from "@mui/material";
-import swal from "sweetalert";
 import agent from "../../../app/api/agent";
 import { PerfModel } from "../../../common/models/DataModel";
 import { Overlay, subscriptionList } from "../../../common/constants/constants";
-import LoadingComponent from "../../../common/components/CustomLoading";
+import LoadingComponent from "@/common/components/CustomLoading";
 import InputLabel from "@mui/material/InputLabel";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { handleGenericSubmit } from "../../../app/util/util";
+import { handleGenericSubmit } from "@/app/util/util";
 
 const PerfPage: React.FC = () => {
   // 获取当前日期，并将其格式化为 MMDD

@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import App from "../../common/layout/App";
+import App from "../../layout/App";
 import HomePage from "../../features/home/HomePage";
 import ServerError from "../errors/ServerError";
 import NotFound from "../errors/NotFound";

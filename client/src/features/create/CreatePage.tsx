@@ -3,7 +3,7 @@ import { IconChartLine } from '@tabler/icons-react';
 import { IconHandClick } from '@tabler/icons-react';
 import { IconAlt  } from '@tabler/icons-react';
 import { IconDeviceDesktopAnalytics } from '@tabler/icons-react';
-import NavPage from '../../common/layout/NavPage';
+import NavPage from '../../layout/NavPage';
 
 // 左侧导航栏的链接
 const leftLinks = [

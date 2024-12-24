@@ -1,6 +1,6 @@
 import React from 'react';
 
-import NavPage from '../../common/layout/NavPage';
+import NavPage from '../../layout/NavPage';
 import { IconHttpDelete } from '@tabler/icons-react';
 
 const leftLinks = [

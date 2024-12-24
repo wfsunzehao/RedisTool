@@ -1,5 +1,5 @@
 import React from 'react';
-import NavPage from '../../common/layout/NavPage';
+import NavPage from '../../layout/NavPage';
 import { IconDatabaseImport } from '@tabler/icons-react';
 import { IconStackMiddle } from '@tabler/icons-react';
 
