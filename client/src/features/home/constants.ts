@@ -1,9 +1,10 @@
 import { styled } from '@mui/system';
 import { Box } from "@mui/material";
+import wicrecend from '@/assets/images/wicrecend.jpg';
 
 //主页轮换图
 export const images = [
-    '../../../public/images/wicrecend.jpg',
+  wicrecend,
   ];
 
 export const services = [

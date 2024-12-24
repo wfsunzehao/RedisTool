@@ -17,7 +17,7 @@ import {
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import ChatIcon from "@mui/icons-material/Chat";
 import { useTheme } from "../app/context/ThemeContext";
-import logo from "../../public/images/wicrecend3.png";
+import logo from "@/assets/images/wicrecend3.png"
 import { useMessage } from "../app/context/MessageContext";
 import { useAuth } from "../app/context/AuthContext";
 import {Switch } from "@nextui-org/react";
