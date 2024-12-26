@@ -161,15 +161,15 @@ export default function Header() {
               slotProps={{
               tooltip: {
                 sx: {
-                  backgroundColor: "rgba(221, 225, 230, 0.9)", // 设置带透明度的背景颜色
-                  backdropFilter: 'blur(10px)', // 背景模糊效果
-                  color: "#ffffff", // 文字颜色
-                  fontSize: "14px", // 文字大小
-                  fontWeight: "bold", // 文字加粗
-                  borderRadius: 4, // 更圆滑的边框
-                  padding: "8px 12px", // 内边距
-                  border: `1px solid rgba(255, 255, 255, 0.6)`, // 半透明边框
-                  //boxShadow: "0px 4px 10px rgba(245, 241, 241, 0.80)", // 阴影
+                    backdropFilter: 'blur(10px)', // 背景模糊效果
+                    color: "rgba(112, 114, 145, 0.9)", // 文字颜色
+                    fontSize: "14px", // 文字大小
+                    fontWeight: "bold", // 文字加粗
+                    borderRadius: 4, // 更圆滑的边框
+                    padding: "8px 12px", // 内边距
+                    border: `1px solid rgba(247, 240, 240, 0)`, // 完全透明边框
+                    backgroundColor: "rgba(247, 240, 240, 0)", // 完全透明背景
+                    // boxShadow: "0px 4px 10px rgba(245, 241, 241, 0.80)", // 可选：阴影（如果需要阴影，可以开启）
                 },
               },
             }}>
@@ -183,7 +183,23 @@ export default function Header() {
             />
           </Tooltip>
           <Box sx={{ mx: 1 }} /> {/* 添加统一间距 */}
-          <Tooltip title="Open Azure Portal">
+          <Tooltip title="Open Azure Portal"
+            slotProps={{
+              tooltip: {
+                sx: {
+                    backdropFilter: 'blur(10px)', // 背景模糊效果
+                    color: "rgba(112, 114, 145, 0.9)", // 文字颜色
+                    fontSize: "14px", // 文字大小
+                    fontWeight: "bold", // 文字加粗
+                    borderRadius: 4, // 更圆滑的边框
+                    padding: "8px 12px", // 内边距
+                    border: `1px solid rgba(247, 240, 240, 0)`, // 完全透明边框
+                    backgroundColor: "rgba(247, 240, 240, 0)", // 完全透明背景
+                    // boxShadow: "0px 4px 10px rgba(245, 241, 241, 0.80)", // 可选：阴影（如果需要阴影，可以开启）
+                },
+              },
+            }}
+          >
             <IconButton
               size="large"
               edge="end"
@@ -194,7 +210,22 @@ export default function Header() {
             </IconButton>
           </Tooltip>
           <Box sx={{ mx: 1 }} /> {/* 添加统一间距 */}
-          <Tooltip title="View More Links">
+          <Tooltip title="View More Links"
+            slotProps={{
+                tooltip: {
+                    sx: {
+                        backdropFilter: 'blur(10px)', // 背景模糊效果
+                        color: "rgba(112, 114, 145, 0.9)", // 文字颜色
+                        fontSize: "14px", // 文字大小
+                        fontWeight: "bold", // 文字加粗
+                        borderRadius: 4, // 更圆滑的边框
+                        padding: "8px 12px", // 内边距
+                        border: `1px solid rgba(247, 240, 240, 0)`, // 完全透明边框
+                        backgroundColor: "rgba(247, 240, 240, 0)", // 完全透明背景
+                        // boxShadow: "0px 4px 10px rgba(245, 241, 241, 0.80)", // 可选：阴影（如果需要阴影，可以开启）
+                    },
+                },
+            }}>
             <IconButton
               size="large"
               edge="end"

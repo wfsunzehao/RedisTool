@@ -1,45 +1,48 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
-import { toast } from "react-toastify";
-import { router } from "../router/Routes";
+import axios, { AxiosError, AxiosResponse } from 'axios'
+import { toast } from 'react-toastify'
+import { router } from '../router/Routes'
 
-const sleep = () => new Promise(resolve => setTimeout(resolve, 500));
+const sleep = () => new Promise((resolve) => setTimeout(resolve, 500))
 
-axios.defaults.baseURL = 'https://localhost:7179/api';
+axios.defaults.baseURL = 'https://localhost:7179/api'
 // axios.defaults.withCredentials = true;
 
-const responseBody = (response: AxiosResponse) => response.data;
+const responseBody = (response: AxiosResponse) => response.data
 
-axios.interceptors.response.use(async response => {
-    await sleep();
-    return response;
-},(error:AxiosError) => {
-    const {data, status} = error.response as AxiosResponse;
-    switch(status){
-        case 400:
-            toast.error(data.title);
-            break;
-        case 401:
-            toast.error(data.message);
-            break;
-        case 404:
-            router.navigate('/server-error',{state: {error: data}});
-            break;
-        case 500:
-            router.navigate('/server-error');
-            break;
-        default:
-            break;
+axios.interceptors.response.use(
+    async (response) => {
+        await sleep()
+        return response
+    },
+    (error: AxiosError) => {
+        const { data, status } = error.response as AxiosResponse
+        switch (status) {
+            case 400:
+                toast.error(data.title)
+                break
+            case 401:
+                toast.error(data.message)
+                break
+            case 404:
+                router.navigate('/server-error', { state: { error: data } })
+                break
+            case 500:
+                router.navigate('/server-error')
+                break
+            default:
+                break
+        }
+        return Promise.reject(error.response)
     }
-    return Promise.reject(error.response);
-})
+)
 
 const request = {
     get: (url: string) => axios.get(url).then(responseBody),
-    getByParam: (url: string, params: string) => axios.get(url, {params}).then(responseBody),
+    getByParam: (url: string, params: string) => axios.get(url, { params }).then(responseBody),
     post: (url: string, body: object) => axios.post(url, body).then(responseBody),
     put: (url: string, body: object) => axios.put(url, body).then(responseBody),
     delete: (url: string) => axios.delete(url).then(responseBody),
-    deleteByGroup: (url: string, body: object) => axios.delete(url, { data: body }).then(responseBody)
+    deleteByGroup: (url: string, body: object) => axios.delete(url, { data: body }).then(responseBody),
 }
 
 const Company = {
@@ -47,36 +50,35 @@ const Company = {
     details: (id: number) => request.get(`Company/${id}`),
 }
 
-
 const Create = {
     getGroup: (subscriptionid: string) => request.get(`Subscription/${subscriptionid}`),
-    sendAllBvtJson:(body: object)=>request.post(`/Creation/CreateBVTCache`,body),
-    sendOneBvtJson:(body: object)=>request.post(`/Creation/CreateBVTCacheByCase`,body),
-    sendManJson:(body: object)=>request.post(`/Creation/CreateP0P1Cache`,body),
-    sendPerfJson: (body: object) =>request.post(`/Creation/CreatePerfCache`, body),
-    sendAltJson: (body: object) =>request.post(`/Creation/CreateAltCache`, body),
+    sendAllBvtJson: (body: object) => request.post(`/Creation/CreateBVTCache`, body),
+    sendOneBvtJson: (body: object) => request.post(`/Creation/CreateBVTCacheByCase`, body),
+    sendManJson: (body: object) => request.post(`/Creation/CreateP0P1Cache`, body),
+    sendPerfJson: (body: object) => request.post(`/Creation/CreatePerfCache`, body),
+    sendAltJson: (body: object) => request.post(`/Creation/CreateAltCache`, body),
 }
 
 const Delete = {
     getResource: (subscriptionid: string, group: string) => request.get(`ResourceDeletion/${subscriptionid}/${group}`),
     //sendDelGroupJson:(body: object)=>request.deleteByGroup(`/StackExchange/DeleteGroup`,body),
-    sendDelGroupJson:(subscription: string, group: string)=>request.delete(`/AzureClient/DeleteResource?subscription=${subscription}&resourceGroupName=${group}`),
-    sendDelGroupJsonT:(body: object)=>request.deleteByGroup(`/ResourceDeletion/DeleteResource`,body),   
+    sendDelGroupJson: (subscription: string, group: string) =>
+        request.delete(`/AzureClient/DeleteResource?subscription=${subscription}&resourceGroupName=${group}`),
+    sendDelGroupJsonT: (body: object) => request.deleteByGroup(`/ResourceDeletion/DeleteResource`, body),
 }
 
 const Other = {
-    sendInsertJson:(body: object)=>request.post(`/StackExchange/AddDataToRedis`,body),
-    sendMedianJson:(body: object)=>request.post(`/Median/sendMedianJson`,body),
+    sendInsertJson: (body: object) => request.post(`/StackExchange/AddDataToRedis`, body),
+    sendMedianJson: (body: object) => request.post(`/Median/sendMedianJson`, body),
 }
 
-const Auth= {
+const Auth = {
     login: (username: string, password: string) => request.post(`/Auth/login`, { username, password }),
-    register: (username: string, password: string, email: string) => request.post(`/Auth/register`, { username, password, email }),
-    changePassword: (username: string, oldPassword: string, newPassword: string) => request.post(`/Auth/change-password`, { username, oldPassword, newPassword }),
+    register: (username: string, password: string, email: string) =>
+        request.post(`/Auth/register`, { username, password, email }),
+    changePassword: (username: string, oldPassword: string, newPassword: string) =>
+        request.post(`/Auth/change-password`, { username, oldPassword, newPassword }),
 }
-
-
-
 
 const TestErrors = {
     get400Error: () => request.get('buggy/bad-request'),
@@ -86,16 +88,13 @@ const TestErrors = {
     getValidationError: () => request.get('buggy/validation-error'),
 }
 
-
 const agent = {
     Company,
     Create,
     Delete,
     Other,
     Auth,
-    TestErrors
+    TestErrors,
 }
 
-
-export default agent;
-
+export default agent
