@@ -32,8 +32,8 @@ const midLinks = [
     { title: 'Tools', path: '/more' },
 ]
 
-const navStyles = {
-    color: 'inherit',
+const navStyles = (theme: any) => ({
+    color: theme.palette.mode === 'dark' ? '#fff' : 'inherit', // 黑暗模式下为白色
     textDecoration: 'none',
     typography: 'h6',
     marginRight: '20px',
@@ -42,9 +42,9 @@ const navStyles = {
     },
     '&.active': {
         fontWeight: 'bold',
-        color: '#033c67', // 选中状态的颜色
+        color: theme.palette.mode === 'dark' ? '#90caf9' : '#033c67', // 根据模式调整选中状态颜色
     },
-}
+})
 
 // 获取头部样式的逻辑
 const getHeaderStyles = (isHomePage: boolean, isDarkMode: boolean) => {
