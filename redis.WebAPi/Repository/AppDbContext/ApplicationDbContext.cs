@@ -8,7 +8,7 @@ namespace redis.WebAPi.Repository.AppDbContext
         public DbSet<User> Users { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options){ }
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -22,5 +22,6 @@ namespace redis.WebAPi.Repository.AppDbContext
                 .HasIndex(u => u.Email)
                 .IsUnique();
         }
+        
     }
 }
