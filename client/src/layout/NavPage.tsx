@@ -44,7 +44,7 @@ const NavPage: React.FC<NavPageProps> = ({
 
     const [openStates, setOpenStates] = React.useState<Record<string, boolean>>({})
 
-    const unrestricted = ['/create/benchmark', '/dashboard/sub-item2'].includes(location.pathname) //不限制宽度
+    const unrestricted = ['/create/benchmark', '/create/statistics'].includes(location.pathname) //不限制宽度
 
     useEffect(() => {
         if (location.pathname === defaultPath.split('/').slice(0, -1).join('/')) {
@@ -75,6 +75,7 @@ const NavPage: React.FC<NavPageProps> = ({
                 <List sx={{ paddingTop: '20px' }}>
                     {links.map(({ title, path, icon, subLinks }) => (
                         <React.Fragment key={title}>
+                            {/* 一级菜单 */}
                             <ListItemButton
                                 component={subLinks ? 'div' : Link}
                                 {...(subLinks ? {} : { to: path })}
@@ -94,6 +95,8 @@ const NavPage: React.FC<NavPageProps> = ({
                                 />
                                 {subLinks && (openStates[title] ? <ExpandLess /> : <ExpandMore />)}
                             </ListItemButton>
+
+                            {/* 二级菜单 */}
                             {subLinks && (
                                 <Collapse in={openStates[title]} timeout="auto" unmountOnExit>
                                     <List component="div" disablePadding>
@@ -102,14 +105,28 @@ const NavPage: React.FC<NavPageProps> = ({
                                                 key={subLink.title}
                                                 component={Link}
                                                 to={subLink.path}
-                                                sx={{ pl: 4 }}
+                                                sx={{
+                                                    pl: 12, // 增加缩进
+                                                    '&.Mui-selected': {
+                                                        backgroundColor: theme.palette.action.hover,
+                                                        '& .MuiListItemText-primary': {
+                                                            fontWeight: 500,
+                                                            color: theme.palette.primary.main,
+                                                        },
+                                                    },
+                                                    '&:hover': {
+                                                        backgroundColor: theme.palette.action.selected,
+                                                    },
+                                                }}
                                                 selected={isSelected(subLink.path)}
                                             >
                                                 <ListItemText
                                                     primary={subLink.title}
                                                     primaryTypographyProps={{
-                                                        fontSize: '16px',
-                                                        color: theme.palette.text.primary,
+                                                        fontFamily: '"Roboto", Arial, sans-serif',
+                                                        fontSize: '14px', // 更小的字体
+                                                        fontStyle: 'italic', // 斜体
+                                                        color: theme.palette.text.secondary, // 更浅的颜色
                                                     }}
                                                 />
                                             </ListItemButton>

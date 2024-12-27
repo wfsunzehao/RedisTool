@@ -1,22 +1,23 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import App from '../../layout/App'
-import HomePage from '../../pages/home/HomePage'
+import HomePage from '@/pages/home/HomePage'
 import ServerError from '../errors/ServerError'
 import NotFound from '../errors/NotFound'
-import CreatePage from '../../pages/create/CreatePage'
-import OtherPage from '../../pages/other/OtherPage'
-import BvtPage from '../../pages/create/bvt/BvtPage'
-import ManPage from '../../pages/create/man/ManPage'
-import PerfPage from '../../pages/create/perf/PerfPage'
-import AltPage from '../../pages/create/alt/AltPage'
-import DeletePage from '../../pages/delete/DeletePage'
-import InsertPage from '../../pages/other/insert/InsertPage'
-import MedianPage from '../../pages/other/median/MedianPage'
-import GroupPage from '../../pages/delete/group/GroupPage'
-import Signal from '../../pages/other/signalR/Signal'
-import LoginPage from '../../pages/login/LoginPage'
-import RegisterPage from '../../pages/login/RegisterPage'
+import CreatePage from '@/pages/create/CreatePage'
+import OtherPage from '@/pages/other/OtherPage'
+import BvtPage from '@/pages/create/bvt/BvtPage'
+import ManPage from '@/pages/create/man/ManPage'
+import PerfPage from '@/pages/create/perf/PerfPage'
+import AltPage from '@/pages/create/alt/AltPage'
+import DeletePage from '@/pages/delete/DeletePage'
+import InsertPage from '@/pages/other/insert/InsertPage'
+import MedianPage from '@/pages/other/median/MedianPage'
+import GroupPage from '@/pages/delete/group/GroupPage'
+import Signal from '@/pages/other/signalR/Signal'
+import LoginPage from '@/pages/login/LoginPage'
+import RegisterPage from '@/pages/login/RegisterPage'
 import RunBenchmark from '@/pages/create/perf/benchmark/RunBenchmark'
+import Statistics from '@/pages/create/perf/statistics/Statistics'
 
 export const router = createBrowserRouter([
     {
@@ -32,7 +33,7 @@ export const router = createBrowserRouter([
                     { path: 'man', element: <ManPage /> },
                     { path: 'perf', element: <PerfPage /> },
                     { path: 'benchmark', element: <RunBenchmark /> },
-                    { path: 'statistics', element: <PerfPage /> },
+                    { path: 'statistics', element: <Statistics /> },
                     { path: 'alt', element: <AltPage /> },
                 ],
             },

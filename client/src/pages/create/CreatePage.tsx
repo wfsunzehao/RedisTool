@@ -16,7 +16,7 @@ const leftLinks = [
         subLinks: [
             { title: 'Create', path: '/create/perf' },
             { title: 'Benchmark', path: '/create/benchmark' },
-            { title: 'Statistics', path: '/dashboard/sub-item2' },
+            { title: 'Statistics', path: '/create/statistics' },
         ],
     },
     { title: 'ALT', path: '/create/alt', icon: <IconAlt stroke={2} /> },

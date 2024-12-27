@@ -62,7 +62,18 @@ const RunBenchmark = () => {
     return (
         <div>
             <Container maxWidth="xl">
-                <Typography variant="h4" gutterBottom>
+                <Typography
+                    variant="h3"
+                    gutterBottom
+                    align="center"
+                    sx={{
+                        fontWeight: 'bold',
+                        background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        fontSize: '30px',
+                    }}
+                >
                     Run Test
                 </Typography>
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', height: '60vh', overflowY: 'auto' }}>
