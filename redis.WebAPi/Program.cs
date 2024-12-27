@@ -24,7 +24,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
 // Add CORS policy
 builder.Services.AddCors();
-
+// 注册 BenchmarkService
+builder.Services.AddScoped<BenchmarkService>();
 // JWT Authentication configuration
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -44,7 +45,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Configure database connection
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+builder.Services.AddDbContext<BenchmarkDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("BenchmarkConnection")));
 // Using Autofac as a Dependency Injection Container
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
@@ -60,9 +62,9 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     containerBuilder.RegisterType<RedisCollectionService>().As<IRedisCollection>().SingleInstance();
     containerBuilder.RegisterType<StackExchangeService>().As<IStackExchangeService>().SingleInstance();
     containerBuilder.RegisterType<ResourceDeletionService>().As<IResourceDeletionService>().SingleInstance();
-    containerBuilder.RegisterType<ConnectionVMService>().As<IConnectionVMService>().SingleInstance();
     containerBuilder.RegisterType<MedianService>().As<IMedianService>().SingleInstance();
     containerBuilder.RegisterType<CreationService>().As<ICreationService>().SingleInstance();
+    containerBuilder.RegisterType<ConnectionVMService>().SingleInstance();
 });
 
 var app = builder.Build();
