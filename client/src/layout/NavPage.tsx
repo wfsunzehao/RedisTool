@@ -44,6 +44,8 @@ const NavPage: React.FC<NavPageProps> = ({
 
     const [openStates, setOpenStates] = React.useState<Record<string, boolean>>({})
 
+    const unrestricted = ['/create/benchmark', '/dashboard/sub-item2'].includes(location.pathname) //不限制宽度
+
     useEffect(() => {
         if (location.pathname === defaultPath.split('/').slice(0, -1).join('/')) {
             navigate(defaultPath)
@@ -133,8 +135,9 @@ const NavPage: React.FC<NavPageProps> = ({
             >
                 <Box
                     sx={{
-                        width: contentWidth,
+                        width: unrestricted ? '100%' : contentWidth, // 动态调整宽度,
                         padding: '20px',
+                        flexGrow: unrestricted ? 1 : 0,
                     }}
                 >
                     <Alert

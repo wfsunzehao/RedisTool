@@ -1,7 +1,6 @@
 import React from 'react'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
-import { Styles } from '../Styles'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
@@ -18,8 +17,6 @@ import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-
-// Import CSS file for styles
 
 const RunBenchmark = () => {
     const [name, setname] = React.useState('')
@@ -64,239 +61,147 @@ const RunBenchmark = () => {
 
     return (
         <div>
-            <Styles maxWidth="xl">
+            <Container maxWidth="xl">
                 <Typography variant="h4" gutterBottom>
                     Run Test
                 </Typography>
-                <Box component="form" noValidate autoComplete="off" sx={{ maxWidth: 600 }}>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <Box>
-                                <InputLabel id="testname-label" className="benchmark-input-label">
-                                    Name of the test
-                                </InputLabel>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', height: '60vh', overflowY: 'auto' }}>
+                    <Box
+                        sx={{
+                            flex: '0 0 50%',
+                            //maxHeight: '90vh',
+                            overflowY: 'auto',
+                            paddingRight: '16px',
+                        }}
+                    >
+                        <Grid container spacing={3}>
+                            <Grid item xs={12}>
+                                <InputLabel>Name of the test</InputLabel>
                                 <TextField
                                     fullWidth
-                                    id="testname"
                                     variant="outlined"
-                                    type="text"
                                     value={name}
                                     onChange={(e) => setname(e.target.value)}
                                 />
-                            </Box>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Box>
-                                <InputLabel id="Primaryname-label" className="benchmark-input-label">
-                                    Primary String()
-                                </InputLabel>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <InputLabel>Primary String</InputLabel>
                                 <TextField
                                     fullWidth
-                                    id="primary"
                                     variant="outlined"
-                                    type="text"
                                     value={primary}
                                     onChange={(e) => setprimary(e.target.value)}
                                 />
-                            </Box>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Box>
-                                <InputLabel id="region-select-label" className="benchmark-input-label">
-                                    Region
-                                </InputLabel>
-                                <Select
-                                    fullWidth
-                                    labelId="region-id"
-                                    id="region-select"
-                                    value={region}
-                                    label="region"
-                                    onChange={handleChange}
-                                >
+                            </Grid>
+                            <Grid item xs={12}>
+                                <InputLabel>Region</InputLabel>
+                                <Select fullWidth value={region} onChange={handleChange}>
                                     <MenuItem value="East US 2 EUAP">East US 2 EUAP</MenuItem>
                                     <MenuItem value="Central US EUAP">Central US EUAP</MenuItem>
                                     <MenuItem value="East US">East US</MenuItem>
                                 </Select>
-                            </Box>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Box>
-                                <InputLabel id="description-label" className="benchmark-input-label">
-                                    Enter a description
-                                </InputLabel>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <InputLabel>Enter a description</InputLabel>
                                 <TextField
                                     fullWidth
-                                    id="description"
                                     variant="outlined"
                                     value={description}
                                     onChange={(e) => setdescription(e.target.value)}
                                 />
-                            </Box>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Box>
-                                <FormLabel id="demo-row-radio-buttons-group-label" sx={{ display: 'block', mb: 2 }}>
-                                    Select test type
-                                </FormLabel>
-                                <RadioGroup
-                                    row
-                                    aria-labelledby="demo-row-radio-buttons-group-label"
-                                    name="row-radio-buttons-group"
-                                    defaultValue="Stress"
-                                >
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormLabel>Select test type</FormLabel>
+                                <RadioGroup row defaultValue="Stress">
                                     <FormControlLabel value="Performance" control={<Radio />} label="Performance" />
                                     <FormControlLabel value="Stress" control={<Radio />} label="Stress" />
                                 </RadioGroup>
-                            </Box>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Box>
-                                <InputLabel id="description-label" className="benchmark-input-label">
-                                    Select test way
-                                </InputLabel>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <InputLabel>Select test way</InputLabel>
                                 <FormGroup row>
                                     <FormControlLabel control={<Checkbox />} label="Set" />
                                     <FormControlLabel control={<Checkbox defaultChecked />} label="Get" />
                                 </FormGroup>
-                            </Box>
-                        </Grid>
-                    </Grid>
-                </Box>
-                <Grid container spacing={2}>
-                    <Grid item xs={5}>
-                        <Box component="form" noValidate autoComplete="off" className="benchmark-form-box">
-                            <Grid container spacing={2}>
-                                <Grid item xs={12}>
-                                    <Grid container alignItems="center" spacing={1}>
-                                        <Grid item xs={6}>
-                                            <InputLabel id="clients-label" className="benchmark-grid-label">
-                                                Clients (-c)
-                                            </InputLabel>
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <TextField
-                                                fullWidth
-                                                id="clients"
-                                                variant="outlined"
-                                                size="small"
-                                                className="benchmark-text-field"
-                                                value={clients}
-                                                onChange={(e) => setclients(e.target.value)}
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Grid container alignItems="center" spacing={1}>
-                                        <Grid item xs={6}>
-                                            <InputLabel id="number-times" className="benchmark-grid-label">
-                                                Threads
-                                            </InputLabel>
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <TextField
-                                                fullWidth
-                                                id="number-times"
-                                                variant="outlined"
-                                                size="small"
-                                                className="benchmark-text-field"
-                                                value={threads}
-                                                onChange={(e) => setthreads(e.target.value)}
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Grid container alignItems="center" spacing={1}>
-                                        <Grid item xs={6}>
-                                            <InputLabel id="payload-size-label" className="benchmark-grid-label">
-                                                Payload size (bytes) (-d)
-                                            </InputLabel>
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <TextField
-                                                fullWidth
-                                                id="payload-size"
-                                                variant="outlined"
-                                                size="small"
-                                                className="benchmark-text-field"
-                                                value={size}
-                                                onChange={(e) => setsize(e.target.value)}
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Grid container alignItems="center" spacing={1}>
-                                        <Grid item xs={6}>
-                                            <InputLabel id="number-of-requests-label" className="benchmark-grid-label">
-                                                Number of requests (-n)
-                                            </InputLabel>
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <TextField
-                                                fullWidth
-                                                id="number-of-requests"
-                                                variant="outlined"
-                                                size="small"
-                                                className="benchmark-text-field"
-                                                value={requests}
-                                                onChange={(e) => setrequests(e.target.value)}
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Grid container alignItems="center" spacing={1}>
-                                        <Grid item xs={6}>
-                                            <InputLabel id="pipeline-label" className="benchmark-grid-label">
-                                                Pipeline (-P)
-                                            </InputLabel>
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <TextField
-                                                fullWidth
-                                                id="pipeline"
-                                                variant="outlined"
-                                                size="small"
-                                                className="benchmark-text-field"
-                                                value={pipeline}
-                                                onChange={(e) => setpipeline(e.target.value)}
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Grid container alignItems="center" spacing={1}>
-                                        <Grid item xs={6}>
-                                            <InputLabel id="number-times" className="benchmark-grid-label">
-                                                Run times( -i )
-                                            </InputLabel>
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <TextField
-                                                fullWidth
-                                                id="number-times"
-                                                variant="outlined"
-                                                size="small"
-                                                className="benchmark-text-field"
-                                                value={times}
-                                                onChange={(e) => settimes(e.target.value)}
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
                             </Grid>
-                        </Box>
-                    </Grid>
-                </Grid>
-                <Button variant="contained" onClick={handleSubmit}>
-                    提交
-                </Button>
-                <Button variant="contained" style={{ marginLeft: '500px' }} onClick={handleRoutine}>
-                    常规
-                </Button>
-            </Styles>
+                        </Grid>
+                    </Box>
+
+                    <Box
+                        sx={{
+                            flex: '0 0 50%',
+                            //maxHeight: '90vh',
+                            overflowY: 'auto',
+                            paddingLeft: '16px',
+                        }}
+                    >
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <InputLabel>Clients (-c)</InputLabel>
+                                <TextField
+                                    fullWidth
+                                    variant="outlined"
+                                    value={clients}
+                                    onChange={(e) => setclients(e.target.value)}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <InputLabel>Threads</InputLabel>
+                                <TextField
+                                    fullWidth
+                                    variant="outlined"
+                                    value={threads}
+                                    onChange={(e) => setthreads(e.target.value)}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <InputLabel>Payload size (bytes) (-d)</InputLabel>
+                                <TextField
+                                    fullWidth
+                                    variant="outlined"
+                                    value={size}
+                                    onChange={(e) => setsize(e.target.value)}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <InputLabel>Number of requests (-n)</InputLabel>
+                                <TextField
+                                    fullWidth
+                                    variant="outlined"
+                                    value={requests}
+                                    onChange={(e) => setrequests(e.target.value)}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <InputLabel>Pipeline (-P)</InputLabel>
+                                <TextField
+                                    fullWidth
+                                    variant="outlined"
+                                    value={pipeline}
+                                    onChange={(e) => setpipeline(e.target.value)}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <InputLabel>Run times (-i)</InputLabel>
+                                <TextField
+                                    fullWidth
+                                    variant="outlined"
+                                    value={times}
+                                    onChange={(e) => settimes(e.target.value)}
+                                />
+                            </Grid>
+                        </Grid>
+                    </Box>
+                </Box>
+                <Box mt={3} display="flex" justifyContent="space-between">
+                    <Button variant="contained" onClick={handleSubmit}>
+                        Submit
+                    </Button>
+                    <Button variant="contained" onClick={handleRoutine}>
+                        Routine
+                    </Button>
+                </Box>
+            </Container>
         </div>
     )
 }
