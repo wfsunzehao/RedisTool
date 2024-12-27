@@ -32,7 +32,7 @@ const Statistics: React.FC = () => {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://localhost:5139/api/parameters')
+            const response = await axios.get('https://localhost:7179/api/Parameters')
             setParameters(response.data)
         } catch (error) {
             console.error('Error fetching the parameters!', error)
@@ -44,7 +44,7 @@ const Statistics: React.FC = () => {
     }, [])
 
     const handleNavigate = () => {
-        navigate('/dataDisplayPage')
+        navigate('/create/dataDisplayPage')
     }
 
     const renderStatusButton = (status: Parameter['status']) => {
