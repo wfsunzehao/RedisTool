@@ -32,7 +32,7 @@ namespace Benchmark_API.Controllers
             try
             {
                 // 插入数据到数据库
-                var benchmarkData = new Parameters
+                var Parameters = new Parameters
                 {
                     Name = model.Name,
                     Region = model.Region,
@@ -43,10 +43,11 @@ namespace Benchmark_API.Controllers
                     Requests = model.Requests,
                     Pipeline = model.Pipeline,
                     Status = 2  // 状态为“2”表示在队列中
+                    //Times
                 };
 
                 // 将新记录添加到 DbContext
-                _dbContext.Parameters.Add(benchmarkData);
+                _dbContext.Parameters.Add(Parameters);
 
                 // 保存到数据库
                 await _dbContext.SaveChangesAsync();

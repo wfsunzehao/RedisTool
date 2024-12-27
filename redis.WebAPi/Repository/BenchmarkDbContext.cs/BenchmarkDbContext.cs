@@ -15,7 +15,7 @@ namespace redis.WebAPi.Repository.AppDbContext{
             base.OnModelCreating(modelBuilder);
             // 如果实体没有主键，并且是仅用于查询的，可以使用 HasNoKey
             modelBuilder.Entity<Parameters>()
-                 .HasKey(p => p.ID); // 标记该实体没有主键，适用于仅查询的情况
+                 .HasKey(p => p.Id); // 标记该实体没有主键，适用于仅查询的情况
         }
         public DbSet<FinalBenchmarkData> BenchmarkData1 { get; set; }
         public DbSet<FinalBenchmarkData> FinalBenchmarkData { get; set; }
