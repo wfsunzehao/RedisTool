@@ -1,147 +1,112 @@
 import React, { useEffect, useState } from 'react'
-import { Autocomplete, Box, Button, FormControl, MenuItem, TextField, Typography } from '@mui/material'
+import {
+    Autocomplete,
+    Box,
+    Button,
+    FormControl,
+    MenuItem,
+    TextField,
+    Typography,
+    InputLabel,
+    Select,
+} from '@mui/material'
 import agent from '../../../app/api/agent'
 import { PerfModel } from '../../../common/models/DataModel'
 import { Overlay, subscriptionList } from '../../../common/constants/constants'
 import LoadingComponent from '@/common/components/CustomLoading'
-import InputLabel from '@mui/material/InputLabel'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { handleGenericSubmit } from '@/app/util/util'
 
 const PerfPage: React.FC = () => {
-    // 获取当前日期，并将其格式化为 MMDD
     const today = new Date()
-    const month = String(today.getMonth() + 1).padStart(2, '0') // 获取月份并补零
-    const day = String(today.getDate()).padStart(2, '0') // 获取日期并补零
-    const formattedDate = `${month}${day}` // 格式化为 MMDD
+    const month = String(today.getMonth() + 1).padStart(2, '0')
+    const day = String(today.getDate()).padStart(2, '0')
+    const formattedDate = `${month}${day}`
+
     const [subscription, setSubscription] = useState('')
     const [group, setGroup] = useState('')
-    const [name, setName] = useState('') // 用于 Perf的 name
-    const [region, setRegion] = useState('') // 用于 Perf的 region
-    const [quantity, setQuantity] = useState('') // 用于 MAN 的数量
-    const [time, setTime] = useState('') // 用于 PERF 的时间
+    const [name, setName] = useState('')
+    const [region, setRegion] = useState('')
+    const [quantity, setQuantity] = useState('')
+    const [time, setTime] = useState('')
     const [cacheName, setCacheName] = useState(`Verifyperformance-{SKU}-EUS2E-${formattedDate}`)
     const [loading, setLoading] = useState(false)
     const [sku, setSku] = useState('All')
     const [groupList, setGroupList] = useState<string[]>([])
     const [errors, setErrors] = useState<{ [key: string]: string }>({})
-    const handlenameChange = (event: SelectChangeEvent) => {
-        setCacheName(event.target.value as string)
-    }
-    const handleskuChange = (event: SelectChangeEvent) => {
-        setSku(event.target.value as string)
-    }
-    //初始化
+
     useEffect(() => {
-        //默认显示Cache Team - Vendor CTI Testing 2
         setSubscription('1e57c478-0901-4c02-8d35-49db234b78d2')
         setRegion('East US 2 EUAP')
         agent.Create.getGroup('1e57c478-0901-4c02-8d35-49db234b78d2')
             .then((response) => {
-                const sortedResponse = response.sort(
-                    (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase()) // 忽略大小写排序
-                )
+                const sortedResponse = response.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
                 setGroupList(sortedResponse)
             })
             .catch((error) => console.log(error.response))
     }, [])
 
-    //校验表单
-    const CheckForm = () => {
+    const validateForm = () => {
         const newErrors: { [key: string]: string } = {}
-        if (!subscription) newErrors.subscription = '订阅不能为空'
-        if (!group) newErrors.group = '组不能为空'
-        if (!region) newErrors.region = '地区不能为空'
+        if (!subscription) newErrors.subscription = 'Subscription is required'
+        if (!group) newErrors.group = 'Group is required'
+        if (!region) newErrors.region = 'Region is required'
         setErrors(newErrors)
-        return Object.keys(newErrors).length === 0 // 返回是否有错误
+        return Object.keys(newErrors).length === 0
     }
 
     const apiPathFunction = async (data: PerfModel) => {
         return await agent.Create.sendPerfJson(data)
     }
+
     const handleSubmit = (event: React.FormEvent) => {
-        // 提交逻辑
-        const data: PerfModel = {
-            subscription: subscription,
-            group: group,
-            sku: sku,
-        }
-        handleGenericSubmit(event, data, apiPathFunction, CheckForm, setLoading)
+        const data: PerfModel = { subscription, group, sku }
+        handleGenericSubmit(event, data, apiPathFunction, validateForm, setLoading)
     }
-    // 处理取消按钮点击事件
+
     const handleCancel = () => {
         setSubscription('')
         setGroup('')
         setName('')
         setQuantity('')
         setRegion('')
-        setErrors({}) // 重置错误信息
+        setErrors({})
     }
-    const handleInputChange =
-        (field: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, value: string) => {
-            //const { value } = event.target;
 
-            switch (field) {
-                case 'group':
-                    setGroup(value)
-                    setErrors((prevErrors) => ({ ...prevErrors, group: '' })) // 清除组错误
-                    break
-                case 'region':
-                    setRegion(value)
-                    setErrors((prevErrors) => ({ ...prevErrors, region: '' })) // 清除区域错误
-                    break
-                default:
-                    break
-            }
-        }
-    // 处理下拉框改变事件
-    const handleSubChange = (subscriptionid: string) => {
-        setSubscription(subscriptionid)
-        setErrors((prevErrors) => ({ ...prevErrors, subscription: '' })) // 清除订阅错误
-        agent.Create.getGroup(subscriptionid)
-            .then((response) => {
-                const sortedResponse = response.sort(
-                    (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase()) // 忽略大小写排序
-                )
-                setGroupList(sortedResponse)
-            })
-            .catch((error) => console.log(error.response))
-    }
     return (
-        <Box>
+        <Box sx={{ p: 4 }}>
             <Typography
                 variant="h3"
                 gutterBottom
+                align="center"
                 sx={{
-                    textAlign: 'center',
                     fontWeight: 'bold',
-                    background: 'linear-gradient(45deg, #1976d2, #9c27b0)', // Example gradient
+                    background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
-                    fontSize: '30px', // You can adjust the font size as needed
+                    fontSize: '30px',
                 }}
             >
                 Create: Performance Cache
             </Typography>
-            <form className="submit-box" onSubmit={handleSubmit}>
+
+            <form onSubmit={handleSubmit}>
                 <Box
                     sx={{
+                        maxWidth: 600,
+                        mx: 'auto',
                         display: 'flex',
-                        justifyContent: 'center',
                         flexDirection: 'column',
-                        alignItems: 'center',
+                        gap: 3,
                     }}
                 >
-                    <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
+                    <FormControl fullWidth>
                         <TextField
                             select
-                            label={`Subscription`}
+                            label="Subscription"
                             value={subscription}
-                            onChange={(e) => handleSubChange(e.target.value)}
-                            variant="outlined"
-                            error={!!errors.subscription} // 判断是否有错误
-                            helperText={errors.subscription} // 显示错误信息
-                            fullWidth
+                            onChange={(e) => setSubscription(e.target.value)}
+                            error={!!errors.subscription}
+                            helperText={errors.subscription}
                         >
                             {subscriptionList.map((option) => (
                                 <MenuItem key={option.value} value={option.value}>
@@ -151,91 +116,62 @@ const PerfPage: React.FC = () => {
                         </TextField>
                     </FormControl>
 
-                    <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
-                        <InputLabel id="cacheName-simple-select-label">CacheName</InputLabel>
+                    <FormControl fullWidth>
+                        <InputLabel id="cacheName-label">Cache Name</InputLabel>
                         <Select
-                            labelId="cacheName-select-label"
-                            id="cacheName-select"
+                            labelId="cacheName-label"
                             value={cacheName}
-                            label="cacheName"
-                            onChange={handlenameChange}
+                            onChange={(e) => setCacheName(e.target.value)}
                         >
                             <MenuItem value={cacheName}>{cacheName}</MenuItem>
                         </Select>
                     </FormControl>
 
-                    <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
+                    <FormControl fullWidth>
                         <Autocomplete
                             options={groupList}
                             value={group}
-                            onChange={(event, value) =>
-                                handleInputChange('group')(
-                                    event as React.ChangeEvent<HTMLInputElement>,
-                                    value as string
-                                )
-                            }
+                            onChange={(event, value) => setGroup(value || '')}
                             renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label="Group"
-                                    variant="outlined"
-                                    error={!!errors.group}
-                                    helperText={errors.group}
-                                    fullWidth
-                                />
+                                <TextField {...params} label="Group" error={!!errors.group} helperText={errors.group} />
                             )}
                         />
                     </FormControl>
-                    <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
+
+                    <FormControl fullWidth>
                         <TextField
                             select
                             label="Region"
                             value={region}
-                            onChange={handleInputChange('region')}
-                            variant="outlined"
-                            error={!!errors.region} // 判断是否有错误
-                            helperText={errors.region} // 显示错误信息
-                            fullWidth
+                            onChange={(e) => setRegion(e.target.value)}
+                            error={!!errors.region}
+                            helperText={errors.region}
                         >
-                            {['East US 2 EUAP'].map((item) => (
-                                <MenuItem key={item} value={item}>
-                                    {item}
-                                </MenuItem>
-                            ))}
+                            <MenuItem value="East US 2 EUAP">East US 2 EUAP</MenuItem>
                         </TextField>
                     </FormControl>
-                    <FormControl variant="outlined" sx={{ width: '100%', marginTop: 2 }}>
-                        <InputLabel id="sku-simple-select-label">SKU</InputLabel>
-                        <Select
-                            labelId="sku-simple-select-label"
-                            id="sku-simple-select"
-                            value={sku}
-                            label="sku"
-                            onChange={handleskuChange}
-                        >
+
+                    <FormControl fullWidth>
+                        <InputLabel id="sku-label">SKU</InputLabel>
+                        <Select labelId="sku-label" value={sku} onChange={(e) => setSku(e.target.value)}>
                             <MenuItem value="All">All</MenuItem>
                             <MenuItem value="Basic">Basic</MenuItem>
                             <MenuItem value="Standard">Standard</MenuItem>
                             <MenuItem value="Premium">Premium</MenuItem>
                         </Select>
                     </FormControl>
-                </Box>
-                {/* 其他相关表单字段 */}
-                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-                    <Button type="submit" variant="contained" color="primary" sx={{ mx: 1, textTransform: 'none' }}>
-                        Submit
-                    </Button>
-                    <Button
-                        type="button"
-                        variant="outlined"
-                        color="secondary"
-                        onClick={handleCancel}
-                        sx={{ mx: 1, textTransform: 'none' }}
-                    >
-                        Cancel
-                    </Button>
+
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+                        <Button type="submit" variant="contained" color="primary">
+                            Submit
+                        </Button>
+                        <Button type="button" variant="outlined" color="secondary" onClick={handleCancel}>
+                            Cancel
+                        </Button>
+                    </Box>
                 </Box>
             </form>
+
             {loading && (
                 <Overlay>
                     <LoadingComponent />
