@@ -22,6 +22,7 @@ interface NavPageProps {
     contentWidth?: string
     marginLeft?: string
     flexDirection?: 'row' | 'column'
+    unrestrictedChildren?: boolean // 新增属性：是否取消 children 的大小限制
 }
 
 const NavPage: React.FC<NavPageProps> = ({
@@ -34,6 +35,7 @@ const NavPage: React.FC<NavPageProps> = ({
     contentWidth = '40%',
     marginLeft = '200px',
     flexDirection = 'column',
+    unrestrictedChildren = false, // 默认限制 children 大小
 }) => {
     const location = useLocation()
     const navigate = useNavigate()
@@ -155,7 +157,8 @@ const NavPage: React.FC<NavPageProps> = ({
                 {children && (
                     <Box
                         sx={{
-                            width: childrenWidth,
+                            width: unrestrictedChildren ? 'auto' : childrenWidth, // 动态控制宽度
+                            flexGrow: unrestrictedChildren ? 1 : 0, // 若不限制宽度则允许弹性增长
                             padding: '20px',
                             marginLeft: '20px',
                         }}

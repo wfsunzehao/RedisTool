@@ -16,6 +16,7 @@ import GroupPage from '../../pages/delete/group/GroupPage'
 import Signal from '../../pages/other/signalR/Signal'
 import LoginPage from '../../pages/login/LoginPage'
 import RegisterPage from '../../pages/login/RegisterPage'
+import RunBenchmark from '@/pages/create/perf/benchmark/RunBenchmark'
 
 export const router = createBrowserRouter([
     {
@@ -30,6 +31,8 @@ export const router = createBrowserRouter([
                     { path: 'bvt', element: <BvtPage /> },
                     { path: 'man', element: <ManPage /> },
                     { path: 'perf', element: <PerfPage /> },
+                    { path: 'benchmark', element: <RunBenchmark /> },
+                    { path: 'statistics', element: <PerfPage /> },
                     { path: 'alt', element: <AltPage /> },
                 ],
             },
