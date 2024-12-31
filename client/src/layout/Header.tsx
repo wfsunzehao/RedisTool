@@ -25,6 +25,7 @@ import { Switch } from '@nextui-org/react'
 import { IconBrandAzure } from '@tabler/icons-react'
 import { IconSun, IconMoon, IconLinkPlus } from '@tabler/icons-react'
 import { loginTextStyles, user } from '../common/constants/constants'
+import NotificationPanel from './NotificationPanel'
 
 const midLinks = [
     { title: 'Tests', path: '/create' },
@@ -45,6 +46,12 @@ const navStyles = (theme: any) => ({
         color: theme.palette.mode === 'dark' ? '#90caf9' : '#033c67', // 根据模式调整选中状态颜色
     },
 })
+
+const fixedMessages = [
+    { title: 'System Update', content: 'The system will undergo maintenance tonight at 10 PM.' },
+    { title: 'New Feature Released', content: 'Check out our latest feature in the dashboard!' },
+    { title: 'Reminder', content: "Don't forget to submit your monthly report by Friday." },
+]
 
 // 获取头部样式的逻辑
 const getHeaderStyles = (isHomePage: boolean, isDarkMode: boolean) => {
@@ -105,9 +112,19 @@ export default function Header() {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
     const [logoutAnchorEl, setLogoutAnchorEl] = useState<HTMLElement | null>(null)
 
-    const handleChatIconClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget)
+    const [isNotificationOpen, setNotificationOpen] = useState(false)
+
+    const handleChatIconClick = () => {
+        setNotificationOpen(true)
     }
+
+    const handleNotificationIconClick = () => {
+        setNotificationOpen(false)
+    }
+
+    // const handleChatIconClick2 = (event: React.MouseEvent<HTMLButtonElement>) => {
+    //     setAnchorEl(event.currentTarget)
+    // }
 
     const handlePopoverClose = () => {
         setAnchorEl(null)
@@ -277,7 +294,9 @@ export default function Header() {
                             </Badge>
                         </IconButton>
                     )}
-
+                    {isNotificationOpen && (
+                        <NotificationPanel messages={fixedMessages} onClose={handleNotificationIconClick} />
+                    )}
                     {isLoggedIn ? (
                         <Box display="flex" alignItems="center" sx={{ marginLeft: 2 }}>
                             <Typography
