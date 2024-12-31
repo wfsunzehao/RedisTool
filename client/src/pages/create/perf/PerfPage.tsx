@@ -162,10 +162,16 @@ const PerfPage: React.FC = () => {
                     </FormControl>
 
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-                        <Button type="submit" variant="contained" color="primary">
+                        <Button sx={{ mx: 1, textTransform: 'none' }} type="submit" variant="contained" color="primary">
                             Submit
                         </Button>
-                        <Button type="button" variant="outlined" color="secondary" onClick={handleCancel}>
+                        <Button
+                            type="button"
+                            variant="outlined"
+                            color="secondary"
+                            onClick={handleCancel}
+                            sx={{ mx: 1, textTransform: 'none' }}
+                        >
                             Cancel
                         </Button>
                     </Box>
