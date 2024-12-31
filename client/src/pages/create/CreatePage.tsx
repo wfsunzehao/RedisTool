@@ -14,9 +14,9 @@ const leftLinks = [
         path: '/create/perf',
         icon: <IconChartLine stroke={2} />,
         subLinks: [
-            { title: 'Create', path: '/create/perf' },
-            { title: 'Benchmark', path: '/create/benchmark' },
-            { title: 'Statistics', path: '/create/statistics' },
+            { title: 'Create', path: '/create/perf', count: 1 },
+            { title: 'Benchmark', path: '/create/benchmark', count: 2 },
+            { title: 'Statistics', path: '/create/statistics', count: 3 },
         ],
     },
     { title: 'ALT', path: '/create/alt', icon: <IconAlt stroke={2} /> },

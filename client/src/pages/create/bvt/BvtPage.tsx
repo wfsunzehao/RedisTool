@@ -54,11 +54,11 @@ const BvtPage: React.FC = () => {
     // 校验表单
     const CheckForm = () => {
         const newErrors: { [key: string]: string } = {}
-        if (!subscription) newErrors.subscription = '订阅不能为空'
-        if (!group || !groupList.includes(group)) newErrors.group = '组不能为空或无效'
-        if (option === 'case' && selectedNames.length === 0) newErrors.selectedNames = '至少选择一个名称'
+        if (!subscription) newErrors.subscription = 'Subscription cannot be empty'
+        if (!group || !groupList.includes(group)) newErrors.group = 'Group cannot be empty or invalid'
+        if (option === 'case' && selectedNames.length === 0) newErrors.selectedNames = 'Select at least one'
         if (option === 'case' && selectedNames.length === 1 && quantity.trim() === '') {
-            newErrors.quantity = '数量不能为空'
+            newErrors.quantity = 'Quantity cannot be empty'
         }
         setErrors(newErrors)
         return Object.keys(newErrors).length === 0
@@ -221,7 +221,7 @@ const BvtPage: React.FC = () => {
 
                             {selectedNames.length === 1 && (
                                 <TextField
-                                    label="数量"
+                                    label="quantity"
                                     type="number"
                                     value={quantity}
                                     onChange={handleInputChange('quantity')}

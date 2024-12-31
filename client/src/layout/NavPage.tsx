@@ -10,6 +10,7 @@ interface LinkItem {
     path: string
     icon?: JSX.Element
     subLinks?: LinkItem[]
+    count?: number
 }
 
 interface NavPageProps {
@@ -72,7 +73,7 @@ const NavPage: React.FC<NavPageProps> = ({
                     overflowY: 'auto',
                 }}
             >
-                <List sx={{ paddingTop: '20px' }}>
+                <List>
                     {links.map(({ title, path, icon, subLinks }) => (
                         <React.Fragment key={title}>
                             {/* 一级菜单 */}
@@ -105,12 +106,13 @@ const NavPage: React.FC<NavPageProps> = ({
                                                 key={subLink.title}
                                                 component={Link}
                                                 to={subLink.path}
+                                                selected={isSelected(subLink.path)}
                                                 sx={{
-                                                    pl: 12, // 增加缩进
+                                                    pl: 8, // 增加缩进
                                                     '&.Mui-selected': {
                                                         backgroundColor: theme.palette.action.hover,
                                                         '& .MuiListItemText-primary': {
-                                                            fontWeight: 500,
+                                                            fontWeight: 'bold',
                                                             color: theme.palette.primary.main,
                                                         },
                                                     },
@@ -118,15 +120,32 @@ const NavPage: React.FC<NavPageProps> = ({
                                                         backgroundColor: theme.palette.action.selected,
                                                     },
                                                 }}
-                                                selected={isSelected(subLink.path)}
                                             >
+                                                {/* 数字图标 */}
+                                                <ListItemIcon>
+                                                    <Box
+                                                        sx={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            backgroundColor: theme.palette.primary.light,
+                                                            color: theme.palette.common.white,
+                                                            borderRadius: '50%',
+                                                            width: '24px',
+                                                            height: '24px',
+                                                            fontSize: '12px',
+                                                            fontWeight: 600,
+                                                        }}
+                                                    >
+                                                        {subLink.count}
+                                                    </Box>
+                                                </ListItemIcon>
                                                 <ListItemText
                                                     primary={subLink.title}
                                                     primaryTypographyProps={{
-                                                        fontFamily: '"Roboto", Arial, sans-serif',
-                                                        fontSize: '14px', // 更小的字体
-                                                        fontStyle: 'italic', // 斜体
-                                                        color: theme.palette.text.secondary, // 更浅的颜色
+                                                        fontSize: '14px',
+                                                        color: theme.palette.text.secondary,
+                                                        fontStyle: 'italic',
                                                     }}
                                                 />
                                             </ListItemButton>

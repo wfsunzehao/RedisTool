@@ -72,9 +72,9 @@ const AltPage: React.FC = () => {
 
     const CheckForm = () => {
         const newErrors: { [key: string]: string } = {}
-        if (!subscription) newErrors.subscription = '订阅不能为空'
-        if (!group) newErrors.group = '组不能为空'
-        if (!region) newErrors.region = '地区不能为空'
+        if (!subscription) newErrors.subscription = 'Subscription cannot be empty'
+        if (!group) newErrors.group = 'Group cannot be empty'
+        if (!region) newErrors.region = 'Region cannot be empty'
         setErrors(newErrors)
         return Object.keys(newErrors).length === 0
     }

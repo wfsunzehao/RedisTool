@@ -36,9 +36,9 @@ const ManPage: React.FC = () => {
     // 表单校验
     const checkForm = () => {
         const newErrors: { [key: string]: string } = {}
-        if (!subscription) newErrors.subscription = '订阅不能为空'
-        if (!group) newErrors.group = '组不能为空'
-        if (!region) newErrors.region = '区域不能为空'
+        if (!subscription) newErrors.subscription = 'Subscription cannot be empty'
+        if (!group) newErrors.group = 'Group cannot be empty'
+        if (!region) newErrors.region = 'Region cannot be empty'
         setErrors(newErrors)
         return Object.keys(newErrors).length === 0
     }

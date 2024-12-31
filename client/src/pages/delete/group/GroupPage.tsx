@@ -72,8 +72,8 @@ const GroupPage: React.FC = () => {
     // 校验表单
     const CheckForm = () => {
         const newErrors: { [key: string]: string } = {}
-        if (!subscription) newErrors.subscription = '订阅不能为空'
-        if (!group) newErrors.group = '组不能为空'
+        if (!subscription) newErrors.subscription = 'Subscription cannot be empty'
+        if (!group) newErrors.group = 'Group cannot be empty'
         setErrors(newErrors)
         return Object.keys(newErrors).length === 0 // 返回是否有错误
     }
