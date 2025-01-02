@@ -26,6 +26,7 @@ import { IconBrandAzure } from '@tabler/icons-react'
 import { IconSun, IconMoon, IconLinkPlus } from '@tabler/icons-react'
 import { loginTextStyles, user } from '../common/constants/constants'
 import NotificationPanel from './NotificationPanel'
+import MessageHandler from './MessageHandler'
 
 const midLinks = [
     { title: 'Tests', path: '/create' },
@@ -112,14 +113,14 @@ export default function Header() {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
     const [logoutAnchorEl, setLogoutAnchorEl] = useState<HTMLElement | null>(null)
 
-    const [isNotificationOpen, setNotificationOpen] = useState(false)
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false)
 
     const handleChatIconClick = () => {
-        setNotificationOpen(true)
+        setIsNotificationOpen((prev) => !prev) // 切换打开或关闭状态
     }
 
-    const handleNotificationIconClick = () => {
-        setNotificationOpen(false)
+    const handleNotificationClose = () => {
+        setIsNotificationOpen(false)
     }
 
     // const handleChatIconClick2 = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -294,9 +295,7 @@ export default function Header() {
                             </Badge>
                         </IconButton>
                     )}
-                    {isNotificationOpen && (
-                        <NotificationPanel messages={fixedMessages} onClose={handleNotificationIconClick} />
-                    )}
+                    <MessageHandler isOpen={isNotificationOpen} onClose={handleNotificationClose} />
                     {isLoggedIn ? (
                         <Box display="flex" alignItems="center" sx={{ marginLeft: 2 }}>
                             <Typography
