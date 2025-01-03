@@ -18,7 +18,6 @@ import { NavLink, useNavigate, useLocation } from 'react-router-dom'
 import ChatIcon from '@mui/icons-material/Chat'
 import { useTheme } from '../app/context/ThemeContext'
 import logo from '@/assets/images/wicrecend3.png'
-import { useMessage } from '../app/context/MessageContext'
 import { useAuth } from '../app/context/AuthContext'
 import { Switch } from '@nextui-org/react'
 
@@ -103,7 +102,7 @@ const getLogoFilter2 = (isHomePage: boolean, isDarkMode: boolean) => {
 
 export default function Header() {
     const { toggleTheme, isDarkMode } = useTheme()
-    const { messages } = useMessage()
+
     const { isLoggedIn, setIsLoggedIn } = useAuth()
     const navigate = useNavigate()
     const location = useLocation()
@@ -290,7 +289,7 @@ export default function Header() {
                             sx={{ mr: 2 }}
                             onClick={handleChatIconClick}
                         >
-                            <Badge badgeContent={messages.length} color="secondary">
+                            <Badge color="secondary">
                                 <ChatIcon />
                             </Badge>
                         </IconButton>

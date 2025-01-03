@@ -3,7 +3,6 @@ import { Box, Button, FormControl, TextField, CircularProgress, MenuItem, Typogr
 import { Autocomplete } from '@mui/material'
 import agent from '../../../app/api/agent'
 import { ManModel } from '../../../common/models/DataModel'
-import { useMessage } from '../../../app/context/MessageContext'
 import { handleGenericSubmit } from '../../../app/util/util'
 
 const ManPage: React.FC = () => {
@@ -13,7 +12,6 @@ const ManPage: React.FC = () => {
     const [groupList, setGroupList] = useState<string[]>([])
     const [loading, setLoading] = useState(false)
     const [errors, setErrors] = useState<{ [key: string]: string }>({})
-    const { addMessage } = useMessage()
 
     // 初始化加载
     useEffect(() => {
