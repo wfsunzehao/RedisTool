@@ -1,39 +1,36 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react'
 
+// 消息类型定义
 interface Message {
-  text: string;
-  timestamp: number;
+    title: string
+    content: string
 }
 
+// 上下文类型定义
 interface MessageContextType {
-  messages: Message[];
-  addMessage: (message: string) => void;
+    messages: Message[]
+    addMessage: (title: string, content: string) => void
 }
 
-const MessageContext = createContext<MessageContextType | undefined>(undefined);
+// 创建上下文
+const MessageContext = createContext<MessageContextType | undefined>(undefined)
 
-export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [messages, setMessages] = useState<Message[]>([]); // 更新为 Message 数组
+// 提供者组件
+export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+    const [messages, setMessages] = useState<Message[]>([])
 
-  const addMessage = (message: string) => {
-    const newMessage: Message = {
-      text: message,
-      timestamp: Date.now(), // 获取当前时间戳
-    };
-    setMessages((prevMessages) => [...prevMessages, newMessage]); // 添加新消息
-  };
+    const addMessage = (title: string, content: string) => {
+        setMessages((prevMessages) => [{ title, content }, ...prevMessages])
+    }
 
-  return (
-    <MessageContext.Provider value={{ messages, addMessage }}>
-      {children}
-    </MessageContext.Provider>
-  );
-};
+    return <MessageContext.Provider value={{ messages, addMessage }}>{children}</MessageContext.Provider>
+}
 
-export const useMessage = () => {
-  const context = useContext(MessageContext);
-  if (!context) {
-    throw new Error('useMessage must be used within a MessageProvider');
-  }
-  return context;
-};
+// 使用上下文的自定义 Hook
+export const useMessageContext = () => {
+    const context = useContext(MessageContext)
+    if (!context) {
+        throw new Error('useMessageContext must be used within a MessageProvider')
+    }
+    return context
+}
