@@ -17,6 +17,8 @@ import LoadingComponent from '../../../common/components/CustomLoading'
 import { Overlay, subscriptionList } from '../../../common/constants/constants'
 import { DeleteModel } from '../../../common/models/DeleteModel'
 import { handleGenericSubmit } from '../../../app/util/util'
+import { useMessageContext } from '@/app/context/MessageContext'
+import MessageHandler from '@/layout/MessageHandler'
 
 const GroupPage: React.FC = () => {
     const [subscription, setSubscription] = useState('')
@@ -26,6 +28,9 @@ const GroupPage: React.FC = () => {
     const [errors, setErrors] = useState<{ [key: string]: string }>({})
     const [resourceList, setResourceList] = useState<string[]>([]) // 资源列表状态
     const [showResourceBox, setShowResourceBox] = useState(false) // 控制资源框显示与否
+
+    const [isOpen, setIsOpen] = useState(true)
+    const { addMessage } = useMessageContext()
 
     // 初始化
     useEffect(() => {
@@ -88,6 +93,7 @@ const GroupPage: React.FC = () => {
             resourceGroupName: group,
         }
         handleGenericSubmit(event, data, apiPathFunction, CheckForm, setLoading)
+        addMessage('Deletion is complete', `Cache deleted at ${new Date().toLocaleTimeString()}.`)
     }
 
     // 取消按钮逻辑
@@ -267,6 +273,7 @@ const GroupPage: React.FC = () => {
                     </Button>
                 </Box>
             </form>
+            <MessageHandler isOpen={isOpen} onClose={() => setIsOpen(false)} />
             {loading && (
                 <Overlay>
                     <LoadingComponent />
