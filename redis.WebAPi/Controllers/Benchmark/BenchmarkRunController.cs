@@ -7,6 +7,7 @@ using redis.WebAPi.Repository.AppDbContext; // 引入 BenchmarkDbContext
 using Microsoft.EntityFrameworkCore;
 using redis.WebAPi.Repository.AppDbContext;
 using redis.WebAPi.Model;
+using redis.WebAPi.Service.IService;
 
 namespace Benchmark_API.Controllers
 {
@@ -16,10 +17,10 @@ namespace Benchmark_API.Controllers
     public class BenchmarkRunController : ControllerBase
     {
         private readonly BenchmarkDbContext _dbContext;  // 引入 DbContext
-        private readonly ConnectionVMService _connectionVMService;
+        private readonly IConnectionVMService _connectionVMService;
 
         // 通过构造函数注入 BenchmarkDbContext 和 ConnectionVMService
-        public BenchmarkRunController(BenchmarkDbContext dbContext, ConnectionVMService connectionVMService)
+        public BenchmarkRunController(BenchmarkDbContext dbContext, IConnectionVMService connectionVMService)
         {
             _dbContext = dbContext;
             _connectionVMService = connectionVMService;
