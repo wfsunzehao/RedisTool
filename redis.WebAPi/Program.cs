@@ -64,7 +64,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     containerBuilder.RegisterType<ResourceDeletionService>().As<IResourceDeletionService>().SingleInstance();
     containerBuilder.RegisterType<MedianService>().As<IMedianService>().SingleInstance();
     containerBuilder.RegisterType<CreationService>().As<ICreationService>().SingleInstance();
-    containerBuilder.RegisterType<ConnectionVMService>().SingleInstance();
+    containerBuilder.RegisterType<ConnectionVMService>().As<IConnectionVMService>().SingleInstance();
 });
 
 var app = builder.Build();

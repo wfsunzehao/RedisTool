@@ -5,11 +5,13 @@ using Azure;
 using System;
 using redis.WebAPi.Service.AzureShared;
 using Azure.ResourceManager.Compute;
+using redis.WebAPi.Service.IService;
+using redis.WebAPi.Model.BenchmarkModel;
 
 
 namespace redis.WebAPi.Service.AzureShared
 {
-    public class ConnectionVMService
+    public class ConnectionVMService : IConnectionVMService
     {
         private readonly AzureClientFactory _client;
         private readonly BenchmarkService _benchmarkService;
@@ -21,6 +23,7 @@ namespace redis.WebAPi.Service.AzureShared
             _benchmarkService = benchmarkService;
         }
 
+        //public async Task<string> ConnectionVM(ConnectionVMRequest request)
         public async Task<string> ConnectionVM(string name, string primary, int clients, int threads, int size, int requests, int pipeline, int times)
         {
             try
@@ -74,7 +77,7 @@ namespace redis.WebAPi.Service.AzureShared
                         "cd /home/azureuser",
                         $"./manage_screen_session.sh {name} {primary} {threads} {clients} {requests} {pipeline} {size} {times} {fileName}",
                     }
-                }; 
+                };
 
                 var response = (await vm1.Value.RunCommandAsync(WaitUntil.Completed, runCommandInput)).Value;
 
@@ -124,6 +127,8 @@ namespace redis.WebAPi.Service.AzureShared
                 Console.WriteLine($"Error writing running tests file: {ex.Message}");
             }
         }
+
+
     }
 }
 

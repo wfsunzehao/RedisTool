@@ -69,11 +69,11 @@ namespace redis.WebAPi.Controllers
             return Ok();
         }
 
-        [HttpPost("VMConnection")]
-        public async Task<IActionResult> VMConnection()
-        {
-            return Ok(await _connectionVMService.ConnectionVM());
+        //[HttpPost("VMConnection")]
+        //public async Task<IActionResult> VMConnection()
+        //{
+        //    return Ok(await _connectionVMService.ConnectionVM());
 
-        }
+        //}
     }
 }
