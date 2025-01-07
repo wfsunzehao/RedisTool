@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration; // Import IConfiguration namespace
+using Microsoft.IdentityModel.Tokens;
 using redis.WebAPi.Service;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 
 namespace redis.WebAPi.Filters
 {
@@ -32,13 +36,45 @@ namespace redis.WebAPi.Filters
             var token = context.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
             // Validate the token's validity
-            if (string.IsNullOrEmpty(token) || !TokenStore.IsValidToken(token))
+            if (string.IsNullOrEmpty(token))
             {
                 context.Result = new UnauthorizedObjectResult(new { message = "Unauthorized" });
                 return;
             }
 
-            base.OnActionExecuting(context);
+            try
+            {
+                var jwtSettings = _configuration.GetSection("JwtSettings");
+                var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]);
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var validationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = jwtSettings["Issuer"],
+                    ValidAudience = jwtSettings["Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                };
+
+                var principal = tokenHandler.ValidateToken(token, validationParameters, out _);
+                var userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (string.IsNullOrEmpty(userId))
+                {
+                    context.Result = new UnauthorizedResult();
+                    return;
+                }
+
+                // 将用户信息存入 HttpContext，供后续接口使用
+                context.HttpContext.User = principal;
+            }
+            catch (SecurityTokenException)
+            {
+                context.Result = new UnauthorizedResult();
+            }
+
         }
     }
 }

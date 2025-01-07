@@ -34,8 +34,6 @@ public class AuthController : ControllerBase
         {
             return BadRequest(new { message = "Token is required." });
         }
- 
-        TokenStore.RemoveToken(token);
 
         return Ok(new { message = "Logout successful." });
     }
@@ -50,8 +48,7 @@ public class AuthController : ControllerBase
             return Unauthorized(new { message = "Invalid username or password." });
         }
 
-        var token = GenerateJwtToken(user);
-        TokenStore.AddToken(token, user.Id);
+        var token = GenerateJwtToken(user); 
 
         return Ok(new { token, role = user.Role });
 
