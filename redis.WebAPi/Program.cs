@@ -88,7 +88,8 @@ app.UseCors(opt =>
 app.UseHttpsRedirection();
 
 // Enable authentication and authorization
-app.UseAuthentication();
+
+//app.UseAuthentication();
 app.UseAuthorization();
 
 // Map SignalR Hub

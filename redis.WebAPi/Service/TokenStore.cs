@@ -10,7 +10,7 @@ namespace redis.WebAPi.Service
 
         public static void AddToken(string token, int userId)
         {
-            var expiration = DateTime.UtcNow.AddHours(1); // set 1 hour expired
+            var expiration = DateTime.UtcNow.AddHours(5); // set 1 hour expired
             _tokens[token] = (userId, expiration);
         }
 

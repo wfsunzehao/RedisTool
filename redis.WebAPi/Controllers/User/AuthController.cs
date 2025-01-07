@@ -25,6 +25,21 @@ public class AuthController : ControllerBase
         _configuration = configuration;
     }
 
+    [HttpPost("logout")]
+    public IActionResult Logout()
+    {
+        var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+
+        if (string.IsNullOrEmpty(token))
+        {
+            return BadRequest(new { message = "Token is required." });
+        }
+ 
+        TokenStore.RemoveToken(token);
+
+        return Ok(new { message = "Logout successful." });
+    }
+
     // Login functionality
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest model)
@@ -38,7 +53,7 @@ public class AuthController : ControllerBase
         var token = GenerateJwtToken(user);
         TokenStore.AddToken(token, user.Id);
 
-        return Ok(new { token });
+        return Ok(new { token, role = user.Role });
 
     }
 
