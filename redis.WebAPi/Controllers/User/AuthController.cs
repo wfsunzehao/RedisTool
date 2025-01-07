@@ -13,7 +13,6 @@ using redis.WebAPi.Filters;
 
 [Route("api/[controller]")]
 [ApiController]
-[ServiceFilter(typeof(AuthFilter))]
 public class AuthController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
@@ -43,7 +42,7 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login([FromBody] LoginRequest model)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == model.Username);
-        if (user == null || !BCrypt.Net.BCrypt.Verify(model.Password, user.PasswordHash))
+        if (!PasswordHasher.VerifyPassword(model.Password, user.PasswordHash, user.Salt))
         {
             return Unauthorized(new { message = "Invalid username or password." });
         }
@@ -120,10 +119,11 @@ public class AuthController : ControllerBase
         }
 
         // Hash the new password
-        var hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.NewPassword);
+        var hashedPassword = PasswordHasher.HashPassword(model.NewPassword);
 
         // Update the password
-        user.PasswordHash = hashedPassword;
+        user.PasswordHash = hashedPassword.hash;
+        user.Salt = hashedPassword.salt;
         _context.Users.Update(user);
         await _context.SaveChangesAsync();
 
