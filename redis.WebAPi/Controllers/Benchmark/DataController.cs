@@ -22,7 +22,6 @@ namespace Benchmark_API.Controllers
             var data = await _dbContext.BenchmarkData1
                 .Select(b => new
                 {
-                    b.Id,
                     b.CacheName,
                     b.TotalDuration,
                     b.TimeUnit,
@@ -31,7 +30,8 @@ namespace Benchmark_API.Controllers
                     b.GetsP50,
                     b.GetsP99,
                     b.GetsP99_90,
-                    b.GetsP99_99
+                    b.GetsP99_99,
+                    b.ID
                 })
                 .ToListAsync();
 

@@ -19,6 +19,7 @@ import RegisterPage from '@/pages/login/RegisterPage'
 import RunBenchmark from '@/pages/create/perf/benchmark/RunBenchmark'
 import Statistics from '@/pages/create/perf/statistics/Statistics'
 import { Dashboard } from '@mui/icons-material'
+import DataDisplayPage from '@/pages/create/perf/data/Dashboard'
 
 export const router = createBrowserRouter([
     {
@@ -35,7 +36,7 @@ export const router = createBrowserRouter([
                     { path: 'perf', element: <PerfPage /> },
                     { path: 'benchmark', element: <RunBenchmark /> },
                     { path: 'statistics', element: <Statistics /> },
-                    { path: 'dataDisplayPage', element: <Dashboard /> },
+                    { path: 'dataDisplayPage', element: <DataDisplayPage /> },
                     { path: 'alt', element: <AltPage /> },
                 ],
             },

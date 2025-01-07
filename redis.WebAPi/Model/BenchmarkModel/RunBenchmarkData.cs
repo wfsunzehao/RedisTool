@@ -26,7 +26,8 @@ public class Parameters
 
         [Required(ErrorMessage = "Pipeline is required.")]
         public int Pipeline { get; set; }
-        public DateTimeOffset Times { get; set; } = DateTimeOffset.UtcNow;
+        [Required(ErrorMessage = "Times is required.")]
+        public int Times { get; set; }
 
         [Required(ErrorMessage = "Status is required.")]
         public int Status { get; set; }

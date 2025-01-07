@@ -53,7 +53,7 @@ namespace Benchmark_API.Controllers
                 // 保存到数据库
                 await _dbContext.SaveChangesAsync();
 
-                Console.WriteLine($"插入成功，Benchmark 任务已保存: {model.Name}");
+                //Console.WriteLine($"插入成功，Benchmark 任务已保存: {model.Name}");
 
                 // 调用 ConnectionVMService 执行虚拟机操作并获取输出
                 string vmOutput = await _connectionVMService.ConnectionVM(

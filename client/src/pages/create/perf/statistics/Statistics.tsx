@@ -13,6 +13,7 @@ import {
     Box,
 } from '@mui/material'
 import axios from 'axios'
+import agent from '@/app/api/agent'
 
 interface Parameter {
     name: string
@@ -33,6 +34,8 @@ const Statistics: React.FC = () => {
     const fetchData = async () => {
         try {
             const response = await axios.get('https://localhost:7179/api/Parameters')
+            // const response = await agent.Create.getBenchmarkRunJson()
+            console.log('Fetched data:', response);
             setParameters(response.data)
         } catch (error) {
             console.error('Error fetching the parameters!', error)
@@ -57,8 +60,8 @@ const Statistics: React.FC = () => {
             }
         > = {
             '1': { label: 'Successful', color: 'success', disabled: false },
-            '2': { label: 'In Progress', color: 'warning', disabled: true },
-            '3': { label: 'Running', color: 'primary', disabled: true },
+            '2': { label: 'In Progress', color: 'secondary', disabled: true },
+            '3': { label: 'Running', color: 'warning', disabled: true },
         }
 
         const { label, color, disabled } = statusMap[status]
@@ -69,7 +72,7 @@ const Statistics: React.FC = () => {
                 onClick={handleNavigate}
                 disabled={disabled}
                 size="small"
-                sx={{ textTransform: 'none', fontSize: '14px' }}
+                sx={{ textTransform: 'none', fontSize: '14px'}}
             >
                 {label}
             </Button>
@@ -77,7 +80,7 @@ const Statistics: React.FC = () => {
     }
 
     return (
-        <Box sx={{ padding: '20px', marginLeft: '5%', height: '80vh' }}>
+        <Box sx={{ padding: '20px', marginLeft: '5%', minHeight: '100vh', overflow: 'auto' }}>
             <Typography
                 variant="h3"
                 gutterBottom

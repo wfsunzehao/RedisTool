@@ -11,6 +11,7 @@ using redis.WebAPi.Repository.AppDbContext;
 using redis.WebAPI.Service;
 using redis.WebAPi.Filters;
 using redis.WebAPi.Hubs;
+using redis.WebAPi.Service.Benchmark;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -65,6 +66,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     containerBuilder.RegisterType<MedianService>().As<IMedianService>().SingleInstance();
     containerBuilder.RegisterType<CreationService>().As<ICreationService>().SingleInstance();
     containerBuilder.RegisterType<ConnectionVMService>().As<IConnectionVMService>().SingleInstance();
+    containerBuilder.RegisterType<InsertBenchmarkService>().As<InsertBenchmarkService>().InstancePerDependency();
 });
 
 var app = builder.Build();
