@@ -57,15 +57,10 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest model)
     {
-        // Check if the username or email already exists
+        // Check if the username 
         if (await _context.Users.AnyAsync(u => u.Username == model.Username))
         {
             return BadRequest(new { message = "Username already exists." });
-        }
-
-        if (await _context.Users.AnyAsync(u => u.Email == model.Email))
-        {
-            return BadRequest(new { message = "Email is already in use." });
         }
 
         var (hash, salt) = PasswordHasher.HashPassword(model.Password);
@@ -81,7 +76,6 @@ public class AuthController : ControllerBase
         var user = new User
         {
             Username = model.Username,
-            Email = model.Email,
             PasswordHash = hash,
             Salt = salt,
             Role = "user"

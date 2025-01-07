@@ -22,13 +22,6 @@ namespace redis.WebAPi.Model.UserModels
         public string Username { get; set; }
 
         /// <summary>
-        /// Gets or sets the email of the user.
-        /// </summary>
-        [Required(ErrorMessage = "Email is required.")]
-        [EmailAddress(ErrorMessage = "Invalid email format.")]
-        public string Email { get; set; }
-
-        /// <summary>
         /// Gets or sets the hashed password for the user. This property is hidden in API responses.
         /// </summary>
         [JsonIgnore]
