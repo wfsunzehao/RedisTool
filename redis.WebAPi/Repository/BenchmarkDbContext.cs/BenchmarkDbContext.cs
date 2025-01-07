@@ -17,7 +17,7 @@ namespace redis.WebAPi.Repository.AppDbContext{
             modelBuilder.Entity<Parameters>()
                  .HasKey(p => p.Id); // 标记该实体没有主键，适用于仅查询的情况
         }
-        public DbSet<FinalBenchmarkData> BenchmarkData1 { get; set; }
+        public DbSet<BenchmarkData1> BenchmarkData1 { get; set; }
         public DbSet<FinalBenchmarkData> FinalBenchmarkData { get; set; }
     }
 }

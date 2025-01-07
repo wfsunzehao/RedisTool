@@ -1,159 +1,168 @@
-import React, { useEffect, useState } from 'react'
-import { Line } from 'react-chartjs-2'
-import {
-    Chart as ChartJS,
-    Title,
-    Tooltip,
-    Legend,
-    LineElement,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-} from 'chart.js'
-import axios from 'axios'
+// src/components/DataChart.tsx
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Table, Card, Row, Col } from 'antd';
+import { Tooltip as AntdTooltip } from 'antd';
 
-import './Dashboard.css'
-import { Styles } from '../Styles'
+// 定义接口数据的类型
+interface AllData {
+  cacheName: string;
+  totalDuration: number;
+  timeUnit: string;
+  getsRPS: number;
+  getsAverageLatency: number;
+  getsP50: number;
+  getsP99: number;
+  getsP99_90: number;
+  getsP99_99: number;
+  id: number;
+}
 
-ChartJS.register(Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement)
-
-// 定义数据类型接口
-interface Data {
-    id: string
-    cacheName: string
-    totalDuration: string
-    timeUnit: string
-    getsRPS: string
-    getsAverageLatency: string
-    getsP50: string
-    getsP99: string
-    getsP99_90: string
-    getsP99_99: string
+interface FinalData {
+  id: number;
+  cacheName: string;
+  totalDuration: number;
+  timeUnit: string;
+  getsRPS: number;
+  getsAverageLatency: number;
+  getsP50: number;
+  getsP99: number;
+  getsP99_90: number;
+  getsP99_99: number;
 }
 
 const DataDisplayPage: React.FC = () => {
-    const [data, setData] = useState<Data[]>([]) // 保存从后端获取的所有数据
-    const [finalData, setFinalData] = useState<Data[]>([]) // 存储 FinalData 数据
+  // 使用useState管理AllData和FinalData
+  const [allData, setAllData] = useState<AllData[]>([]);
+  const [finalData, setFinalData] = useState<FinalData[]>([]);
 
-    useEffect(() => {
-        // 并行获取两个 API 数据
-        Promise.all([
-            axios.get('https://localhost:7179/api/Data/AllData'),
-            axios.get('https://localhost:7179/api/Data/FinalData'),
-        ])
-            .then(([allDataResponse, finalDataResponse]) => {
-                setData(allDataResponse.data) // 设置 AllData 数据
-                setFinalData(finalDataResponse.data) // 设置 FinalData 数据
-            })
-            .catch((error) => {
-                console.error('There was an error fetching the data!', error)
-            })
-    }, [])
+  // 获取数据
+  useEffect(() => {
+    // 获取AllData数据
+    axios.get('https://localhost:7179/api/Data/AllData')
+      .then((response) => {
+        setAllData(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching AllData:', error);
+      });
 
-    // 折线图数据
-    const lineChartData = {
-        labels: Array.from({ length: 10 }, (_, i) => i + 1), // 横轴：1 到 10
-        datasets: [
-            {
-                label: data.length > 0 ? data[0].cacheName : 'Cache Name', // 使用第一个数据项的 cacheName 作为图表标题
-                data: data.map((item) => parseFloat(item.getsRPS)), // 使用 getsRPS 的值作为数据点
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                tension: 0.1,
-            },
-        ],
-    }
+    // 获取FinalData数据
+    axios.get('https://localhost:7179/api/Data/FinalData')
+      .then((response) => {
+        setFinalData(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching FinalData:', error);
+      });
+  }, []);
 
-    const options = {
-        responsive: true,
-        plugins: {
-            tooltip: {
-                callbacks: {
-                    // 自定义显示内容
-                    label: function (tooltipItem: any) {
-                        // 根据索引获取当前点的数据项
-                        const index = tooltipItem.dataIndex
-                        const item = data[index]
+  // 转换AllData数据用于图表
+  const chartData = allData.map(item => ({
+    cacheName: item.cacheName,
+    totalDuration: item.totalDuration,
+    getsRPS: item.getsRPS,
+    id: item.id,
+  }));
 
-                        return [
-                            `CacheName: ${item.cacheName}`,
-                            `Total Duration: ${item.totalDuration}`,
-                            `TimeUnit: ${item.timeUnit}`,
-                            `Gets RPS: ${parseFloat(item.getsRPS).toFixed(2)}`,
-                            `Gets Average Latency: ${parseFloat(item.getsAverageLatency).toFixed(3)}`,
-                            `Gets p50.00: ${parseFloat(item.getsP50).toFixed(3)}`,
-                            `Gets p99.00: ${parseFloat(item.getsP99).toFixed(3)}`,
-                            `Gets p99.90: ${parseFloat(item.getsP99_90).toFixed(3)}`,
-                            `Gets p99.99: ${parseFloat(item.getsP99_99).toFixed(3)}`,
-                        ]
-                    },
-                },
-            },
-        },
-    }
+  // 表格的列定义
+  const columns = [
+    {
+      title: 'Cache Name',
+      dataIndex: 'cacheName',
+      key: 'cacheName',
+    },
+    {
+      title: 'Total Duration',
+      dataIndex: 'totalDuration',
+      key: 'totalDuration',
+    },
+    {
+      title: 'Gets RPS',
+      dataIndex: 'getsRPS',
+      key: 'getsRPS',
+    },
+    {
+      title: 'Gets Average Latency',
+      dataIndex: 'getsAverageLatency',
+      key: 'getsAverageLatency',
+    },
+    {
+      title: 'Gets P50',
+      dataIndex: 'getsP50',
+      key: 'getsP50',
+    },
+    {
+      title: 'Gets P99',
+      dataIndex: 'getsP99',
+      key: 'getsP99',
+    },
+    {
+      title: 'Gets P99 90',
+      dataIndex: 'getsP99_90',
+      key: 'getsP99_90',
+    },
+    {
+      title: 'Gets P99 99',
+      dataIndex: 'getsP99_99',
+      key: 'getsP99_99',
+    },
+  ];
 
-    return (
-        <div className="container">
-            <Styles maxWidth="xl">
-                {/* 页面标题 */}
-                <h1 className="title">Analytics</h1>
+  return (
+    <div style={{ padding: '20px' }}>
+      {/* 折线图部分 */}
+      <ResponsiveContainer width="100%" height={400}>
+        <LineChart data={chartData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="id" />
+          <YAxis />
+          <Tooltip
+            content={({ payload }) => {
+              if (payload && payload.length) {
+                const data = payload[0].payload;
+                return (
+                  <div style={{ padding: '10px', background: '#fff', borderRadius: '5px', boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)' }}>
+                    <p><strong>Cache Name:</strong> {data.cacheName}</p>
+                    <p><strong>Total Duration:</strong> {data.totalDuration}</p>
+                    <p><strong>Gets RPS:</strong> {data.getsRPS}</p>
+                    <p><strong>Gets Average Latency:</strong> {data.getsAverageLatency}</p>
+                    <p><strong>Gets P50:</strong> {data.getsP50}</p>
+                    <p><strong>Gets P99:</strong> {data.getsP99}</p>
+                    <p><strong>Gets P99_90:</strong> {data.getsP99_90}</p>
+                    <p><strong>Gets P99_99:</strong> {data.getsP99_99}</p>
+                  </div>
+                );
+              }
+              return null;
+            }}
+          />
+          <Legend />
+          <Line type="monotone" dataKey="getsRPS" stroke="#8884d8" />
+        </LineChart>
+      </ResponsiveContainer>
 
-                {/* 折线图 */}
-                <div className="chart-container">
-                    <Line data={lineChartData} options={options} />
-                </div>
+      {/* 表格部分，使用Card布局竖向显示 */}
+      <h2>Final Data</h2>
+      <Row gutter={16}>
+        {finalData.map((data) => (
+          <Col span={6} key={data.id}>
+            <Card title={`ID: ${data.id}`} bordered={false}>
+              <p><strong>Cache Name:</strong> {data.cacheName}</p>
+              <p><strong>Total Duration:</strong> {data.totalDuration}</p>
+              <p><strong>Gets RPS:</strong> {data.getsRPS}</p>
+              <p><strong>Gets Average Latency:</strong> {data.getsAverageLatency}</p>
+              <p><strong>Gets P50:</strong> {data.getsP50}</p>
+              <p><strong>Gets P99:</strong> {data.getsP99}</p>
+              <p><strong>Gets P99_90:</strong> {data.getsP99_90}</p>
+              <p><strong>Gets P99_99:</strong> {data.getsP99_99}</p>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+    </div>
+  );
+};
 
-                {/* 页面标题 */}
-                <h1 className="title">Final result</h1>
-
-                {/* 数据表格展示 */}
-                {finalData.length > 0 && (
-                    <div className="data-table">
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td>CacheName</td>
-                                    <td>{finalData[0].cacheName}</td>
-                                </tr>
-                                <tr>
-                                    <td>Total duration</td>
-                                    <td>{finalData[0].totalDuration}</td>
-                                </tr>
-                                <tr>
-                                    <td>TimeUnit</td>
-                                    <td>{finalData[0].timeUnit}</td>
-                                </tr>
-                                <tr>
-                                    <td>Gets RPS</td>
-                                    <td>{parseFloat(finalData[0].getsRPS).toFixed(2)}</td>
-                                </tr>
-                                <tr>
-                                    <td>Gets average latency</td>
-                                    <td>{parseFloat(finalData[0].getsAverageLatency).toFixed(3)}</td>
-                                </tr>
-                                <tr>
-                                    <td>Gets p50.00</td>
-                                    <td>{parseFloat(finalData[0].getsP50).toFixed(3)}</td>
-                                </tr>
-                                <tr>
-                                    <td>Gets p99.00</td>
-                                    <td>{parseFloat(finalData[0].getsP99).toFixed(3)}</td>
-                                </tr>
-                                <tr>
-                                    <td>Gets p99.90</td>
-                                    <td>{parseFloat(finalData[0].getsP99_90).toFixed(3)}</td>
-                                </tr>
-                                <tr>
-                                    <td>Gets p99.99</td>
-                                    <td>{parseFloat(finalData[0].getsP99_99).toFixed(3)}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                )}
-            </Styles>
-        </div>
-    )
-}
-
-export default DataDisplayPage
+export default DataDisplayPage;

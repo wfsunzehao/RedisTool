@@ -7,6 +7,7 @@ using redis.WebAPi.Service.AzureShared;
 using Azure.ResourceManager.Compute;
 using redis.WebAPi.Service.IService;
 using redis.WebAPi.Model.BenchmarkModel;
+using redis.WebAPi.Service.Benchmark;
 
 
 namespace redis.WebAPi.Service.AzureShared
@@ -15,12 +16,14 @@ namespace redis.WebAPi.Service.AzureShared
     {
         private readonly AzureClientFactory _client;
         private readonly BenchmarkService _benchmarkService;
+        private readonly InsertBenchmarkService _insertBenchmarkService;
         private const string MaxRunningTestsFile = "./running_benchmark_tests_count.txt";
         private const int MaxRunningTests = 2;  // 最大并发数
-        public ConnectionVMService(AzureClientFactory client, BenchmarkService benchmarkService)
+        public ConnectionVMService(AzureClientFactory client, BenchmarkService benchmarkService, InsertBenchmarkService insertBenchmarkService)
         {
             _client = client;
             _benchmarkService = benchmarkService;
+            _insertBenchmarkService = insertBenchmarkService;
         }
 
         //public async Task<string> ConnectionVM(ConnectionVMRequest request)
@@ -84,6 +87,8 @@ namespace redis.WebAPi.Service.AzureShared
                 var output = string.Join("\n", response.Value.Select(r => r.Message));
                 // 3. 执行完毕后更新并发数，增加1
                 UpdateRunningTestsCount(runningTests);  // 增加1
+                                                      
+                await _insertBenchmarkService.InsertBenchmarkData(output, name, timeStamp);
                 return output;
 
             }

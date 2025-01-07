@@ -8,7 +8,6 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 import InputLabel from '@mui/material/InputLabel'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import FormControl from '@mui/material/FormControl'
 import FormLabel from '@mui/material/FormLabel'
 import Radio from '@mui/material/Radio'
 import Checkbox from '@mui/material/Checkbox'
@@ -16,6 +15,9 @@ import FormGroup from '@mui/material/FormGroup'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import { useNavigate } from 'react-router-dom'
+import LoadingComponent from '@/common/components/CustomLoading'
+import { Overlay } from '@/common/constants/constants'
+import agent from '@/app/api/agent'
 import axios from 'axios'
 
 const RunBenchmark = () => {
@@ -30,26 +32,29 @@ const RunBenchmark = () => {
     const [pipeline, setpipeline] = React.useState('')
     const [threads, setthreads] = React.useState('')
     const navigate = useNavigate()
+    const [loading, setLoading] = React.useState(false)
 
     const handleChange = (event: SelectChangeEvent) => {
         setregion(event.target.value as string)
     }
 
     const handleSubmit = async () => {
+        const body = {
+            name,
+            primary,
+            region,
+            description,
+            clients,
+            threads,
+            size,
+            requests,
+            pipeline,
+            times,
+        }
+    
         try {
-            const response = await axios.post('http://localhost:5139/api/BenchmarkRun', {
-                name,
-                primary,
-                region,
-                description,
-                clients,
-                threads,
-                size,
-                requests,
-                pipeline,
-                times,
-            })
-            console.log('Submission successful:', response.data)
+            const response = await agent.Create.sendBenchmarkRunJson(body)
+            console.log('Submission successful:', response)
         } catch (error) {
             console.error('Error submitting data:', error)
         }
@@ -123,9 +128,9 @@ const RunBenchmark = () => {
                             </Grid>
                             <Grid item xs={12}>
                                 <FormLabel>Select test type</FormLabel>
-                                <RadioGroup row defaultValue="Stress">
-                                    <FormControlLabel value="Performance" control={<Radio />} label="Performance" />
-                                    <FormControlLabel value="Stress" control={<Radio />} label="Stress" />
+                                <RadioGroup row defaultValue="No-SSL">
+                                    <FormControlLabel value="No-SSL" control={<Radio />} label="No-SSL" />
+                                    <FormControlLabel value="SSL" control={<Radio />} label="SSL" />
                                 </RadioGroup>
                             </Grid>
                             <Grid item xs={12}>
@@ -213,6 +218,11 @@ const RunBenchmark = () => {
                     </Button>
                 </Box>
             </Container>
+            {loading && (
+                <Overlay>
+                    <LoadingComponent />
+                </Overlay>
+            )}
         </div>
     )
 }
