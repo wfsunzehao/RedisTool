@@ -9,6 +9,20 @@ axios.defaults.baseURL = 'https://localhost:7179/api'
 
 const responseBody = (response: AxiosResponse) => response.data
 
+// 请求拦截器：添加 Authorization 头
+axios.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('authToken') // 获取存储在 localStorage 中的 token
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}` // 将 token 添加到请求头
+        }
+        return config
+    },
+    (error) => {
+        return Promise.reject(error)
+    }
+)
+
 axios.interceptors.response.use(
     async (response) => {
         await sleep()

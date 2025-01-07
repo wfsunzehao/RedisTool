@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Box, TextField, Button, Typography, Link, useTheme, CircularProgress } from '@mui/material'
 import { useAuth } from '../../app/context/AuthContext'
 import agent from '../../app/api/agent'
@@ -14,7 +14,24 @@ const LoginForm: React.FC = () => {
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
     const { setIsLoggedIn, setToken } = useAuth()
-    const { currentForm, setCurrentForm } = useAuthState() // 使用新命名的 hook
+    const { currentForm, setCurrentForm } = useAuthState()
+    const [isAdmin, setIsAdmin] = useState(false) // 管理员标志
+
+    // 在组件加载时检查 token 的角色
+    useEffect(() => {
+        const token = localStorage.getItem('authToken')
+        if (token) {
+            try {
+                const parsedToken = JSON.parse(atob(token.split('.')[1])) // 解码并解析 token
+                const userRole = parsedToken.role // 假设角色信息存储在 token 的 'role' 字段
+                if (userRole === 'admin') {
+                    setIsAdmin(true) // 设置为管理员
+                }
+            } catch (error) {
+                console.error('Token parsing error:', error)
+            }
+        }
+    }, []) // 空依赖数组，确保只在组件加载时执行一次
 
     const handleLogin = async (event: React.FormEvent) => {
         event.preventDefault()
@@ -36,12 +53,14 @@ const LoginForm: React.FC = () => {
             setIsLoading(false)
         }
     }
+
     const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-        event.preventDefault() // 阻止默认跳转行为（如果需要）
+        event.preventDefault()
         setCurrentForm('forgotPassword')
     }
+
     const handleUpClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-        event.preventDefault() // 阻止默认跳转行为（如果需要）
+        event.preventDefault()
         setCurrentForm('signup')
     }
 
@@ -49,26 +68,25 @@ const LoginForm: React.FC = () => {
         <Box
             sx={{
                 display: 'flex',
-                justifyContent: 'center', // 水平居中
-                alignItems: 'center', // 垂直居中
-                minHeight: '100vh', // 占满视口高度
+                justifyContent: 'center',
+                alignItems: 'center',
+                minHeight: '100vh',
             }}
         >
             <Box
                 sx={{
-                    width: 500, // 增大宽度
-                    padding: 5, // 增大内边距
-                    backgroundColor: 'rgba(255, 255, 255, 0.5)', // 更明显的背景
-                    backdropFilter: 'blur(10px)', // 背景模糊效果
-                    borderRadius: 4, // 更圆滑的边框
-                    boxShadow: theme.shadows[6], // 强一点的阴影
+                    width: 500,
+                    padding: 5,
+                    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                    backdropFilter: 'blur(10px)',
+                    borderRadius: 4,
+                    boxShadow: theme.shadows[6],
                     color: theme.palette.text.primary,
-                    border: `1px solid rgba(255, 255, 255, 0.6)`, // 半透明边框
+                    border: `1px solid rgba(255, 255, 255, 0.6)`,
                 }}
             >
-                {/* 标题部分 */}
                 <Typography
-                    variant="h3" // 更大的标题
+                    variant="h3"
                     gutterBottom
                     sx={{
                         textAlign: 'center',
@@ -81,35 +99,35 @@ const LoginForm: React.FC = () => {
                     Sign In
                 </Typography>
 
-                {/* 辅助文字部分 */}
                 <Typography
-                    variant="body1" // 更大的辅助文字
+                    variant="body1"
                     gutterBottom
                     sx={{
                         textAlign: 'center',
                         color: theme.palette.text.secondary,
                     }}
                 >
-                    Don't have an account?{' '}
-                    <Link
-                        href="#"
-                        sx={{
-                            color: theme.palette.primary.main,
-                            fontWeight: 'bold',
-                            textDecoration: 'none',
-                            '&:hover': {
-                                textDecoration: 'underline',
-                                color: theme.palette.primary.dark,
-                            },
-                        }}
-                        onClick={handleUpClick}
-                    >
-                        Sign up
-                    </Link>
+                    Don't have an account? {/* 只有管理员才能看到 Sign up */}
+                    {isAdmin && (
+                        <Link
+                            href="#"
+                            sx={{
+                                color: theme.palette.primary.main,
+                                fontWeight: 'bold',
+                                textDecoration: 'none',
+                                '&:hover': {
+                                    textDecoration: 'underline',
+                                    color: theme.palette.primary.dark,
+                                },
+                            }}
+                            onClick={handleUpClick}
+                        >
+                            Sign up
+                        </Link>
+                    )}
                 </Typography>
 
                 <form onSubmit={handleLogin}>
-                    {/* 输入框部分 */}
                     <TextField
                         fullWidth
                         required
@@ -171,7 +189,6 @@ const LoginForm: React.FC = () => {
                         disabled={isLoading}
                     />
 
-                    {/* 忘记密码链接 */}
                     <Link
                         href="#"
                         variant="body2"
@@ -190,7 +207,6 @@ const LoginForm: React.FC = () => {
                         Forgot password?
                     </Link>
 
-                    {/* 按钮部分 */}
                     <Button
                         fullWidth
                         type="submit"
@@ -201,8 +217,8 @@ const LoginForm: React.FC = () => {
                             color: theme.palette.primary.contrastText,
                             fontWeight: 'bold',
                             textTransform: 'none',
-                            fontSize: '1.2rem', // 增大字体
-                            padding: '12px', // 增大按钮
+                            fontSize: '1.2rem',
+                            padding: '12px',
                             '&:hover': {
                                 backgroundColor: theme.palette.primary.dark,
                             },
@@ -220,7 +236,6 @@ const LoginForm: React.FC = () => {
                     </Button>
                 </form>
 
-                {/* 底部说明文字 */}
                 <Typography
                     variant="body1"
                     sx={{
