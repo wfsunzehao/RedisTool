@@ -101,7 +101,7 @@ public class AuthController : ControllerBase
         }
 
         // Verify the old password
-        if (!BCrypt.Net.BCrypt.Verify(model.OldPassword, user.PasswordHash))
+        if (!IsValidPassword(model.OldPassword))
         {
             return Unauthorized(new { message = "Old password is incorrect." });
         }

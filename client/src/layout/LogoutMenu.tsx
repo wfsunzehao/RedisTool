@@ -24,6 +24,7 @@ const LogoutMenu: React.FC<LogoutMenuProps> = ({ anchorEl, open, onClose }) => {
 
     // 注册跳转逻辑
     const handleRegister = () => {
+        onClose()
         navigate('/') // 跳转到注册页面
         setCurrentForm('signup') // 设置当前表单为注册
     }

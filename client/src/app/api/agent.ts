@@ -90,8 +90,7 @@ const Other = {
 
 const Auth = {
     login: (username: string, password: string) => request.post(`/Auth/login`, { username, password }),
-    register: (username: string, password: string, email: string) =>
-        request.post(`/Auth/register`, { username, password, email }),
+    register: (username: string, password: string) => request.post(`/Auth/register`, { username, password }),
     changePassword: (username: string, oldPassword: string, newPassword: string) =>
         request.post(`/Auth/change-password`, { username, oldPassword, newPassword }),
 }
