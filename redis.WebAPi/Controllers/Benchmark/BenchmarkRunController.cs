@@ -13,7 +13,6 @@ namespace Benchmark_API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [EnableCors("AllowSpecificOrigin")] // 启用 CORS 策略
     public class BenchmarkRunController : ControllerBase
     {
         private readonly BenchmarkDbContext _dbContext;  // 引入 DbContext
