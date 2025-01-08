@@ -26,6 +26,7 @@ import { IconSun, IconMoon, IconLinkPlus } from '@tabler/icons-react'
 import { loginTextStyles, user } from '../common/constants/constants'
 import NotificationPanel from './NotificationPanel'
 import MessageHandler from './MessageHandler'
+import LogoutMenu from './LogoutMenu'
 
 const midLinks = [
     { title: 'Tests', path: '/create' },
@@ -109,7 +110,6 @@ export default function Header() {
 
     const isHomePage = location.pathname === '/'
 
-    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
     const [logoutAnchorEl, setLogoutAnchorEl] = useState<HTMLElement | null>(null)
 
     const [isNotificationOpen, setIsNotificationOpen] = useState(false)
@@ -122,30 +122,11 @@ export default function Header() {
         setIsNotificationOpen(false)
     }
 
-    // const handleChatIconClick2 = (event: React.MouseEvent<HTMLButtonElement>) => {
-    //     setAnchorEl(event.currentTarget)
-    // }
-
-    const handlePopoverClose = () => {
-        setAnchorEl(null)
-    }
-
     const handleAvatarClick = (event: React.MouseEvent<HTMLElement>) => {
         setLogoutAnchorEl(event.currentTarget)
     }
 
-    const handleLogout = () => {
-        localStorage.removeItem('authToken')
-        setIsLoggedIn(false)
-        setLogoutAnchorEl(null)
-        navigate('/')
-    }
-
-    const open = Boolean(anchorEl)
-    const id = open ? 'message-popover' : undefined
-
     const openLogoutMenu = Boolean(logoutAnchorEl)
-    const logoutId = openLogoutMenu ? 'logout-popover' : undefined
 
     // 获取头部的样式
     const headerStyles = getHeaderStyles2(isHomePage, isDarkMode)
@@ -302,7 +283,7 @@ export default function Header() {
                                 sx={{
                                     fontWeight: '500',
                                     fontSize: '16px',
-                                    color: headerStyles.color, // 使用动态颜色
+                                    color: headerStyles, // 使用动态颜色
                                     marginRight: '10px',
                                 }}
                             >
@@ -333,16 +314,11 @@ export default function Header() {
                         </Typography>
                     )}
 
-                    <Popover
-                        id={logoutId}
-                        open={openLogoutMenu}
+                    <LogoutMenu
                         anchorEl={logoutAnchorEl}
+                        open={openLogoutMenu}
                         onClose={() => setLogoutAnchorEl(null)}
-                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                    >
-                        <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                    </Popover>
+                    />
                 </Box>
             </Toolbar>
         </AppBar>

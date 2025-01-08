@@ -1,13 +1,14 @@
 import React from 'react'
-import { Box, TextField, Button, Typography, Link, useTheme } from '@mui/material'
+import { Box, TextField, Button, Typography, useTheme, IconButton } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
 import { useAuth } from '@/app/context/AuthContext'
 
 const SignUpForm: React.FC = () => {
     const theme = useTheme()
-    const { currentForm, setCurrentForm } = useAuth()
-    const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-        event.preventDefault() // 阻止默认跳转行为（如果需要）
-        setCurrentForm('login')
+    const { setCurrentForm } = useAuth()
+
+    const handleClose = () => {
+        setCurrentForm('login') // 关闭表单
     }
 
     return (
@@ -21,6 +22,7 @@ const SignUpForm: React.FC = () => {
         >
             <Box
                 sx={{
+                    position: 'relative', // 设置相对定位，确保 X 按钮相对这个容器定位
                     width: 500,
                     padding: 5,
                     backgroundColor: 'rgba(255, 255, 255, 0.5)',
@@ -31,6 +33,22 @@ const SignUpForm: React.FC = () => {
                     border: `1px solid rgba(255, 255, 255, 0.6)`,
                 }}
             >
+                {/* Close button */}
+                <IconButton
+                    onClick={handleClose}
+                    sx={{
+                        position: 'absolute',
+                        top: '8px',
+                        right: '8px',
+                        color: theme.palette.text.primary,
+                        '&:hover': {
+                            color: theme.palette.error.main,
+                        },
+                    }}
+                >
+                    <CloseIcon />
+                </IconButton>
+
                 <Typography
                     variant="h3"
                     gutterBottom
@@ -43,32 +61,6 @@ const SignUpForm: React.FC = () => {
                     }}
                 >
                     Sign Up
-                </Typography>
-
-                <Typography
-                    variant="body1"
-                    gutterBottom
-                    sx={{
-                        textAlign: 'center',
-                        color: theme.palette.text.secondary,
-                    }}
-                >
-                    Already have an account?{' '}
-                    <Link
-                        href="#"
-                        sx={{
-                            color: theme.palette.primary.main,
-                            fontWeight: 'bold',
-                            textDecoration: 'none',
-                            '&:hover': {
-                                textDecoration: 'underline',
-                                color: theme.palette.primary.dark,
-                            },
-                        }}
-                        onClick={handleClick}
-                    >
-                        Sign in
-                    </Link>
                 </Typography>
 
                 <TextField

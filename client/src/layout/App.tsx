@@ -8,7 +8,6 @@ import { darkTheme, lightTheme } from './theme'
 import Header from './Header'
 import { SignalProvider } from '../app/context/SignalContext'
 import { AuthProvider } from '../app/context/AuthContext' // 引入 AuthProvider
-import { AuthStateProvider } from '../app/context/AuthStateContext'
 import { MessageProvider } from '@/app/context/MessageContext'
 
 function App() {

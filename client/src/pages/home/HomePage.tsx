@@ -80,9 +80,14 @@ const HomePage: React.FC = () => {
                         zIndex: 10, // 确保 LoginForm 显示在图片上方
                     }}
                 >
-                    {!isLoggedIn && currentForm === 'login' && <LoginForm />}
-                    {!isLoggedIn && currentForm === 'signup' && <SignUpForm />}
-                    {!isLoggedIn && currentForm === 'forgotPassword' && <ForgotPasswordForm />}
+                    {/* 仅在当前为 'login' 且未登录时显示 LoginForm */}
+                    {currentForm === 'login' && !isLoggedIn && <LoginForm />}
+
+                    {/* 仅管理员（role === 'admin'）并且 currentForm 为 'signup' 时，显示 SignUpForm */}
+                    {currentForm === 'signup' && role === 'admin' && <SignUpForm />}
+
+                    {/* 仅在 currentForm 为 'forgotPassword' 且未登录时显示 ForgotPasswordForm */}
+                    {currentForm === 'forgotPassword' && !isLoggedIn && <ForgotPasswordForm />}
                 </Box>
 
                 {/* 图片轮播 */}

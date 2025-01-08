@@ -1,10 +1,10 @@
 import React from 'react'
 import { Box, TextField, Button, Typography, Link, useTheme } from '@mui/material'
-import { useAuthState } from '@/app/context/AuthStateContext'
+import { useAuth } from '@/app/context/AuthContext'
 
 const ForgotPasswordForm: React.FC = () => {
     const theme = useTheme()
-    const { currentForm, setCurrentForm } = useAuthState()
+    const { currentForm, setCurrentForm } = useAuth()
     const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault() // 阻止默认跳转行为（如果需要）
         setCurrentForm('login')

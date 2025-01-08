@@ -90,23 +90,20 @@ const LoginForm: React.FC = () => {
                     }}
                 >
                     Don't have an account? {/* 只有管理员才能看到 Sign up */}
-                    {role === 'admin' && (
-                        <Link
-                            href="#"
-                            sx={{
-                                color: theme.palette.primary.main,
-                                fontWeight: 'bold',
-                                textDecoration: 'none',
-                                '&:hover': {
-                                    textDecoration: 'underline',
-                                    color: theme.palette.primary.dark,
-                                },
-                            }}
-                            onClick={handleUpClick}
-                        >
-                            Sign up
-                        </Link>
-                    )}
+                    <Link
+                        href="#"
+                        sx={{
+                            color: theme.palette.primary.main,
+                            fontWeight: 'bold',
+                            textDecoration: 'none',
+                            '&:hover': {
+                                textDecoration: 'underline',
+                                color: theme.palette.primary.dark,
+                            },
+                        }}
+                    >
+                        Contact the administrator
+                    </Link>
                 </Typography>
 
                 {message && (
