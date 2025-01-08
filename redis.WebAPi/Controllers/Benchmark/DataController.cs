@@ -10,7 +10,6 @@ namespace Benchmark_API.Controllers
     {
         private readonly BenchmarkDbContext _dbContext;
 
-        // 通过依赖注入获取 BenchmarkDbContext
         public DataController(BenchmarkDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -20,6 +19,7 @@ namespace Benchmark_API.Controllers
         public async Task<IActionResult> Get()
         {
             var data = await _dbContext.BenchmarkData1
+                .OrderBy(p => p.ID)
                 .Select(b => new
                 {
                     b.CacheName,

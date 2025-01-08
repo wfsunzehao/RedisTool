@@ -1,12 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using redis.WebAPi.Model;
-using redis.WebAPi.Model.BenchmarkModel;
+﻿using redis.WebAPi.Model;
 using redis.WebAPi.Repository.AppDbContext;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace redis.WebAPi.Service.Benchmark
 {
@@ -20,15 +14,15 @@ namespace redis.WebAPi.Service.Benchmark
             _context = context;
         }
 
-        // 插入解析后的数据
+        // Insert the run result into the database
         public async Task InsertBenchmarkData(string output, string cacheName, string timeStamp)
         {
             try
             {
-                // 提取所有的 Entry 区块
+                // Extract all Entry blocks
                 var entries = ExtractEntries(output);
 
-                // 遍历每个 Entry，生成 BenchmarkData1 对象并插入到数据库
+                // Iterate through each Entry, generate a BenchmarkData1 object and insert it into the database
                 foreach (var entry in entries)
                 {
                     var BenchmarkData1 = new BenchmarkData1
@@ -44,12 +38,8 @@ namespace redis.WebAPi.Service.Benchmark
                         GetsP99_99 = entry.GetsP99_99,
                         TimeStamp = timeStamp
                     };
-
-                    // 插入数据到数据库
                     await _context.BenchmarkData1.AddAsync(BenchmarkData1);
                 }
-
-                // 保存到数据库
                 await _context.SaveChangesAsync();
                 Console.WriteLine("Benchmark data inserted successfully.");
             }
@@ -59,12 +49,11 @@ namespace redis.WebAPi.Service.Benchmark
             }
         }
 
-        // 提取 Entry 的数据
         private List<BenchmarkEntry> ExtractEntries(string output)
         {
             var entries = new List<BenchmarkEntry>();
 
-            // 正则表达式用于提取每个 Entry 的相关数据
+            // Regular expressions are used to extract data related to each Entry
             var entryPattern = new Regex(@"Entry (\d+):.*?Total duration: (\d+)\s*.*?Time unit: (\w+).*?Gets RPS: ([\d\.]+).*?Gets average latency: ([\d\.]+).*?Gets p50\.00: ([\d\.]+).*?Gets p99\.00: ([\d\.]+).*?Gets p99\.90: ([\d\.]+).*?Gets p99\.99: ([\d\.]+)", RegexOptions.Singleline);
 
             var matches = entryPattern.Matches(output);
@@ -89,7 +78,7 @@ namespace redis.WebAPi.Service.Benchmark
         }
     }
 
-    // 将 BenchmarkEntry 提取到类外部作为普通类
+    // Extract BenchmarkEntry outside the class as a normal class
     public class BenchmarkEntry
     {
         public double TotalDuration { get; set; }

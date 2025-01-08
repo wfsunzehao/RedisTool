@@ -24,7 +24,7 @@ interface Parameter {
     size: string
     requests: string
     pipeline: string
-    status: '1' | '2' | '3'
+    status: '1' | '2' | '3'| '4'
 }
 
 const Statistics: React.FC = () => {
@@ -36,7 +36,7 @@ const Statistics: React.FC = () => {
             const response = await axios.get('https://localhost:7179/api/Parameters')
             // const response = await agent.Create.getBenchmarkRunJson()
             console.log('Fetched data:', response);
-            setParameters(response.data)
+            setParameters(response.data.reverse())
         } catch (error) {
             console.error('Error fetching the parameters!', error)
         }
@@ -60,8 +60,9 @@ const Statistics: React.FC = () => {
             }
         > = {
             '1': { label: 'Successful', color: 'success', disabled: false },
-            '2': { label: 'In Progress', color: 'secondary', disabled: true },
-            '3': { label: 'Running', color: 'warning', disabled: true },
+            '2': { label: 'In Progress', color: 'inherit', disabled: true },
+            '3': { label: 'Running', color: 'inherit', disabled: true },
+            '4': { label: 'Error', color: 'error', disabled: true },
         }
 
         const { label, color, disabled } = statusMap[status]
@@ -72,7 +73,19 @@ const Statistics: React.FC = () => {
                 onClick={handleNavigate}
                 disabled={disabled}
                 size="small"
-                sx={{ textTransform: 'none', fontSize: '14px'}}
+                sx={{
+                    textTransform: 'none',
+                    fontSize: '14px',
+                    width: '150px',  // Ensure all buttons have the same size
+                    height: '40px',  // Ensure consistent height
+                    opacity: 1, // Keep opacity as 1 even for disabled button
+                    backgroundColor: disabled ? `${color}.main` : `${color}.light`, // Manually control the background color
+                    '&:disabled': {
+                        backgroundColor: `${color}.main`,  // Ensure background color remains the same when disabled
+                        opacity: 1,  // Make sure opacity stays normal for disabled buttons
+                        color: 'white', // Set text color to white for disabled buttons
+                    },
+                }}
             >
                 {label}
             </Button>

@@ -1,13 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Cors;
-using System;
-using System.Threading.Tasks;
-using redis.WebAPi.Service.AzureShared; // 引入 ConnectionVMService
-using redis.WebAPi.Repository.AppDbContext; // 引入 BenchmarkDbContext
-using Microsoft.EntityFrameworkCore;
-using redis.WebAPi.Repository.AppDbContext;
+using redis.WebAPi.Repository.AppDbContext; 
 using redis.WebAPi.Model;
 using redis.WebAPi.Service.IService;
+using redis.WebAPi.Service;
 
 namespace Benchmark_API.Controllers
 {
@@ -15,23 +10,24 @@ namespace Benchmark_API.Controllers
     [Route("api/[controller]")]
     public class BenchmarkRunController : ControllerBase
     {
-        private readonly BenchmarkDbContext _dbContext;  // 引入 DbContext
+        private readonly BenchmarkDbContext _dbContext;  
         private readonly IConnectionVMService _connectionVMService;
+        private readonly BenchmarkService _benchmarkService;
 
-        // 通过构造函数注入 BenchmarkDbContext 和 ConnectionVMService
-        public BenchmarkRunController(BenchmarkDbContext dbContext, IConnectionVMService connectionVMService)
+        // Inject BenchmarkDbContext and ConnectionVMService through the constructor
+        public BenchmarkRunController(BenchmarkDbContext dbContext, IConnectionVMService connectionVMService, BenchmarkService benchmarkService)
         {
             _dbContext = dbContext;
             _connectionVMService = connectionVMService;
+            _benchmarkService = benchmarkService;
         }
 
-        // 接收前端参数，然后放入数据库并调用 VM 操作
+        // Receive the front-end parameters, then put them into the database and invoke the VM operation
         [HttpPost]
         public async Task<IActionResult> Post(RunBenchmarkData model)
         {
             try
             {
-                // 插入数据到数据库
                 var Parameters = new Parameters
                 {
                     Name = model.Name,
@@ -42,19 +38,14 @@ namespace Benchmark_API.Controllers
                     Size = model.Size,
                     Requests = model.Requests,
                     Pipeline = model.Pipeline,
-                    Status = 2  // 状态为“2”表示在队列中
+                    Status = 2  // If the status is 2, it is in the queue
                     //Times
                 };
-
-                // 将新记录添加到 DbContext
                 _dbContext.Parameters.Add(Parameters);
-
-                // 保存到数据库
                 await _dbContext.SaveChangesAsync();
 
-                //Console.WriteLine($"插入成功，Benchmark 任务已保存: {model.Name}");
 
-                // 调用 ConnectionVMService 执行虚拟机操作并获取输出
+                // Call ConnectionVMService to perform the virtual machine operation and get the output
                 string vmOutput = await _connectionVMService.ConnectionVM(
                     model.Name,
                     model.Primary,
@@ -66,12 +57,11 @@ namespace Benchmark_API.Controllers
                     model.Times
                 );
 
-                // 返回执行结果
                 return Ok(new { message = "Benchmark run completed successfully", output = vmOutput });
             }
             catch (Exception ex)
             {
-                // 发生异常时返回错误信息
+                await _benchmarkService.UpdateBenchmarkStatus(model.Name, 4);
                 return StatusCode(500, new { message = "Error occurred during benchmark execution", error = ex.Message });
             }
         }

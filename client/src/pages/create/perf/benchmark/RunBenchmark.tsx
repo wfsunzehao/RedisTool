@@ -55,6 +55,7 @@ const RunBenchmark = () => {
         try {
             const response = await agent.Create.sendBenchmarkRunJson(body)
             console.log('Submission successful:', response)
+            navigate('/create/Statistics');
         } catch (error) {
             console.error('Error submitting data:', error)
         }
@@ -218,11 +219,6 @@ const RunBenchmark = () => {
                     </Button>
                 </Box>
             </Container>
-            {loading && (
-                <Overlay>
-                    <LoadingComponent />
-                </Overlay>
-            )}
         </div>
     )
 }

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using redis.WebAPi.Repository.AppDbContext;
-using redis.WebAPi.Model;
 
 namespace redis.WebAPi.Controllers
 {
@@ -11,17 +10,15 @@ namespace redis.WebAPi.Controllers
     {
         private readonly BenchmarkDbContext _dbContext;
 
-        // 通过构造函数注入 BenchmarkDbContext
         public ParametersController(BenchmarkDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        // 获取所有 Parameters 的 API
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            // 使用 Entity Framework 查询 Parameters 表
+            // Use Entity Framework to query the Parameters table
             var parameters = await _dbContext.Parameters
                 .Select(p => new
                 {
@@ -35,9 +32,9 @@ namespace redis.WebAPi.Controllers
                     p.Pipeline,
                     p.Status
                 })
-                .ToListAsync();  // 异步执行查询
+                .ToListAsync(); 
 
-            return Ok(parameters);  // 返回查询结果
+            return Ok(parameters);  
         }
     }
 }
