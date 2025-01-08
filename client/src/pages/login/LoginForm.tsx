@@ -3,7 +3,6 @@ import { Box, TextField, Button, Typography, Link, useTheme, CircularProgress } 
 import { useAuth } from '../../app/context/AuthContext'
 import agent from '../../app/api/agent'
 import { useNavigate } from 'react-router-dom'
-import { useAuthState } from '@/app/context/AuthStateContext'
 
 const LoginForm: React.FC = () => {
     const theme = useTheme()
@@ -11,44 +10,27 @@ const LoginForm: React.FC = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [isLoading, setIsLoading] = useState(false)
-    const [error, setError] = useState('')
-    const [success, setSuccess] = useState('')
-    const { setIsLoggedIn, setToken } = useAuth()
-    const { currentForm, setCurrentForm } = useAuthState()
-    const [isAdmin, setIsAdmin] = useState(false) // 管理员标志
-
-    // 在组件加载时检查 token 的角色
-    useEffect(() => {
-        const token = localStorage.getItem('authToken')
-        if (token) {
-            try {
-                const parsedToken = JSON.parse(atob(token.split('.')[1])) // 解码并解析 token
-                const userRole = parsedToken.role // 假设角色信息存储在 token 的 'role' 字段
-                if (userRole === 'admin') {
-                    setIsAdmin(true) // 设置为管理员
-                }
-            } catch (error) {
-                console.error('Token parsing error:', error)
-            }
-        }
-    }, []) // 空依赖数组，确保只在组件加载时执行一次
+    const [message, setMessage] = useState<{ type: 'error' | 'success'; content: string } | null>(null)
+    const { setIsLoggedIn, setToken, setCurrentForm, role, setRole } = useAuth()
 
     const handleLogin = async (event: React.FormEvent) => {
         event.preventDefault()
         setIsLoading(true)
-        setError('')
-        setSuccess('')
+        setMessage(null) // Reset message state
         try {
             const response = await agent.Auth.login(username, password)
             localStorage.setItem('authToken', response.token)
             setToken(response.token)
             setIsLoggedIn(true)
-            setSuccess('Login successful!')
+
+            setRole(response.role) // 登录后更新角色
+
+            setMessage({ type: 'success', content: 'Login successful!' })
             navigate('/create')
         } catch (error) {
             const errorMessage =
                 (error as { data: { message: string } })?.data?.message || 'Invalid username or password.'
-            setError(errorMessage)
+            setMessage({ type: 'error', content: errorMessage })
         } finally {
             setIsLoading(false)
         }
@@ -108,7 +90,7 @@ const LoginForm: React.FC = () => {
                     }}
                 >
                     Don't have an account? {/* 只有管理员才能看到 Sign up */}
-                    {isAdmin && (
+                    {role === 'admin' && (
                         <Link
                             href="#"
                             sx={{
@@ -127,6 +109,19 @@ const LoginForm: React.FC = () => {
                     )}
                 </Typography>
 
+                {message && (
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            color: message.type === 'error' ? theme.palette.error.main : theme.palette.success.main,
+                            textAlign: 'center',
+                            marginBottom: 2,
+                        }}
+                    >
+                        {message.content}
+                    </Typography>
+                )}
+
                 <form onSubmit={handleLogin}>
                     <TextField
                         fullWidth
@@ -135,7 +130,7 @@ const LoginForm: React.FC = () => {
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         margin="normal"
-                        type="Username"
+                        type="text"
                         variant="outlined"
                         InputProps={{
                             style: { color: theme.palette.text.primary },
@@ -245,7 +240,7 @@ const LoginForm: React.FC = () => {
                         fontStyle: 'italic',
                     }}
                 >
-                    Enter <strong>email</strong> and <strong>password </strong>
+                    Enter <strong>email</strong> and <strong>password</strong>
                 </Typography>
             </Box>
         </Box>

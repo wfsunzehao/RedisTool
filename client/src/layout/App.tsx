@@ -16,20 +16,17 @@ function App() {
 
     return (
         <AuthProvider>
-            {' '}
             {/* 将 AuthProvider 包裹在其他 provider 上面 */}
-            <AuthStateProvider>
-                <SignalProvider>
-                    <MessageProvider>
-                        <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
-                            <ToastContainer position="bottom-right" hideProgressBar theme="colored" />
-                            <CssBaseline />
-                            <Header />
-                            <Outlet /> {/* This is a placeholder for the child components */}
-                        </ThemeProvider>
-                    </MessageProvider>
-                </SignalProvider>
-            </AuthStateProvider>
+            <SignalProvider>
+                <MessageProvider>
+                    <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+                        <ToastContainer position="bottom-right" hideProgressBar theme="colored" />
+                        <CssBaseline />
+                        <Header />
+                        <Outlet /> {/* This is a placeholder for the child components */}
+                    </ThemeProvider>
+                </MessageProvider>
+            </SignalProvider>
         </AuthProvider>
     )
 }
