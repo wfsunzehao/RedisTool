@@ -29,10 +29,12 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({ messages, onClose
                 zIndex: 1300,
                 display: 'flex',
                 flexDirection: 'column',
-                borderRadius: '8px 0 0 8px', // 圆角效果
+                borderRadius: '8px 0 0 8px',
                 overflow: 'hidden',
+                transition: 'background-color 0.3s ease-in-out, color 0.3s ease-in-out',
             }}
         >
+            {/* 标题栏 */}
             <Box
                 sx={{
                     display: 'flex',
@@ -46,55 +48,83 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({ messages, onClose
                 <Typography variant="h6" sx={{ color: textColor, fontWeight: 'bold', fontSize: '1.2rem' }}>
                     Notifications
                 </Typography>
-                <IconButton onClick={onClose} sx={{ color: textColor }}>
+                <IconButton onClick={onClose} sx={{ color: textColor }} aria-label="Close notification panel">
                     <CloseIcon />
                 </IconButton>
             </Box>
-            <Box sx={{ flex: 1, overflowY: 'auto' }}>
-                <List>
-                    {messages.map((message, index) => (
-                        <ListItem key={index}>
-                            <Card
-                                sx={{
-                                    width: '100%',
-                                    marginBottom: 1,
-                                    boxShadow: 1,
-                                    borderRadius: 2,
-                                    bgcolor: theme.palette.mode === 'dark' ? 'background.default' : 'background.paper',
-                                    //transition: 'all 0.3s ease-in-out',
-                                    '&:hover': {
-                                        boxShadow: 6, // hover效果：增加阴影
-                                    },
-                                }}
-                            >
-                                <CardContent>
-                                    <Typography
-                                        sx={{
-                                            color: theme.palette.mode === 'dark' ? 'white' : 'primary.main',
-                                            fontWeight: 'bold',
-                                            fontSize: '1.3rem', // 更大字号
-                                            marginBottom: 0.5,
-                                            letterSpacing: '0.5px', // 增加字母间距让标题更有视觉层次
-                                        }}
-                                    >
-                                        {message.title}
-                                    </Typography>
-                                    <Typography
-                                        sx={{
-                                            color: contentColor,
-                                            fontSize: '1rem', // 适度减少字号
-                                            fontWeight: 400, // 使用更轻的字体
-                                            lineHeight: 1.6,
-                                            letterSpacing: '0.3px',
-                                        }}
-                                    >
-                                        {message.content}
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </ListItem>
-                    ))}
-                </List>
+            {/* 消息列表 */}
+            <Box
+                sx={{
+                    flex: 1,
+                    overflowY: 'auto',
+                    '&::-webkit-scrollbar': {
+                        width: '8px',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                        backgroundColor: theme.palette.mode === 'dark' ? '#555' : '#ccc',
+                        borderRadius: '4px',
+                    },
+                }}
+            >
+                {messages.length === 0 ? (
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '100%',
+                        }}
+                    >
+                        <Typography variant="body1" sx={{ color: contentColor }}>
+                            No new notifications
+                        </Typography>
+                    </Box>
+                ) : (
+                    <List>
+                        {messages.map((message, index) => (
+                            <ListItem key={index}>
+                                <Card
+                                    sx={{
+                                        width: '100%',
+                                        marginBottom: 1,
+                                        boxShadow: 1,
+                                        borderRadius: 2,
+                                        bgcolor:
+                                            theme.palette.mode === 'dark' ? 'background.default' : 'background.paper',
+                                        '&:hover': {
+                                            boxShadow: 6, // hover效果：增加阴影
+                                        },
+                                    }}
+                                >
+                                    <CardContent>
+                                        <Typography
+                                            sx={{
+                                                color: theme.palette.mode === 'dark' ? 'white' : 'primary.main',
+                                                fontWeight: 'bold',
+                                                fontSize: '1.3rem', // 更大字号
+                                                marginBottom: 0.5,
+                                                letterSpacing: '0.5px',
+                                            }}
+                                        >
+                                            {message.title}
+                                        </Typography>
+                                        <Typography
+                                            sx={{
+                                                color: contentColor,
+                                                fontSize: '1rem', // 适度减少字号
+                                                fontWeight: 400,
+                                                lineHeight: 1.6,
+                                                letterSpacing: '0.3px',
+                                            }}
+                                        >
+                                            {message.content}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </ListItem>
+                        ))}
+                    </List>
+                )}
             </Box>
         </Box>
     )

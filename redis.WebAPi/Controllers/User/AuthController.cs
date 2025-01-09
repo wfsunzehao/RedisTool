@@ -49,7 +49,7 @@ public class AuthController : ControllerBase
 
         var token = GenerateJwtToken(user);
 
-        return Ok(new { token, role = user.Role });
+        return Ok(new { token, role = user.Role, username=user.Username });
 
     }
 
