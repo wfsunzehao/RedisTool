@@ -23,9 +23,8 @@ import agent from '../../../app/api/agent'
 import { DataModel } from '../../../common/models/DataModel'
 import { BVTTestCaseNames, Overlay, subscriptionList } from '../../../common/constants/constants'
 import LoadingComponent from '../../../common/components/CustomLoading'
-import { handleGenericSubmit } from '../../../app/util/util'
 import { useMessageContext } from '@/app/context/MessageContext'
-import MessageHandler from '@/layout/MessageHandler'
+import { handleGenericSubmit } from '@/app/util/util'
 
 const BvtPage: React.FC = () => {
     const [subscription, setSubscription] = useState('')
@@ -40,7 +39,7 @@ const BvtPage: React.FC = () => {
     const [groupList, setGroupList] = useState<string[]>([])
     const [errors, setErrors] = useState<{ [key: string]: string }>({})
 
-    const [isOpen, setIsOpen] = useState(true)
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false)
     const { addMessage } = useMessageContext()
 
     // 初始化
@@ -260,7 +259,6 @@ const BvtPage: React.FC = () => {
                     </Button>
                 </Box>
             </form>
-            <MessageHandler isOpen={isOpen} onClose={() => setIsOpen(false)} />
             {loading && (
                 <Overlay>
                     <LoadingComponent message="Submitting, please wait..." />

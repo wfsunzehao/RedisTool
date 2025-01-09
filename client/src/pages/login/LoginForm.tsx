@@ -11,7 +11,7 @@ const LoginForm: React.FC = () => {
     const [password, setPassword] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [message, setMessage] = useState<{ type: 'error' | 'success'; content: string } | null>(null)
-    const { setIsLoggedIn, setToken, setCurrentForm, role, setRole } = useAuth()
+    const { setIsLoggedIn, setToken, setCurrentForm, role, setRole, setName } = useAuth()
 
     const handleLogin = async (event: React.FormEvent) => {
         event.preventDefault()
@@ -21,9 +21,9 @@ const LoginForm: React.FC = () => {
             const response = await agent.Auth.login(username, password)
             localStorage.setItem('authToken', response.token)
             setToken(response.token)
-            setIsLoggedIn(true)
-
+            setName(response.username) // 假设 backend 返回了 username
             setRole(response.role) // 登录后更新角色
+            setIsLoggedIn(true)
 
             setMessage({ type: 'success', content: 'Login successful!' })
             navigate('/create')

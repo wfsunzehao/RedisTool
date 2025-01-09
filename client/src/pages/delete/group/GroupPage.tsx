@@ -18,7 +18,6 @@ import { Overlay, subscriptionList } from '../../../common/constants/constants'
 import { DeleteModel } from '../../../common/models/DeleteModel'
 import { handleGenericSubmit } from '../../../app/util/util'
 import { useMessageContext } from '@/app/context/MessageContext'
-import MessageHandler from '@/layout/MessageHandler'
 
 const GroupPage: React.FC = () => {
     const [subscription, setSubscription] = useState('')
@@ -31,6 +30,10 @@ const GroupPage: React.FC = () => {
 
     const [isOpen, setIsOpen] = useState(true)
     const { addMessage } = useMessageContext()
+
+    // const { setIsBlurred } = useBackgroundBlur() // 使用 hook 获取 setIsBlurred
+    // // 使用高阶函数来创建一个处理提交的函数
+    // const handleGenericSubmit = withBackgroundBlur(setIsBlurred)
 
     // 初始化
     useEffect(() => {
@@ -273,7 +276,6 @@ const GroupPage: React.FC = () => {
                     </Button>
                 </Box>
             </form>
-            <MessageHandler isOpen={isOpen} onClose={() => setIsOpen(false)} />
             {loading && (
                 <Overlay>
                     <LoadingComponent />

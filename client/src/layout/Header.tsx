@@ -24,7 +24,6 @@ import { Switch } from '@nextui-org/react'
 import { IconBrandAzure } from '@tabler/icons-react'
 import { IconSun, IconMoon, IconLinkPlus } from '@tabler/icons-react'
 import { loginTextStyles, user } from '../common/constants/constants'
-import NotificationPanel from './NotificationPanel'
 import MessageHandler from './MessageHandler'
 import LogoutMenu from './LogoutMenu'
 
@@ -104,7 +103,7 @@ const getLogoFilter2 = (isHomePage: boolean, isDarkMode: boolean) => {
 export default function Header() {
     const { toggleTheme, isDarkMode } = useTheme()
 
-    const { isLoggedIn, setIsLoggedIn } = useAuth()
+    const { isLoggedIn, setIsLoggedIn, name } = useAuth()
     const navigate = useNavigate()
     const location = useLocation()
 
@@ -251,7 +250,13 @@ export default function Header() {
                             {/* 中间导航链接，仅在用户登录时显示 */}
                             <List sx={{ display: 'flex', padding: 0 }}>
                                 {midLinks.map(({ title, path }) => (
-                                    <ListItem component={NavLink} to={path} key={path} sx={navStyles}>
+                                    <ListItem
+                                        component={NavLink}
+                                        to={path}
+                                        key={path}
+                                        sx={navStyles}
+                                        onClick={(event) => event.stopPropagation()} // 阻止冒泡
+                                    >
                                         {title}
                                     </ListItem>
                                 ))}
@@ -287,7 +292,7 @@ export default function Header() {
                                     marginRight: '10px',
                                 }}
                             >
-                                {user.username}
+                                {name}
                             </Typography>
                             <Avatar
                                 sx={{
