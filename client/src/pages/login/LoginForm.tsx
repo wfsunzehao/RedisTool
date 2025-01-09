@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Box, TextField, Button, Typography, Link, useTheme, CircularProgress } from '@mui/material'
 import { useAuth } from '../../app/context/AuthContext'
 import agent from '../../app/api/agent'
@@ -16,13 +16,13 @@ const LoginForm: React.FC = () => {
     const handleLogin = async (event: React.FormEvent) => {
         event.preventDefault()
         setIsLoading(true)
-        setMessage(null) // Reset message state
+        setMessage(null)
         try {
             const response = await agent.Auth.login(username, password)
             localStorage.setItem('authToken', response.token)
             setToken(response.token)
-            setName(response.username) // 假设 backend 返回了 username
-            setRole(response.role) // 登录后更新角色
+            setName(response.username)
+            setRole(response.role)
             setIsLoggedIn(true)
 
             setMessage({ type: 'success', content: 'Login successful!' })
@@ -39,11 +39,6 @@ const LoginForm: React.FC = () => {
     const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault()
         setCurrentForm('forgotPassword')
-    }
-
-    const handleUpClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-        event.preventDefault()
-        setCurrentForm('signup')
     }
 
     return (
@@ -73,7 +68,10 @@ const LoginForm: React.FC = () => {
                     sx={{
                         textAlign: 'center',
                         fontWeight: 'bold',
-                        background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                        background:
+                            theme.palette.mode === 'dark'
+                                ? '#000000'
+                                : `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
                     }}
@@ -86,14 +84,14 @@ const LoginForm: React.FC = () => {
                     gutterBottom
                     sx={{
                         textAlign: 'center',
-                        color: theme.palette.text.secondary,
+                        color: theme.palette.mode === 'dark' ? '#000000' : theme.palette.text.secondary,
                     }}
                 >
-                    Don't have an account? {/* 只有管理员才能看到 Sign up */}
+                    Don't have an account?{' '}
                     <Link
                         href="#"
                         sx={{
-                            color: theme.palette.primary.main,
+                            color: theme.palette.mode === 'dark' ? '#000000' : theme.palette.primary.main,
                             fontWeight: 'bold',
                             textDecoration: 'none',
                             '&:hover': {
@@ -129,12 +127,6 @@ const LoginForm: React.FC = () => {
                         margin="normal"
                         type="text"
                         variant="outlined"
-                        InputProps={{
-                            style: { color: theme.palette.text.primary },
-                        }}
-                        InputLabelProps={{
-                            style: { color: theme.palette.text.secondary },
-                        }}
                         sx={{
                             '& .MuiOutlinedInput-root': {
                                 '& fieldset': {
@@ -146,10 +138,17 @@ const LoginForm: React.FC = () => {
                                 '&.Mui-focused fieldset': {
                                     borderColor: theme.palette.primary.dark,
                                 },
+                                '& input': {
+                                    color: theme.palette.text.primary, // Input 文字颜色
+                                },
+                            },
+                            '& .MuiInputLabel-root': {
+                                color: theme.palette.mode === 'dark' ? '#000000' : theme.palette.text.secondary, // label 文字颜色
                             },
                         }}
                         disabled={isLoading}
                     />
+
                     <TextField
                         fullWidth
                         required
@@ -159,12 +158,6 @@ const LoginForm: React.FC = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         variant="outlined"
-                        InputProps={{
-                            style: { color: theme.palette.text.primary },
-                        }}
-                        InputLabelProps={{
-                            style: { color: theme.palette.text.secondary },
-                        }}
                         sx={{
                             '& .MuiOutlinedInput-root': {
                                 '& fieldset': {
@@ -176,6 +169,12 @@ const LoginForm: React.FC = () => {
                                 '&.Mui-focused fieldset': {
                                     borderColor: theme.palette.primary.dark,
                                 },
+                                '& input': {
+                                    color: theme.palette.text.primary, // Input 文字颜色
+                                },
+                            },
+                            '& .MuiInputLabel-root': {
+                                color: theme.palette.mode === 'dark' ? '#000000' : theme.palette.text.secondary, // label 文字颜色
                             },
                         }}
                         disabled={isLoading}
@@ -188,7 +187,7 @@ const LoginForm: React.FC = () => {
                             display: 'block',
                             marginBottom: 3,
                             textAlign: 'right',
-                            color: theme.palette.text.secondary,
+                            color: theme.palette.mode === 'dark' ? '#000000' : theme.palette.text.secondary,
                             '&:hover': {
                                 textDecoration: 'underline',
                                 color: theme.palette.primary.main,
@@ -232,7 +231,7 @@ const LoginForm: React.FC = () => {
                     variant="body1"
                     sx={{
                         marginTop: 3,
-                        color: theme.palette.text.secondary,
+                        color: theme.palette.mode === 'dark' ? '#000000' : theme.palette.text.secondary,
                         textAlign: 'center',
                         fontStyle: 'italic',
                     }}

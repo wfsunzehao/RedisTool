@@ -24,7 +24,7 @@ interface Parameter {
     size: string
     requests: string
     pipeline: string
-    status: '1' | '2' | '3'| '4'
+    status: '1' | '2' | '3' | '4'
 }
 
 const Statistics: React.FC = () => {
@@ -35,7 +35,7 @@ const Statistics: React.FC = () => {
         try {
             const response = await axios.get('https://localhost:7179/api/Parameters')
             // const response = await agent.Create.getBenchmarkRunJson()
-            console.log('Fetched data:', response);
+            console.log('Fetched data:', response)
             setParameters(response.data.reverse())
         } catch (error) {
             console.error('Error fetching the parameters!', error)
@@ -76,13 +76,13 @@ const Statistics: React.FC = () => {
                 sx={{
                     textTransform: 'none',
                     fontSize: '14px',
-                    width: '150px',  // Ensure all buttons have the same size
-                    height: '40px',  // Ensure consistent height
+                    width: '150px', // Ensure all buttons have the same size
+                    height: '40px', // Ensure consistent height
                     opacity: 1, // Keep opacity as 1 even for disabled button
                     backgroundColor: disabled ? `${color}.main` : `${color}.light`, // Manually control the background color
                     '&:disabled': {
-                        backgroundColor: `${color}.main`,  // Ensure background color remains the same when disabled
-                        opacity: 1,  // Make sure opacity stays normal for disabled buttons
+                        backgroundColor: `${color}.main`, // Ensure background color remains the same when disabled
+                        opacity: 1, // Make sure opacity stays normal for disabled buttons
                         color: 'white', // Set text color to white for disabled buttons
                     },
                 }}
@@ -93,7 +93,7 @@ const Statistics: React.FC = () => {
     }
 
     return (
-        <Box sx={{ padding: '20px', marginLeft: '5%', minHeight: '100vh', overflow: 'auto' }}>
+        <Box sx={{ padding: '20px', marginLeft: '5%', minHeight: '60vh', overflow: 'auto' }}>
             <Typography
                 variant="h3"
                 gutterBottom

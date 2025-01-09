@@ -159,7 +159,7 @@ export default function Header() {
                     </NavLink>
                     <Box sx={{ mx: 1 }} /> {/* 添加统一间距 */}
                     <Tooltip
-                        title="Toggle Dark Mode"
+                        title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
                         slotProps={{
                             tooltip: {
                                 sx: {

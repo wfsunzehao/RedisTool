@@ -66,6 +66,7 @@ const HomePage: React.FC = () => {
                             height: '100%',
                             backgroundColor: 'rgba(0, 0, 0, 0.5)', // 半透明黑色遮罩
                             zIndex: 11, // 确保遮罩在图片上方
+                            pointerEvents: 'none', // 遮罩层不拦截鼠标事件
                         }}
                     />
                 )}
