@@ -67,7 +67,6 @@ namespace redis.WebAPi.Filters
                     return;
                 }
 
-                // 将用户信息存入 HttpContext，供后续接口使用
                 context.HttpContext.User = principal;
             }
             catch (SecurityTokenException)

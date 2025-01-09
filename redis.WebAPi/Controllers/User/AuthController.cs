@@ -55,6 +55,7 @@ public class AuthController : ControllerBase
 
     // Registration functionality
     [HttpPost("register")]
+    [ServiceFilter(typeof(AuthFilter))]
     public async Task<IActionResult> Register([FromBody] RegisterRequest model)
     {
         // Check if the username 
