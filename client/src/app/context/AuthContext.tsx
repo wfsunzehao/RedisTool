@@ -10,6 +10,8 @@ interface AuthContextType {
     setCurrentForm: React.Dispatch<React.SetStateAction<'login' | 'signup' | 'forgotPassword'>>
     role: 'admin' | 'user'
     setRole: React.Dispatch<React.SetStateAction<'admin' | 'user'>>
+    name: string
+    setName: React.Dispatch<React.SetStateAction<string>>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -20,6 +22,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [token, setToken] = useState<string | null>(localStorage.getItem('authToken'))
     const [currentForm, setCurrentForm] = useState<'login' | 'signup' | 'forgotPassword'>('login')
     const [role, setRole] = useState<'admin' | 'user'>('user') // 默认角色是普通用户
+    const [name, setName] = useState<string>('') // 管理用户名
 
     useEffect(() => {
         if (token) {
@@ -38,6 +41,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 setCurrentForm,
                 role,
                 setRole,
+                name,
+                setName,
             }}
         >
             {children}

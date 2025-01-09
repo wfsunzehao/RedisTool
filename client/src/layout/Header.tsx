@@ -103,7 +103,7 @@ const getLogoFilter2 = (isHomePage: boolean, isDarkMode: boolean) => {
 export default function Header() {
     const { toggleTheme, isDarkMode } = useTheme()
 
-    const { isLoggedIn, setIsLoggedIn } = useAuth()
+    const { isLoggedIn, setIsLoggedIn, name } = useAuth()
     const navigate = useNavigate()
     const location = useLocation()
 
@@ -292,7 +292,7 @@ export default function Header() {
                                     marginRight: '10px',
                                 }}
                             >
-                                {user.username}
+                                {name}
                             </Typography>
                             <Avatar
                                 sx={{
