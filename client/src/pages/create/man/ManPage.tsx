@@ -97,7 +97,7 @@ const ManPage: React.FC = () => {
                             freeSolo={false} // 禁止自定义输入
                             options={groupList}
                             value={group}
-                            onChange={(e, newValue) => setGroup(newValue || '')}
+                            onChange={(_e, newValue) => setGroup(newValue || '')}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}

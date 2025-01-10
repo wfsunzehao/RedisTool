@@ -39,7 +39,9 @@ const PerfPage: React.FC = () => {
         setRegion('East US 2 EUAP')
         agent.Create.getGroup('1e57c478-0901-4c02-8d35-49db234b78d2')
             .then((response) => {
-                const sortedResponse = response.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
+                const sortedResponse = response.sort((a: string, b: string) =>
+                    a.toLowerCase().localeCompare(b.toLowerCase())
+                )
                 setGroupList(sortedResponse)
             })
             .catch((error) => console.log(error.response))
@@ -131,7 +133,7 @@ const PerfPage: React.FC = () => {
                         <Autocomplete
                             options={groupList}
                             value={group}
-                            onChange={(event, value) => setGroup(value || '')}
+                            onChange={(_event, value) => setGroup(value || '')}
                             renderInput={(params) => (
                                 <TextField {...params} label="Group" error={!!errors.group} helperText={errors.group} />
                             )}

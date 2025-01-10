@@ -175,7 +175,7 @@ const BvtPage: React.FC = () => {
                         <Autocomplete
                             options={groupList}
                             value={group}
-                            onChange={(event, newValue) => {
+                            onChange={(_event, newValue) => {
                                 setGroup(newValue || '')
                                 setErrors((prevErrors) => ({ ...prevErrors, group: '' }))
                             }}

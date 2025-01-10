@@ -53,26 +53,7 @@ const fixedMessages = [
     { title: 'Reminder', content: "Don't forget to submit your monthly report by Friday." },
 ]
 
-// 获取头部样式的逻辑
-const getHeaderStyles = (isHomePage: boolean, isDarkMode: boolean) => {
-    return {
-        backgroundColor: isHomePage
-            ? isDarkMode
-                ? '#333333' // 主页且黑暗模式
-                : '#1976d2' // 主页且亮色模式
-            : isDarkMode
-              ? '#333333' // 非主页且黑暗模式
-              : '#ffffff', // 非主页且亮色模式
-        color: isHomePage
-            ? isDarkMode
-                ? '#ffffff' // 主页且黑暗模式
-                : '#ffffff' // 主页且亮色模式
-            : isDarkMode
-              ? '#ffffff' // 非主页且黑暗模式
-              : '#333333', // 非主页且亮色模式
-    }
-}
-const getHeaderStyles2 = (isHomePage: boolean, isDarkMode: boolean) => {
+const getHeaderStyles2 = (isDarkMode: boolean) => {
     return {
         backgroundColor: isDarkMode
             ? '#333333' // 黑暗模式
@@ -80,19 +61,7 @@ const getHeaderStyles2 = (isHomePage: boolean, isDarkMode: boolean) => {
     }
 }
 
-// 获取Logo过滤色的逻辑
-const getLogoFilter = (isHomePage: boolean, isDarkMode: boolean) => {
-    // 主页时，Logo总是使用反色滤镜
-    if (isHomePage) {
-        return 'invert(100%) sepia(100%) saturate(0%) hue-rotate(180deg)'
-    }
-
-    // 非主页时，根据黑暗模式决定是否使用反色滤镜
-    return isDarkMode
-        ? 'invert(100%) sepia(100%) saturate(0%) hue-rotate(180deg)' // 黑暗模式使用反色滤镜
-        : 'none' // 亮色模式不使用滤镜
-}
-const getLogoFilter2 = (isHomePage: boolean, isDarkMode: boolean) => {
+const getLogoFilter2 = () => {
     // 主页时，Logo总是使用反色滤镜
 
     // 非主页时，根据黑暗模式决定是否使用反色滤镜
@@ -128,8 +97,8 @@ export default function Header() {
     const openLogoutMenu = Boolean(logoutAnchorEl)
 
     // 获取头部的样式
-    const headerStyles = getHeaderStyles2(isHomePage, isDarkMode)
-    const logoFilter = getLogoFilter2(isHomePage, isDarkMode)
+    const headerStyles = getHeaderStyles2(isDarkMode)
+    const logoFilter = getLogoFilter2()
     const handleAzureClick = () => {
         window.open('https://ms.portal.azure.com/?l=en.en-us#home', '_blank')
     }

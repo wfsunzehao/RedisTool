@@ -148,7 +148,7 @@ const GroupPage: React.FC = () => {
     }
 
     const handleInputChange =
-        (field: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, value: string) => {
+        (field: string) => (_event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, value: string) => {
             //const { value } = event.target;
 
             switch (field) {

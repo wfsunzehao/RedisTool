@@ -98,26 +98,25 @@ const InsertPage: React.FC = () => {
                 setResourceList([]) // 清空资源列表
             })
     }
-    const handleInputChange =
-        (field: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, value: string) => {
-            //const { value } = event.target;
+    const handleInputChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const value = event.target.value // 从事件中获取值
 
-            switch (field) {
-                case 'group':
-                    handleGroupChange(value)
-                    break
-                case 'name':
-                    setName(value)
-                    setErrors((prevErrors) => ({ ...prevErrors, name: '' })) // 清除名称错误
-                    break
-                case 'quantity':
-                    setQuantity(value)
-                    setErrors((prevErrors) => ({ ...prevErrors, quantity: '' })) // 清除数量错误
-                    break
-                default:
-                    break
-            }
+        switch (field) {
+            case 'group':
+                handleGroupChange(value)
+                break
+            case 'name':
+                setName(value)
+                setErrors((prevErrors) => ({ ...prevErrors, name: '' })) // 清除名称错误
+                break
+            case 'quantity':
+                setQuantity(value)
+                setErrors((prevErrors) => ({ ...prevErrors, quantity: '' })) // 清除数量错误
+                break
+            default:
+                break
         }
+    }
 
     return (
         <Box>
@@ -161,12 +160,7 @@ const InsertPage: React.FC = () => {
                         <Autocomplete
                             options={groupList}
                             value={group}
-                            onChange={(event, value) =>
-                                handleInputChange('group')(
-                                    event as React.ChangeEvent<HTMLInputElement>,
-                                    value as string
-                                )
-                            }
+                            onChange={(_, value) => handleGroupChange(value as string)} // 第二个参数是选定值
                             renderInput={(params) => (
                                 <TextField
                                     {...params}

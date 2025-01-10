@@ -51,7 +51,8 @@ const AltPage: React.FC = () => {
     }, [])
 
     const handleInputChange =
-        (field: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, value: string | null) => {
+        (field: string) =>
+        (_event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, value: string | null) => {
             if (field === 'group') {
                 setGroup(value || '')
                 setErrors((prevErrors) => ({ ...prevErrors, group: '' }))
