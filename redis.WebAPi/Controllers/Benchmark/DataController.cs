@@ -16,9 +16,17 @@ namespace Benchmark_API.Controllers
         }
 
         [HttpGet("AllData")]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] string TimeStamp)
         {
-            var data = await _dbContext.BenchmarkData1
+            // 如果传入了name，则根据name过滤数据
+            var query = _dbContext.BenchmarkData1.AsQueryable();
+
+            if (!string.IsNullOrEmpty(TimeStamp))
+            {
+                query = query.Where(b => b.TimeStamp == TimeStamp);
+            }
+
+            var data = await query
                 .OrderBy(p => p.ID)
                 .Select(b => new
                 {
