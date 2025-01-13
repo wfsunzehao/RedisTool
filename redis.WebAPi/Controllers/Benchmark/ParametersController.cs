@@ -24,13 +24,14 @@ namespace redis.WebAPi.Controllers
                 {
                     p.Name,
                     p.Region,
-                    p.Description,
+                    Description = p.Description ?? "No Description",
                     p.Clients,
                     p.Threads,
                     p.Size,
                     p.Requests,
                     p.Pipeline,
-                    p.Status
+                    p.Status,
+                    p.TimeStamp
                 })
                 .ToListAsync(); 
 

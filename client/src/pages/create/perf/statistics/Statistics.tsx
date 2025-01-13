@@ -24,6 +24,7 @@ interface Parameter {
     size: string
     requests: string
     pipeline: string
+    timeStamp:  string
     status: '1' | '2' | '3' | '4'
 }
 
@@ -46,11 +47,11 @@ const Statistics: React.FC = () => {
         fetchData()
     }, [])
 
-    const handleNavigate = () => {
-        navigate('/create/dataDisplayPage')
-    }
+    const handleNavigate = (timeStamp: string) => {
+        navigate(`/create/dataDisplayPage/${timeStamp}`);
+    };
 
-    const renderStatusButton = (status: Parameter['status']) => {
+    const renderStatusButton = (status: Parameter['status'], timeStamp : string) => {
         const statusMap: Record<
             Parameter['status'],
             {
@@ -70,7 +71,7 @@ const Statistics: React.FC = () => {
             <Button
                 variant="contained"
                 color={color} // 传递枚举值
-                onClick={handleNavigate}
+                onClick={() => handleNavigate(timeStamp)}
                 disabled={disabled}
                 size="small"
                 sx={{
@@ -135,7 +136,7 @@ const Statistics: React.FC = () => {
                                     <TableCell>{param.size}</TableCell>
                                     <TableCell>{param.requests}</TableCell>
                                     <TableCell>{param.pipeline}</TableCell>
-                                    <TableCell>{renderStatusButton(param.status)}</TableCell>
+                                    <TableCell>{renderStatusButton(param.status,param.timeStamp)}</TableCell>
                                 </TableRow>
                                 {index !== parameters.length - 1 && (
                                     <TableRow>

@@ -4,8 +4,8 @@ import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Table, Card, Row, Col } from 'antd';
 import { Tooltip as AntdTooltip } from 'antd';
+import { useParams } from 'react-router-dom';
 
-// 定义接口数据的类型
 interface AllData {
   cacheName: string;
   totalDuration: number;
@@ -16,6 +16,7 @@ interface AllData {
   getsP99: number;
   getsP99_90: number;
   getsP99_99: number;
+  timeStamp:string;
   id: number;
 }
 
@@ -30,17 +31,22 @@ interface FinalData {
   getsP99: number;
   getsP99_90: number;
   getsP99_99: number;
+  timeStamp:string;
 }
 
 const DataDisplayPage: React.FC = () => {
-  // 使用useState管理AllData和FinalData
+  const { timeStamp } = useParams<{ timeStamp: string }>(); // 获取 
   const [allData, setAllData] = useState<AllData[]>([]);
   const [finalData, setFinalData] = useState<FinalData[]>([]);
+  const [filteredData, setFilteredData] = useState<AllData | null>(null);
 
-  // 获取数据
   useEffect(() => {
+    if (!timeStamp) {
+      console.error('Timestamp is undefined!');
+      return;
+    }
     // 获取AllData数据
-    axios.get('https://localhost:7179/api/Data/AllData')
+    axios.get(`https://localhost:7179/api/Data/AllData?TimeStamp=${timeStamp}`)
       .then((response) => {
         setAllData(response.data);
       })
@@ -49,14 +55,14 @@ const DataDisplayPage: React.FC = () => {
       });
 
     // 获取FinalData数据
-    axios.get('https://localhost:7179/api/Data/FinalData')
+    axios.get(`https://localhost:7179/api/Data/FinalData?TimeStamp=${timeStamp}`)
       .then((response) => {
         setFinalData(response.data);
       })
       .catch((error) => {
         console.error('Error fetching FinalData:', error);
       });
-  }, []);
+  }, [timeStamp]);
 
   // 转换AllData数据用于图表
   const chartData = allData.map(item => ({
@@ -143,7 +149,7 @@ const DataDisplayPage: React.FC = () => {
         </LineChart>
       </ResponsiveContainer>
 
-      {/* 表格部分，使用Card布局竖向显示 */}
+      {/* 表格部分，使用Card布局竖向显示
       <h2>Final Data</h2>
       <Row gutter={16}>
         {finalData.map((data) => (
@@ -160,7 +166,7 @@ const DataDisplayPage: React.FC = () => {
             </Card>
           </Col>
         ))}
-      </Row>
+      </Row> */}
     </div>
   );
 };

@@ -31,7 +31,8 @@ public class Parameters
 
         [Required(ErrorMessage = "Status is required.")]
         public int Status { get; set; }
-}
+        public string TimeStamp { get; set; }
+    }
 public class RunBenchmarkData
 {
         public string Name { get; set; }
@@ -44,7 +45,8 @@ public class RunBenchmarkData
         public int Requests { get; set; }
         public int Pipeline { get; set; }
         public int Times { get; set; }
-}
+        public string TimeStamp { get; set; }
+    }
 
 }
 

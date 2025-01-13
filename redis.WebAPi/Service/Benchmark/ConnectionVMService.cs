@@ -22,14 +22,14 @@ namespace redis.WebAPi.Service.AzureShared
             _insertBenchmarkService = insertBenchmarkService;
         }
 
-        public async Task<string> ConnectionVM(string name, string primary, int clients, int threads, int size, int requests, int pipeline, int times)
+        public async Task<string> ConnectionVM(string name, string primary, int clients, int threads, int size, int requests, int pipeline, int times, string TimeStamp)
         {
             try
             {
                 var armClient = _client.ArmClient;
                 var subResource = armClient.GetSubscriptionResource(new ResourceIdentifier("/subscriptions/" + "fc2f20f5-602a-4ebd-97e6-4fae3f1f6424"));
                 var vm1 = (await subResource.GetResourceGroupAsync("MemtierbenchmarkTest")).Value.GetVirtualMachine("MemtierBenchmarkM3-Premium-P5");
-                string timeStamp = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+                string timeStamp = TimeStamp;
                 string fileName = $"output-{timeStamp}";
 
                 // Get an instance view of the virtual machine to check its status

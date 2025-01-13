@@ -34,7 +34,7 @@ export const router = createBrowserRouter([
                     { path: 'perf', element: <PerfPage /> },
                     { path: 'benchmark', element: <RunBenchmark /> },
                     { path: 'statistics', element: <Statistics /> },
-                    { path: 'dataDisplayPage', element: <DataDisplayPage /> },
+                    { path: 'dataDisplayPage/:timeStamp', element: <DataDisplayPage /> },
                     { path: 'alt', element: <AltPage /> },
                 ],
             },
