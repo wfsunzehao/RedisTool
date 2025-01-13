@@ -38,7 +38,21 @@ const RunBenchmark = () => {
         setregion(event.target.value as string)
     }
 
+    // 生成时间戳
+    const generateTimeStamp = () => {
+        const now = new Date();
+        return now.toISOString().replace(/[-:.TZ]/g, '');
+    };
+
     const handleSubmit = async () => {
+        if (!name || !primary || !clients || !size || !requests || !threads) {
+            alert('Please fill out all required fields.');
+            return;
+          }
+
+        setLoading(true);
+        const timeStamp = generateTimeStamp();
+
         const body = {
             name,
             primary,
@@ -50,6 +64,7 @@ const RunBenchmark = () => {
             requests,
             pipeline,
             times,
+            timeStamp
         }
     
         try {
@@ -64,6 +79,8 @@ const RunBenchmark = () => {
     const handleRoutine = () => {
         //常规做法
     }
+
+
 
     return (
         <div>

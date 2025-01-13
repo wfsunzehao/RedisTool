@@ -38,7 +38,8 @@ namespace Benchmark_API.Controllers
                     Size = model.Size,
                     Requests = model.Requests,
                     Pipeline = model.Pipeline,
-                    Status = 2  // If the status is 2, it is in the queue
+                    Status = 2,  // If the status is 2, it is in the queue
+                    TimeStamp = model.TimeStamp,
                     //Times
                 };
                 _dbContext.Parameters.Add(Parameters);
@@ -54,7 +55,8 @@ namespace Benchmark_API.Controllers
                     model.Size,
                     model.Requests,
                     model.Pipeline,
-                    model.Times
+                    model.Times,
+                    model.TimeStamp
                 );
 
                 return Ok(new { message = "Benchmark run completed successfully", output = vmOutput });
