@@ -9,12 +9,12 @@ axios.defaults.withCredentials = true
 
 const responseBody = (response: AxiosResponse) => response.data
 
-// 请求拦截器：添加 Authorization 头
+// Request interceptor: Add Authorization header
 axios.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('authToken') // 获取存储在 localStorage 中的 token
+        const token = localStorage.getItem('authToken') // Retrieve the token stored in localStorage
         if (token) {
-            config.headers['Authorization'] = `Bearer ${token}` // 将 token 添加到请求头
+            config.headers['Authorization'] = `Bearer ${token}` // Add the token to the request header
         }
         return config
     },

@@ -25,67 +25,67 @@ const GroupPage: React.FC = () => {
     const [loading, setLoading] = useState(false)
     const [groupList, setGroupList] = useState<string[]>([])
     const [errors, setErrors] = useState<{ [key: string]: string }>({})
-    const [resourceList, setResourceList] = useState<string[]>([]) // 资源列表状态
-    const [showResourceBox, setShowResourceBox] = useState(false) // 控制资源框显示与否
+    const [resourceList, setResourceList] = useState<string[]>([]) // Resource list state
+    const [showResourceBox, setShowResourceBox] = useState(false) // Control whether the resource box is shown or not
 
     const [isOpen, setIsOpen] = useState(true)
     const { addMessage } = useMessageContext()
 
-    // const { setIsBlurred } = useBackgroundBlur() // 使用 hook 获取 setIsBlurred
-    // // 使用高阶函数来创建一个处理提交的函数
+    // const { setIsBlurred } = useBackgroundBlur() // Use hook to get setIsBlurred
+    // // Use higher-order function to create a submit handler function
     // const handleGenericSubmit = withBackgroundBlur(setIsBlurred)
 
-    // 初始化
+    // Initialization
     useEffect(() => {
         setSubscription('1e57c478-0901-4c02-8d35-49db234b78d2')
         agent.Create.getGroup('1e57c478-0901-4c02-8d35-49db234b78d2')
             .then((response) => {
                 const sortedResponse = response.sort(
-                    (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase()) // 忽略大小写排序
+                    (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase()) // Sort case-insensitively
                 )
                 setGroupList(sortedResponse)
             })
             .catch((error) => console.log(error.response))
     }, [])
 
-    // 每分钟更新一次资源列表
+    // Update the resource list every minute
     useEffect(() => {
         const intervalId = setInterval(() => {
             if (group) {
-                // 调用API获取该组的资源列表
+                // Call API to get the resource list for this group
                 agent.Delete.getResource(subscription, group)
                     .then((response) => {
-                        // 将键值对格式化为字符串数组，例如 "BVT-RebootBladeTest-1203-5675: Premium"
+                        // Format key-value pairs into a string array, e.g., "BVT-RebootBladeTest-1203-5675: Premium"
                         const resourceList = Object.keys(response).map((key) => `${key}: ${response[key]}`)
 
-                        // 保存资源列表（字符串数组）
+                        // Save the resource list (as string array)
                         setResourceList(resourceList)
-                        setShowResourceBox(true) // 显示资源框
+                        setShowResourceBox(true) // Show the resource box
                     })
                     .catch((error) => {
                         console.log(error.response)
-                        setResourceList([]) // 清空资源列表
-                        setShowResourceBox(false) // 隐藏资源框
+                        setResourceList([]) // Clear the resource list
+                        setShowResourceBox(false) // Hide the resource box
                     })
             }
-        }, 60000) // 每 60000 毫秒（即 1 分钟）更新一次
+        }, 60000) // Update every 60000 milliseconds (1 minute)
 
-        // 清除定时器，防止内存泄漏
+        // Clear the interval to prevent memory leaks
         return () => {
             clearInterval(intervalId)
         }
-    }, [subscription, group]) // 依赖项是 subscription 和 group，只有当它们变化时才会启动新的定时器
+    }, [subscription, group]) // Dependencies are subscription and group, it will start a new interval only when they change
 
-    // 校验表单
+    // Form validation
     const CheckForm = () => {
         const newErrors: { [key: string]: string } = {}
         if (!subscription) newErrors.subscription = 'Subscription cannot be empty'
         if (!group) newErrors.group = 'Group cannot be empty'
         setErrors(newErrors)
-        return Object.keys(newErrors).length === 0 // 返回是否有错误
+        return Object.keys(newErrors).length === 0 // Return whether there are errors
     }
 
-    // 删除组的API请求
+    // API request to delete the group
     const apiPathFunction = async (data: DeleteModel) => {
         return await agent.Delete.sendDelGroupJsonT(data)
     }
@@ -99,51 +99,51 @@ const GroupPage: React.FC = () => {
         addMessage('Deletion is complete', `Cache deleted at ${new Date().toLocaleTimeString()}.`)
     }
 
-    // 取消按钮逻辑
+    // Cancel button logic
     const handleCancel = () => {
         setSubscription('')
         setGroup('')
         setErrors({})
-        setResourceList([]) // 取消时清空资源列表
-        setShowResourceBox(false) // 隐藏资源框
+        setResourceList([]) // Clear the resource list on cancel
+        setShowResourceBox(false) // Hide the resource box
     }
 
-    // 订阅选择改变时
+    // When the subscription selection changes
     const handleSubChange = (subscriptionid: string) => {
         setSubscription(subscriptionid)
-        setGroup('') // 清空组选择框
-        setResourceList([]) // 清空资源列表
-        setShowResourceBox(false) // 隐藏资源框
-        setErrors((prevErrors) => ({ ...prevErrors, subscription: '' })) // 清除订阅错误
+        setGroup('') // Clear the group selection
+        setResourceList([]) // Clear the resource list
+        setShowResourceBox(false) // Hide the resource box
+        setErrors((prevErrors) => ({ ...prevErrors, subscription: '' })) // Clear subscription errors
         agent.Create.getGroup(subscriptionid)
             .then((response) => {
                 const sortedResponse = response.sort(
-                    (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase()) // 忽略大小写排序
+                    (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase()) // Sort case-insensitively
                 )
                 setGroupList(sortedResponse)
             })
             .catch((error) => console.log(error.response))
     }
 
-    // 组选择改变时
+    // When the group selection changes
     const handleGroupChange = (group: string) => {
         setGroup(group)
-        setErrors((prevErrors) => ({ ...prevErrors, group: '' })) // 清除组错误
+        setErrors((prevErrors) => ({ ...prevErrors, group: '' })) // Clear group errors
 
-        // 调用API获取该组的资源列表
+        // Call API to get the resource list for this group
         agent.Delete.getResource(subscription, group)
             .then((response) => {
-                // 将键值对格式化为字符串数组，例如 "BVT-RebootBladeTest-1203-5675: Premium"
+                // Format key-value pairs into a string array, e.g., "BVT-RebootBladeTest-1203-5675: Premium"
                 const resourceList = Object.keys(response).map((key) => `${key}: ${response[key]}`)
 
-                // 保存资源列表（字符串数组）
+                // Save the resource list (as string array)
                 setResourceList(resourceList)
-                setShowResourceBox(true) // 显示资源框
+                setShowResourceBox(true) // Show the resource box
             })
             .catch((error) => {
                 console.log(error.response)
-                setResourceList([]) // 清空资源列表
-                setShowResourceBox(false) // 隐藏资源框
+                setResourceList([]) // Clear the resource list
+                setShowResourceBox(false) // Hide the resource box
             })
     }
 
@@ -222,7 +222,7 @@ const GroupPage: React.FC = () => {
                     </FormControl>
                 </Box>
 
-                {/* 显示资源列表的框 */}
+                {/* Display the resource list box */}
                 {showResourceBox && (
                     <Box
                         sx={{
@@ -231,8 +231,8 @@ const GroupPage: React.FC = () => {
                             padding: 2,
                             border: '1px solid #ccc',
                             borderRadius: 2,
-                            maxHeight: 300, // 设置最大高度
-                            overflowY: 'auto', // 启用垂直滚动
+                            maxHeight: 300, // Set max height
+                            overflowY: 'auto', // Enable vertical scrolling
                         }}
                     >
                         <h3>ResourceList</h3>
@@ -259,7 +259,7 @@ const GroupPage: React.FC = () => {
                         variant="contained"
                         color="primary"
                         sx={{ mx: 1, textTransform: 'none' }}
-                        disabled={loading || !showResourceBox} // 添加 showResourceBox 作为禁用条件
+                        disabled={loading || !showResourceBox} // Add showResourceBox as disable condition
                     >
                         Submit
                     </Button>

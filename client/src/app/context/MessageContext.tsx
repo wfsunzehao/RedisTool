@@ -1,21 +1,21 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react'
 
-// 消息类型定义
+// Definition of the message type
 interface Message {
     title: string
     content: string
 }
 
-// 上下文类型定义
+// Definition of the context type
 interface MessageContextType {
     messages: Message[]
     addMessage: (title: string, content: string) => void
 }
 
-// 创建上下文
+// Create the context
 const MessageContext = createContext<MessageContextType | undefined>(undefined)
 
-// 提供者组件
+// Provider component
 export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [messages, setMessages] = useState<Message[]>([])
 
@@ -26,7 +26,7 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
     return <MessageContext.Provider value={{ messages, addMessage }}>{children}</MessageContext.Provider>
 }
 
-// 使用上下文的自定义 Hook
+// Custom Hook for using the context
 export const useMessageContext = () => {
     const context = useContext(MessageContext)
     if (!context) {

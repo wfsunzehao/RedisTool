@@ -139,11 +139,11 @@ const LoginForm: React.FC = () => {
                                     borderColor: theme.palette.primary.dark,
                                 },
                                 '& input': {
-                                    color: theme.palette.text.primary, // Input 文字颜色
+                                    color: theme.palette.text.primary, // Input text color
                                 },
                             },
                             '& .MuiInputLabel-root': {
-                                color: theme.palette.mode === 'dark' ? '#000000' : theme.palette.text.secondary, // label 文字颜色
+                                color: theme.palette.mode === 'dark' ? '#000000' : theme.palette.text.secondary, // Label text color
                             },
                         }}
                         disabled={isLoading}
@@ -170,11 +170,11 @@ const LoginForm: React.FC = () => {
                                     borderColor: theme.palette.primary.dark,
                                 },
                                 '& input': {
-                                    color: theme.palette.text.primary, // Input 文字颜色
+                                    color: theme.palette.text.primary, // Input text color
                                 },
                             },
                             '& .MuiInputLabel-root': {
-                                color: theme.palette.mode === 'dark' ? '#000000' : theme.palette.text.secondary, // label 文字颜色
+                                color: theme.palette.mode === 'dark' ? '#000000' : theme.palette.text.secondary, // label Text color
                             },
                         }}
                         disabled={isLoading}

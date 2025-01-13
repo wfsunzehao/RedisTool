@@ -1,4 +1,4 @@
 export interface DeleteModel {
-    subscription?: string;
-    resourceGroupName?: string;
+    subscription?: string
+    resourceGroupName?: string
 }

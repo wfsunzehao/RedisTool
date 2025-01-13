@@ -2,22 +2,22 @@ import swal from 'sweetalert'
 
 export const handleGenericSubmit = async <T>(
     event: React.FormEvent,
-    data: T, // 使用泛型
+    data: T, // Use generics
     apiPath: (data: T) => Promise<T>,
     CheckForm: () => boolean,
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
-    confirmationMessage: string = 'Once started, the cache used in BVT will be created!' // 新增的参数，带有默认值
+    confirmationMessage: string = 'Once started, the cache used in BVT will be created!' // New parameter with default value
 ) => {
     event.preventDefault()
 
-    // 校验表单
+    // Validate the form
     if (!CheckForm()) {
-        return // 如果有错误，停止提交
+        return // Stop submission if there are errors
     }
 
     swal({
         title: 'Confirm the operation',
-        text: confirmationMessage, // 使用传入的 confirmationMessage
+        text: confirmationMessage, // Use the passed confirmationMessage
         buttons: ['No', 'Yes!'],
         dangerMode: true,
         closeOnClickOutside: false,

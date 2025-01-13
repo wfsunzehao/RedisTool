@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react'
 
-// 定义 AuthContext 的类型
+// Define the type for AuthContext
 interface AuthContextType {
     isLoggedIn: boolean
     setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
@@ -16,17 +16,17 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-// AuthProvider 组件，提供所有与认证相关的状态
+// AuthProvider component that provides all authentication-related state
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
     const [token, setToken] = useState<string | null>(localStorage.getItem('authToken'))
     const [currentForm, setCurrentForm] = useState<'login' | 'signup' | 'forgotPassword'>('login')
-    const [role, setRole] = useState<'admin' | 'user'>('user') // 默认角色是普通用户
-    const [name, setName] = useState<string>('') // 管理用户名
+    const [role, setRole] = useState<'admin' | 'user'>('user') // Default role is a regular user
+    const [name, setName] = useState<string>('') // Manage the username
 
     useEffect(() => {
         if (token) {
-            setIsLoggedIn(true) // 如果有 token，则设置为已登录
+            setIsLoggedIn(true) // If a token exists, set to logged in
         }
     }, [token])
 
@@ -50,7 +50,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     )
 }
 
-// 自定义 hook 用于访问 AuthContext
+// Custom hook for accessing AuthContext
 export const useAuth = (): AuthContextType => {
     const context = useContext(AuthContext)
     if (!context) {

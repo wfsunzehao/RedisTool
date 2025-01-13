@@ -6,7 +6,7 @@ const ForgotPasswordForm: React.FC = () => {
     const theme = useTheme()
     const { currentForm, setCurrentForm } = useAuth()
     const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-        event.preventDefault() // 阻止默认跳转行为（如果需要）
+        event.preventDefault() // Blocking Default Jump Behaviors
         setCurrentForm('login')
     }
 

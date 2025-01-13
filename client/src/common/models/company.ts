@@ -1,5 +1,5 @@
 export interface Company {
-    id: number;
-    name: string;
-    address?: string;//可选属性
+    id: number
+    name: string
+    address?: string
 }

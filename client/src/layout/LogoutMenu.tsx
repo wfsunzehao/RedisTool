@@ -11,22 +11,22 @@ interface LogoutMenuProps {
 
 const LogoutMenu: React.FC<LogoutMenuProps> = ({ anchorEl, open, onClose }) => {
     const navigate = useNavigate()
-    const { setIsLoggedIn, role, setCurrentForm } = useAuth() // 获取 role
+    const { setIsLoggedIn, role, setCurrentForm } = useAuth() // Get the role
 
-    // 登出逻辑
+    // Logout logic
     const handleLogout = () => {
         localStorage.removeItem('authToken')
         setIsLoggedIn(false)
         onClose()
         navigate('/')
-        setCurrentForm('login') // 设置当前表单为注册
+        setCurrentForm('login') // Set the current form to login
     }
 
-    // 注册跳转逻辑
+    // Registration redirect logic
     const handleRegister = () => {
         onClose()
-        navigate('/') // 跳转到注册页面
-        setCurrentForm('signup') // 设置当前表单为注册
+        navigate('/') // Redirect to the registration page
+        setCurrentForm('signup') // Set the current form to signup
     }
 
     return (
@@ -40,7 +40,7 @@ const LogoutMenu: React.FC<LogoutMenuProps> = ({ anchorEl, open, onClose }) => {
         >
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
 
-            {/* 只有管理员角色才能看到注册选项 */}
+            {/* Only admin roles can see the register option */}
             {role === 'admin' && <MenuItem onClick={handleRegister}>Register</MenuItem>}
         </Popover>
     )

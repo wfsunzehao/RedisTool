@@ -47,7 +47,7 @@ const HomePage: React.FC = () => {
                 color: theme.palette.text.primary,
             }}
         >
-            {/* 图片轮播区域 */}
+            {/* Image carousel area */}
             <Hero
                 onMouseEnter={() => setIsHovering(true)}
                 onMouseLeave={() => setIsHovering(false)}
@@ -55,7 +55,7 @@ const HomePage: React.FC = () => {
                     position: 'relative',
                 }}
             >
-                {/* 黑暗模式下的遮罩 */}
+                {/* Dark mode overlay */}
                 {theme.palette.mode === 'dark' && (
                     <Box
                         sx={{
@@ -64,34 +64,34 @@ const HomePage: React.FC = () => {
                             left: 0,
                             width: '100%',
                             height: '100%',
-                            backgroundColor: 'rgba(0, 0, 0, 0.5)', // 半透明黑色遮罩
-                            zIndex: 11, // 确保遮罩在图片上方
-                            pointerEvents: 'none', // 遮罩层不拦截鼠标事件
+                            backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black overlay
+                            zIndex: 11, // Ensure the overlay is on top of the image
+                            pointerEvents: 'none', // The overlay doesn't intercept mouse events
                         }}
                     />
                 )}
 
-                {/* LoginForm 组件 */}
+                {/* LoginForm component */}
                 <Box
                     sx={{
                         position: 'absolute',
                         top: '50%',
                         left: '80%',
                         transform: 'translate(-50%, -50%)',
-                        zIndex: 10, // 确保 LoginForm 显示在图片上方
+                        zIndex: 10, // Ensure LoginForm is on top of the image
                     }}
                 >
-                    {/* 仅在当前为 'login' 且未登录时显示 LoginForm */}
+                    {/* Show LoginForm only when currentForm is 'login' and not logged in */}
                     {currentForm === 'login' && !isLoggedIn && <LoginForm />}
 
-                    {/* 仅管理员（role === 'admin'）并且 currentForm 为 'signup' 时，显示 SignUpForm */}
+                    {/* Show SignUpForm only when currentForm is 'signup' and role is 'admin' */}
                     {currentForm === 'signup' && role === 'admin' && <SignUpForm />}
 
-                    {/* 仅在 currentForm 为 'forgotPassword' 且未登录时显示 ForgotPasswordForm */}
+                    {/* Show ForgotPasswordForm only when currentForm is 'forgotPassword' and not logged in */}
                     {currentForm === 'forgotPassword' && !isLoggedIn && <ForgotPasswordForm />}
                 </Box>
 
-                {/* 图片轮播 */}
+                {/* Image carousel */}
                 <ImageWrapper shift={-1}>
                     <img
                         src={images[(currentIndex - 1 + images.length) % images.length]}
@@ -108,7 +108,7 @@ const HomePage: React.FC = () => {
                     <img src={images[(currentIndex + 1) % images.length]} alt="Next" className="image" />
                 </ImageWrapper>
 
-                {/* 导航箭头 */}
+                {/* Navigation arrows */}
                 <IconButton
                     onClick={handlePrev}
                     sx={{
@@ -117,7 +117,7 @@ const HomePage: React.FC = () => {
                         top: '50%',
                         transform: 'translateY(-50%)',
                         color: theme.palette.primary.main,
-                        zIndex: 10, // 确保箭头在遮罩上方
+                        zIndex: 10, // Ensure arrows are on top of the overlay
                     }}
                 >
                     <ArrowBackIosIcon fontSize="large" />
@@ -131,13 +131,13 @@ const HomePage: React.FC = () => {
                         top: '50%',
                         transform: 'translateY(-50%)',
                         color: theme.palette.primary.main,
-                        zIndex: 10, // 确保箭头在遮罩上方
+                        zIndex: 10, // Ensure arrows are on top of the overlay
                     }}
                 >
                     <ArrowForwardIosIcon fontSize="large" />
                 </IconButton>
 
-                {/* 指示点 */}
+                {/* Indicator dots */}
                 <Indicator>
                     {images.map((_, index) => (
                         <IndicatorDot

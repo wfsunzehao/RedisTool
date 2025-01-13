@@ -11,95 +11,95 @@ const InsertPage: React.FC = () => {
     const [subscription, setSubscription] = useState('')
     const [group, setGroup] = useState('')
     const [name, setName] = useState('')
-    const [quantity, setQuantity] = useState('') // 数量
+    const [quantity, setQuantity] = useState('') // Quantity
     const [loading, setLoading] = useState(false)
     const [groupList, setGroupList] = useState<string[]>([])
     const [errors, setErrors] = useState<{ [key: string]: string }>({})
-    const [resourceList, setResourceList] = useState<string[]>([]) // 资源列表状态
-    //初始化
+    const [resourceList, setResourceList] = useState<string[]>([]) // Resource list state
+    // Initialization
     useEffect(() => {
-        //默认显示Cache Team - Vendor CTI Testing 2
+        // Default display Cache Team - Vendor CTI Testing 2
         setSubscription('1e57c478-0901-4c02-8d35-49db234b78d2')
         agent.Create.getGroup('1e57c478-0901-4c02-8d35-49db234b78d2')
             .then((response) => {
                 const sortedResponse = response.sort(
-                    (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase()) // 忽略大小写排序
+                    (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase()) // Case-insensitive sorting
                 )
                 setGroupList(sortedResponse)
             })
             .catch((error) => console.log(error.response))
     }, [])
 
-    //校验表单
+    // Validate form
     const CheckForm = () => {
         const newErrors: { [key: string]: string } = {}
         if (!subscription) newErrors.subscription = 'Subscription cannot be empty'
         if (!group) newErrors.group = 'Group cannot be empty'
-        if (!name) newErrors.name = 'Name cannot be empty' // 新增名称验证
-        if (!quantity) newErrors.quantity = 'Quantity cannot be empty' // 新增名称验证
+        if (!name) newErrors.name = 'Name cannot be empty' // Added name validation
+        if (!quantity) newErrors.quantity = 'Quantity cannot be empty' // Added quantity validation
         setErrors(newErrors)
-        return Object.keys(newErrors).length === 0 // 返回是否有错误
+        return Object.keys(newErrors).length === 0 // Returns whether there are errors
     }
 
     const apiPathFunction = async (data: DataModel) => {
-        return await agent.Other.sendInsertJson(data) // 或其他 API 调用
+        return await agent.Other.sendInsertJson(data) // Or other API call
     }
     const handleSubmit = (event: React.FormEvent) => {
-        // 提交逻辑
+        // Submission logic
         const data: DataModel = {
             name,
-            region: 'Central US EUAP', // 这里替换为实际的region值
+            region: 'Central US EUAP', // Replace with actual region value
             subscription,
             group,
             port: '6379',
-            // 添加其他字段的值
+            // Add other field values
             numKeysPerShard: quantity,
         }
         const customMessage = 'Once started, the cache will be inserted!'
         handleGenericSubmit(event, data, apiPathFunction, CheckForm, setLoading, customMessage)
     }
-    // 处理取消按钮点击事件
+    // Handle cancel button click event
     const handleCancel = () => {
         setSubscription('')
         setGroup('')
-        setName('') // 清空名称输入
-        setQuantity('') // 清空数量输入
+        setName('') // Clear name input
+        setQuantity('') // Clear quantity input
         setErrors({})
     }
-    // 处理下拉框改变事件
+    // Handle dropdown change event
     const handleSubChange = (subscriptionid: string) => {
         setSubscription(subscriptionid)
-        setErrors((prevErrors) => ({ ...prevErrors, subscription: '' })) // 清除订阅错误
+        setErrors((prevErrors) => ({ ...prevErrors, subscription: '' })) // Clear subscription error
         agent.Create.getGroup(subscriptionid)
             .then((response) => {
                 const sortedResponse = response.sort(
-                    (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase()) // 忽略大小写排序
+                    (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase()) // Case-insensitive sorting
                 )
                 setGroupList(sortedResponse)
             })
             .catch((error) => console.log(error.response))
     }
-    // 组选择改变时
+    // Handle group selection change
     const handleGroupChange = (group: string) => {
         setGroup(group)
-        setErrors((prevErrors) => ({ ...prevErrors, group: '' })) // 清除组错误
+        setErrors((prevErrors) => ({ ...prevErrors, group: '' })) // Clear group error
 
-        // 调用API获取该组的资源列表
+        // Call API to get the resource list of this group
         agent.Delete.getResource(subscription, group)
             .then((response) => {
-                // 提取出所有资源的 ID（即键），形成一个字符串数组
+                // Extract all resource IDs (keys) and form a string array
                 const resourceList = Object.keys(response)
 
-                // 保存资源列表（字符串数组）
+                // Save the resource list (string array)
                 setResourceList(resourceList)
             })
             .catch((error) => {
                 console.log(error.response)
-                setResourceList([]) // 清空资源列表
+                setResourceList([]) // Clear the resource list
             })
     }
     const handleInputChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const value = event.target.value // 从事件中获取值
+        const value = event.target.value // Get value from the event
 
         switch (field) {
             case 'group':
@@ -107,11 +107,11 @@ const InsertPage: React.FC = () => {
                 break
             case 'name':
                 setName(value)
-                setErrors((prevErrors) => ({ ...prevErrors, name: '' })) // 清除名称错误
+                setErrors((prevErrors) => ({ ...prevErrors, name: '' })) // Clear name error
                 break
             case 'quantity':
                 setQuantity(value)
-                setErrors((prevErrors) => ({ ...prevErrors, quantity: '' })) // 清除数量错误
+                setErrors((prevErrors) => ({ ...prevErrors, quantity: '' })) // Clear quantity error
                 break
             default:
                 break
@@ -160,7 +160,7 @@ const InsertPage: React.FC = () => {
                         <Autocomplete
                             options={groupList}
                             value={group}
-                            onChange={(_, value) => handleGroupChange(value as string)} // 第二个参数是选定值
+                            onChange={(_, value) => handleGroupChange(value as string)} // The second parameter is the selected value
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
@@ -178,12 +178,12 @@ const InsertPage: React.FC = () => {
                             select
                             label="Name"
                             value={name}
-                            onChange={handleInputChange('name')} // 使用通用方法
+                            onChange={handleInputChange('name')} // Using a generic method
                             variant="outlined"
                             error={!!errors.name}
                             helperText={errors.name}
                             fullWidth
-                            disabled={loading || !group} // 只有选择了group后才能选择name
+                            disabled={loading || !group} // Only enable name selection after selecting a group
                         >
                             {resourceList.map((item) => (
                                 <MenuItem key={item} value={item}>
@@ -196,12 +196,12 @@ const InsertPage: React.FC = () => {
                         <TextField
                             label="Quantity"
                             value={quantity}
-                            onChange={handleInputChange('quantity')} // 使用通用方法
+                            onChange={handleInputChange('quantity')} // Using a generic method
                             variant="outlined"
                             error={!!errors.quantity}
                             helperText={errors.quantity}
                             fullWidth
-                            disabled={loading || !name} // 只有选择了name后才能输入quantity
+                            disabled={loading || !name} // Only enable quantity input after selecting a name
                         ></TextField>
                     </FormControl>
                 </Box>

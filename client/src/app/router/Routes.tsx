@@ -14,11 +14,9 @@ import InsertPage from '@/pages/other/insert/InsertPage'
 import MedianPage from '@/pages/other/median/MedianPage'
 import GroupPage from '@/pages/delete/group/GroupPage'
 import Signal from '@/pages/other/signalR/Signal'
-import LoginPage from '@/pages/login/LoginPage'
 import RegisterPage from '@/pages/login/RegisterPage'
 import RunBenchmark from '@/pages/create/perf/benchmark/RunBenchmark'
 import Statistics from '@/pages/create/perf/statistics/Statistics'
-import { Dashboard } from '@mui/icons-material'
 import DataDisplayPage from '@/pages/create/perf/data/Dashboard'
 
 export const router = createBrowserRouter([

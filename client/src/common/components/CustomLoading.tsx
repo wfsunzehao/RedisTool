@@ -1,52 +1,51 @@
-import React from 'react';
-import { Backdrop, Box, CircularProgress, Typography } from '@mui/material';
-import defaultImageUrl from '@/assets/images/loadingwic.png';
+import React from 'react'
+import { Backdrop, Box, CircularProgress, Typography } from '@mui/material'
+import defaultImageUrl from '@/assets/images/loadingwic.png'
 
 interface Props {
-  message?: string;
-  imageUrl?: string; // 可选的图片 URL
+    message?: string
+    imageUrl?: string // Optional image URL
 }
 
 export default function LoadingComponent({ message, imageUrl }: Props) {
-
-  return (
-    <Backdrop
-      open={true}
-      sx={{
-        backdropFilter: 'blur(1px)', // 背景模糊
-        backgroundColor: 'rgba(255, 255, 255, 0.5)', // 调整背景颜色和透明度
-        zIndex: (theme) => theme.zIndex.drawer + 1,
-      }}
-    >
-      <Box
-        sx={{
-          width: '100%',
-          height: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        {/* 图片 */}
-        {imageUrl || defaultImageUrl ? (
-          <Box
-            component="img"
-            src={imageUrl || defaultImageUrl}
-            alt="Loading"
+    return (
+        <Backdrop
+            open={true}
             sx={{
-              width: '600px', // 增加图片的宽度
-              height: '500px', // 增加图片的高度
-              marginBottom: 3, // 增加图片和文本之间的间距
-              borderRadius: '50%', // 使图片变成圆形
+                backdropFilter: 'blur(1px)', // Background blur
+                backgroundColor: 'rgba(255, 255, 255, 0.5)', // Adjust background color and opacity
+                zIndex: (theme) => theme.zIndex.drawer + 1,
             }}
-          />
-        ) : null}
-        <CircularProgress size={50}  sx={{ color:"white",marginBottom: 3 }} />
-        <Typography variant="h5" sx={{ mt: 4, color: 'black' }}>
-          {message}
-        </Typography>
-      </Box>
-    </Backdrop>
-  );
+        >
+            <Box
+                sx={{
+                    width: '100%',
+                    height: '100vh',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+            >
+                {/* Image */}
+                {imageUrl || defaultImageUrl ? (
+                    <Box
+                        component="img"
+                        src={imageUrl || defaultImageUrl}
+                        alt="Loading"
+                        sx={{
+                            width: '600px', // Increase image width
+                            height: '500px', // Increase image height
+                            marginBottom: 3, // Increase spacing between image and text
+                            borderRadius: '50%', // Make the image circular
+                        }}
+                    />
+                ) : null}
+                <CircularProgress size={50} sx={{ color: 'white', marginBottom: 3 }} />
+                <Typography variant="h5" sx={{ mt: 4, color: 'black' }}>
+                    {message}
+                </Typography>
+            </Box>
+        </Backdrop>
+    )
 }

@@ -1,15 +1,15 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { HubConnectionBuilder, HubConnection } from '@microsoft/signalr'
 
-// SignalContext 类型定义
+// Type definition for SignalContext
 interface SignalContextType {
     connection: HubConnection | null
-    randomObjects: { name: string; time: string; status: string }[] // 存储随机对象
+    randomObjects: { name: string; time: string; status: string }[] // Stores random objects
     isConnected: boolean
-    clearRandomObjects: () => void // 清除随机对象
-    sendRandomObjectManually: () => void // 手动请求随机对象
-    startTimerManually: () => void // 手动启动定时器
-    stopTimerManually: () => void // 手动停止定时器
+    clearRandomObjects: () => void // Clears random objects
+    sendRandomObjectManually: () => void // Sends a random object manually
+    startTimerManually: () => void // Starts the timer manually
+    stopTimerManually: () => void // Stops the timer manually
 }
 
 export const SignalContext = createContext<SignalContextType | undefined>(undefined)
@@ -24,12 +24,12 @@ export const SignalProvider: React.FC<SignalProviderProps> = ({ children }) => {
     const [isConnected, setIsConnected] = useState<boolean>(false)
 
     useEffect(() => {
-        // 创建并初始化 SignalR 连接
+        // Create and initialize SignalR connection
         const newConnection = new HubConnectionBuilder()
             .withUrl('https://localhost:7179/createHub', { withCredentials: true })
             .build()
 
-        // 启动连接
+        // Start the connection
         const startConnection = async () => {
             try {
                 await newConnection.start()
@@ -41,36 +41,36 @@ export const SignalProvider: React.FC<SignalProviderProps> = ({ children }) => {
             }
         }
 
-        // 连接关闭时，尝试重新连接
+        // Attempt to reconnect when the connection is lost
         newConnection.onclose(async (error) => {
             console.log('Connection lost, attempting to reconnect...', error)
             setIsConnected(false)
-            await startConnection() // 尝试重新连接
+            await startConnection() // Attempt to reconnect
         })
 
-        // 收到数据时，更新 randomObjects
+        // Update randomObjects when data is received
         newConnection.on('ReceiveRandomObject', (randomObject: { name: string; time: string; status: string }) => {
             console.log('Received random object:', randomObject)
             setRandomObjects((prevObjects) => [...prevObjects, randomObject])
         })
 
-        // 初始化连接
+        // Initialize the connection
         startConnection()
 
         setConnection(newConnection)
 
-        // 清理连接
+        // Clean up the connection
         return () => {
             newConnection.stop().catch((err) => console.error('Error stopping connection: ' + err))
         }
-    }, []) // 只在组件加载时初始化一次
+    }, []) // Initialize only once when the component is mounted
 
-    // 清空 randomObjects
+    // Clears randomObjects
     const clearRandomObjects = () => {
-        setRandomObjects([]) // 清空已接收的对象
+        setRandomObjects([]) // Clear the received objects
     }
 
-    // 手动发送请求
+    // Sends a request manually
     const sendRandomObjectManually = () => {
         if (connection && isConnected) {
             connection
@@ -84,7 +84,7 @@ export const SignalProvider: React.FC<SignalProviderProps> = ({ children }) => {
         }
     }
 
-    // 手动启动定时器
+    // Starts the timer manually
     const startTimerManually = () => {
         if (connection && isConnected) {
             connection
@@ -96,7 +96,7 @@ export const SignalProvider: React.FC<SignalProviderProps> = ({ children }) => {
         }
     }
 
-    // 手动停止定时器
+    // Stops the timer manually
     const stopTimerManually = () => {
         if (connection && isConnected) {
             connection

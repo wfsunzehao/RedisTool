@@ -23,7 +23,7 @@ interface NavPageProps {
     contentWidth?: string
     marginLeft?: string
     flexDirection?: 'row' | 'column'
-    unrestrictedChildren?: boolean // 新增属性：是否取消 children 的大小限制
+    unrestrictedChildren?: boolean // New property: whether to remove size restrictions for children
 }
 
 const NavPage: React.FC<NavPageProps> = ({
@@ -36,7 +36,7 @@ const NavPage: React.FC<NavPageProps> = ({
     contentWidth = '40%',
     marginLeft = '200px',
     flexDirection = 'column',
-    unrestrictedChildren = false, // 默认限制 children 大小
+    unrestrictedChildren = false, // Default to restrict children size
 }) => {
     const location = useLocation()
     const navigate = useNavigate()
@@ -45,7 +45,7 @@ const NavPage: React.FC<NavPageProps> = ({
 
     const [openStates, setOpenStates] = React.useState<Record<string, boolean>>({})
 
-    const unrestricted = ['/create/benchmark', '/create/statistics'].includes(location.pathname) //不限制宽度
+    const unrestricted = ['/create/benchmark', '/create/statistics'].includes(location.pathname) // No width restriction
 
     useEffect(() => {
         if (location.pathname === defaultPath.split('/').slice(0, -1).join('/')) {
@@ -61,7 +61,7 @@ const NavPage: React.FC<NavPageProps> = ({
 
     return (
         <Paper elevation={10} sx={{ height: '100vh', display: 'flex', border: '1px solid #ccc' }}>
-            {/* 左侧导航栏 */}
+            {/* Left sidebar */}
             <Box
                 sx={{
                     width: sidebarWidth,
@@ -76,7 +76,7 @@ const NavPage: React.FC<NavPageProps> = ({
                 <List>
                     {links.map(({ title, path, icon, subLinks }) => (
                         <React.Fragment key={title}>
-                            {/* 一级菜单 */}
+                            {/* Primary menu */}
                             <ListItemButton
                                 component={subLinks ? 'div' : Link}
                                 {...(subLinks ? {} : { to: path })}
@@ -97,7 +97,7 @@ const NavPage: React.FC<NavPageProps> = ({
                                 {subLinks && (openStates[title] ? <ExpandLess /> : <ExpandMore />)}
                             </ListItemButton>
 
-                            {/* 二级菜单 */}
+                            {/* Secondary menu */}
                             {subLinks && (
                                 <Collapse in={openStates[title]} timeout="auto" unmountOnExit>
                                     <List component="div" disablePadding>
@@ -108,7 +108,7 @@ const NavPage: React.FC<NavPageProps> = ({
                                                 to={subLink.path}
                                                 selected={isSelected(subLink.path)}
                                                 sx={{
-                                                    pl: 8, // 增加缩进
+                                                    pl: 8, // Increase indent
                                                     '&.Mui-selected': {
                                                         backgroundColor: theme.palette.action.hover,
                                                         '& .MuiListItemText-primary': {
@@ -121,7 +121,7 @@ const NavPage: React.FC<NavPageProps> = ({
                                                     },
                                                 }}
                                             >
-                                                {/* 数字图标 */}
+                                                {/* Number icon */}
                                                 <ListItemIcon>
                                                     <Box
                                                         sx={{
@@ -158,7 +158,7 @@ const NavPage: React.FC<NavPageProps> = ({
                 </List>
             </Box>
 
-            {/* 主要内容区域 */}
+            {/* Main content area */}
             <Box
                 sx={{
                     flex: 1,
@@ -171,7 +171,7 @@ const NavPage: React.FC<NavPageProps> = ({
             >
                 <Box
                     sx={{
-                        width: unrestricted ? '100%' : contentWidth, // 动态调整宽度,
+                        width: unrestricted ? '100%' : contentWidth, // Dynamically adjust width
                         padding: '20px',
                         flexGrow: unrestricted ? 1 : 0,
                     }}
@@ -196,8 +196,8 @@ const NavPage: React.FC<NavPageProps> = ({
                 {children && (
                     <Box
                         sx={{
-                            width: unrestrictedChildren ? 'auto' : childrenWidth, // 动态控制宽度
-                            flexGrow: unrestrictedChildren ? 1 : 0, // 若不限制宽度则允许弹性增长
+                            width: unrestrictedChildren ? 'auto' : childrenWidth, // Dynamically control width
+                            flexGrow: unrestrictedChildren ? 1 : 0, // Allow flexible growth if no restriction
                             padding: '20px',
                             marginLeft: '20px',
                         }}

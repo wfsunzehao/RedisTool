@@ -2,19 +2,20 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
+}
 
 .about-section {
-    background-image: url('../../../public/images/bg1.jpg'); /* 替换为你的背景图路径 */
+    background-image: url('../../../public/images/bg1.jpg'); /* Replace with your background image path */
     background-size: cover;
     background-position: center;
-    height: 60vh; /* 根据需要调整高度 */
+    height: 60vh; /* Adjust height as needed */
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     padding: 20px;
-  }
+}
+
 .cards-section {
     display: flex;
     justify-content: center;
@@ -23,27 +24,24 @@
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.5s ease, transform 0.5s ease;
-  }
-  
-  .cards-section.visible {
+}
+
+.cards-section.visible {
     opacity: 1;
     transform: translateY(0);
-  }
-  
-  .card {
+}
+
+.card {
     /* background: white; */
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     margin: 10px;
     padding: 20px;
-    width: 300px; /* 根据需要调整 */
+    width: 300px; /* Adjust as needed */
     text-align: center;
     transition: transform 0.3s ease;
-  }
-  
-  .card:hover {
+}
+
+.card:hover {
     transform: translateY(-5px);
-  }
-  
-  
-  
+}

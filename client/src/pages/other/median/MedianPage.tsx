@@ -8,12 +8,12 @@ const MedianPage: React.FC = () => {
     const [folderPath, setFolderPath] = useState<string>('D:\\Tests\\Alt\\Latency') // Default path
     const [loading, setLoading] = useState<boolean>(false)
 
-    // 处理路径输入框的变化
+    // Handle changes in the folder path input field
     const handleFolderPathChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setFolderPath(event.target.value)
     }
 
-    // 提交表单
+    // Submit the form
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault()
 
@@ -31,7 +31,7 @@ const MedianPage: React.FC = () => {
             if (willSubmit) {
                 setLoading(true)
 
-                // 将文件夹路径传递给后端，使用 fetch 来获取 Excel 文件
+                // Send the folder path to the backend using fetch to get the Excel file
                 fetch('https://localhost:7179/api/Median/sendMedianJson', {
                     method: 'POST',
                     headers: {
@@ -41,14 +41,14 @@ const MedianPage: React.FC = () => {
                 })
                     .then((response) => {
                         if (response.ok) {
-                            // 返回的是 Excel 文件内容
+                            // The response contains the Excel file content
                             return response.blob()
                         } else {
                             throw new Error('Unable to generate report')
                         }
                     })
                     .then((blob) => {
-                        // 创建 Blob URL
+                        // Create a Blob URL
                         const downloadUrl = URL.createObjectURL(blob)
                         const link = document.createElement('a')
                         link.href = downloadUrl

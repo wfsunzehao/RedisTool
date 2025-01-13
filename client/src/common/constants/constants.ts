@@ -2,7 +2,7 @@ import { Box, createTheme, Theme } from '@mui/material'
 import { Button, keyframes, ListItem, ListItemText, Paper, styled } from '@mui/material'
 import md5 from 'md5'
 
-//订阅列表
+// Subscription list
 export const subscriptionList = [
     {
         value: '1e57c478-0901-4c02-8d35-49db234b78d2',
@@ -17,35 +17,38 @@ export const subscriptionList = [
         label: 'CacheTeam - Redis Perf and Stress Resources',
     },
 ]
-//case列表
+
+// Test case list
 export const BVTTestCaseNames = [
     'FlushBladeTest',
     'DataAccessConfigurationBladeTest',
     'OverviewBladeTest',
     'AccessKeysBladeTest',
     'AdvancedSettingsBladeTest',
-    'RebootBladeTest', //Need multiple shards
+    'RebootBladeTest', // Need multiple shards
     'ScaleBladeTest',
     'ClusterSizeBladeTest',
-    'DataPersistenceBladeTest-NotPremium', //NotPremium
+    'DataPersistenceBladeTest-NotPremium', // NotPremium
     'DataPersistenceBladeTest-Premium',
     'ManagedIdentityBladeTest',
     'ScheduleUpdatesBladeTest',
-    'GeoreplicationBladeTest', //Need two caches
+    'GeoreplicationBladeTest', // Need two caches
     'VirtualNetworkBladeTest',
-    //"PrivateEndpointBladeTest", //Could not be create
+    //"PrivateEndpointBladeTest", // Could not be created
     'FirewallBladeTest',
     'PropertiesBladeTest',
     'Import-ExportBladeTest',
     'PortalOwnedBladeTest',
     'LocalizationTest',
 ]
-//case列表
+
+// Test case list for manual tests
 export const ManualTestCaseNames = ['8672', '8659', '8673']
+
 export const user = {
-    avatar: `https://www.gravatar.com/avatar/${md5('v-xinzhang6@microsoft.com')}?d=identicon`, // d=identicon 代表如果没有找到对应的头像，会返回一个默认的图标头像
-    username: 'Zhang Xin', // 用户名
-    email: 'v-xinzhang6@microsoft.com', // 用户邮箱
+    avatar: `https://www.gravatar.com/avatar/${md5('v-xinzhang6@microsoft.com')}?d=identicon`, // d=identicon means if no matching avatar is found, it will return a default icon avatar
+    username: 'Zhang Xin', // Username
+    email: 'v-xinzhang6@microsoft.com', // User email
 }
 
 export const Overlay = styled(Box)({
@@ -54,28 +57,29 @@ export const Overlay = styled(Box)({
     left: 0,
     width: '100%',
     height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // 半透明黑色
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 1000, // 确保覆盖在其他元素之上
+    zIndex: 1000, // Ensure it overlays other elements
 })
-// constants.ts
+
+// Constants.ts
 
 export const loginTextStyles = {
     ml: 2,
-    color: (theme: Theme) => theme.palette.common.white, // 使用 theme 动态设置颜色
-    fontWeight: 'bold', // 加粗
-    fontSize: '1rem', // 字体大小
-    //textTransform: 'uppercase', // 转换为大写
-    letterSpacing: 1.0, // 字母间距
-    textAlign: 'center', // 居中对齐
-    //backgroundColor: 'rgba(0, 0, 0, 0.3)', // 背景透明色
-    padding: '5px 15px', // 内边距
-    borderRadius: '20px', // 圆角
+    color: (theme: Theme) => theme.palette.common.white, // Use theme to dynamically set color
+    fontWeight: 'bold', // Bold text
+    fontSize: '1rem', // Font size
+    // textTransform: 'uppercase', // Convert to uppercase
+    letterSpacing: 1.0, // Letter spacing
+    textAlign: 'center', // Center align text
+    // backgroundColor: 'rgba(0, 0, 0, 0.3)', // Transparent background color
+    padding: '5px 15px', // Padding
+    borderRadius: '20px', // Rounded corners
 }
 
-// 创建主题
+// Create theme
 export const theme = createTheme({
     palette: {
         primary: {
@@ -111,7 +115,7 @@ const slideInAnimation = keyframes`
   }
 `
 
-// 创建点击动画
+// Create click animation
 const clickAnimation = keyframes`
   0% {
     transform: scale(1);

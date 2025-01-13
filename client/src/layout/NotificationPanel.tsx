@@ -3,16 +3,16 @@ import { Box, Typography, List, ListItem, IconButton, Card, CardContent } from '
 import CloseIcon from '@mui/icons-material/Close'
 import { useTheme } from '@mui/material/styles'
 
-// 消息面板的 props
+// Props for the notification panel
 interface NotificationPanelProps {
     messages: { title: string; content: string }[]
     onClose: () => void
 }
 
 const NotificationPanel: React.FC<NotificationPanelProps> = ({ messages, onClose }) => {
-    const theme = useTheme() // 获取当前主题
+    const theme = useTheme() // Get the current theme
 
-    // 判断当前主题模式，如果是暗黑模式，则使用白色字体，否则使用黑色字体
+    // Determine the text color based on the theme mode (dark mode uses white text, otherwise black)
     const textColor = theme.palette.mode === 'dark' ? 'white' : 'black'
     const contentColor = theme.palette.mode === 'dark' ? 'gray' : 'text.secondary'
 
@@ -34,7 +34,7 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({ messages, onClose
                 transition: 'background-color 0.3s ease-in-out, color 0.3s ease-in-out',
             }}
         >
-            {/* 标题栏 */}
+            {/* Header */}
             <Box
                 sx={{
                     display: 'flex',
@@ -52,7 +52,7 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({ messages, onClose
                     <CloseIcon />
                 </IconButton>
             </Box>
-            {/* 消息列表 */}
+            {/* Message List */}
             <Box
                 sx={{
                     flex: 1,
@@ -92,7 +92,7 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({ messages, onClose
                                         bgcolor:
                                             theme.palette.mode === 'dark' ? 'background.default' : 'background.paper',
                                         '&:hover': {
-                                            boxShadow: 6, // hover效果：增加阴影
+                                            boxShadow: 6, // Hover effect: increase shadow
                                         },
                                     }}
                                 >
@@ -101,7 +101,7 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({ messages, onClose
                                             sx={{
                                                 color: theme.palette.mode === 'dark' ? 'white' : 'primary.main',
                                                 fontWeight: 'bold',
-                                                fontSize: '1.3rem', // 更大字号
+                                                fontSize: '1.3rem', // Larger font size
                                                 marginBottom: 0.5,
                                                 letterSpacing: '0.5px',
                                             }}
@@ -111,7 +111,7 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({ messages, onClose
                                         <Typography
                                             sx={{
                                                 color: contentColor,
-                                                fontSize: '1rem', // 适度减少字号
+                                                fontSize: '1rem', // Slightly smaller font size
                                                 fontWeight: 400,
                                                 lineHeight: 1.6,
                                                 letterSpacing: '0.3px',
