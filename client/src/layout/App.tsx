@@ -7,7 +7,7 @@ import { useTheme } from '../app/context/ThemeContext'
 import { darkTheme, lightTheme } from './theme'
 import Header from './Header'
 import { SignalProvider } from '../app/context/SignalContext'
-import { AuthProvider } from '../app/context/AuthContext' // 引入 AuthProvider
+import { AuthProvider } from '../app/context/AuthContext' // Introduce AuthProvider
 import { MessageProvider } from '@/app/context/MessageContext'
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
 
     return (
         <AuthProvider>
-            {/* 将 AuthProvider 包裹在其他 provider 上面 */}
+            {/* Wrapping AuthProvider around other providers */}
             <SignalProvider>
                 <MessageProvider>
                     <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>

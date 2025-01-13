@@ -34,7 +34,7 @@ const midLinks = [
 ]
 
 const navStyles = (theme: any) => ({
-    color: theme.palette.mode === 'dark' ? '#fff' : 'inherit', // 黑暗模式下为白色
+    color: theme.palette.mode === 'dark' ? '#fff' : 'inherit', // White in dark mode
     textDecoration: 'none',
     typography: 'h6',
     marginRight: '20px',
@@ -43,7 +43,7 @@ const navStyles = (theme: any) => ({
     },
     '&.active': {
         fontWeight: 'bold',
-        color: theme.palette.mode === 'dark' ? '#90caf9' : '#033c67', // 根据模式调整选中状态颜色
+        color: theme.palette.mode === 'dark' ? '#90caf9' : '#033c67', // Adjust selected state color based on mode
     },
 })
 
@@ -56,17 +56,17 @@ const fixedMessages = [
 const getHeaderStyles2 = (isDarkMode: boolean) => {
     return {
         backgroundColor: isDarkMode
-            ? '#333333' // 黑暗模式
-            : '#1976d2', // 亮色模式
+            ? '#333333' // Dark mode
+            : '#1976d2', // Light mode
     }
 }
 
 const getLogoFilter2 = () => {
-    // 主页时，Logo总是使用反色滤镜
+    // The logo always uses an inverted filter on the homepage
 
-    // 非主页时，根据黑暗模式决定是否使用反色滤镜
-    return 'invert(100%) sepia(100%) saturate(0%) hue-rotate(180deg)' // 黑暗模式使用反色滤镜
-    // 亮色模式不使用滤镜
+    // On non-homepages, decide whether to use an inverted filter based on dark mode
+    return 'invert(100%) sepia(100%) saturate(0%) hue-rotate(180deg)' // Use inverted filter in dark mode
+    // Do not use filter in light mode
 }
 
 export default function Header() {
@@ -83,7 +83,7 @@ export default function Header() {
     const [isNotificationOpen, setIsNotificationOpen] = useState(false)
 
     const handleChatIconClick = () => {
-        setIsNotificationOpen((prev) => !prev) // 切换打开或关闭状态
+        setIsNotificationOpen((prev) => !prev) // Toggle open or close state
     }
 
     const handleNotificationClose = () => {
@@ -96,7 +96,7 @@ export default function Header() {
 
     const openLogoutMenu = Boolean(logoutAnchorEl)
 
-    // 获取头部的样式
+    // Get the styles for the header
     const headerStyles = getHeaderStyles2(isDarkMode)
     const logoFilter = getLogoFilter2()
     const handleAzureClick = () => {
@@ -113,7 +113,7 @@ export default function Header() {
         <AppBar position="sticky" sx={{ ...headerStyles, boxShadow: 2 }}>
             {/*, paddingLeft: "40px", paddingRight: "40px"  */}
             <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 2 }}>
-                {/* 左侧 Logo 和主题切换 */}
+                {/* Left: Logo and theme switch */}
                 <Box display="flex" alignItems="center">
                     <NavLink to="/" style={{ display: 'flex', alignItems: 'center' }}>
                         <img
@@ -122,25 +122,25 @@ export default function Header() {
                             style={{
                                 maxHeight: 40,
                                 objectFit: 'contain',
-                                filter: logoFilter, // 应用过滤逻辑
+                                filter: logoFilter, // Apply filter logic
                             }}
                         />
                     </NavLink>
-                    <Box sx={{ mx: 1 }} /> {/* 添加统一间距 */}
+                    <Box sx={{ mx: 1 }} /> {/* Add uniform spacing */}
                     <Tooltip
                         title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
                         slotProps={{
                             tooltip: {
                                 sx: {
-                                    backdropFilter: 'blur(10px)', // 背景模糊效果
-                                    color: 'rgba(112, 114, 145, 0.9)', // 文字颜色
-                                    fontSize: '14px', // 文字大小
-                                    fontWeight: 'bold', // 文字加粗
-                                    borderRadius: 4, // 更圆滑的边框
-                                    padding: '8px 12px', // 内边距
-                                    border: `1px solid rgba(247, 240, 240, 0)`, // 完全透明边框
-                                    backgroundColor: 'rgba(247, 240, 240, 0)', // 完全透明背景
-                                    // boxShadow: "0px 4px 10px rgba(245, 241, 241, 0.80)", // 可选：阴影（如果需要阴影，可以开启）
+                                    backdropFilter: 'blur(10px)', // Background blur effect
+                                    color: 'rgba(112, 114, 145, 0.9)', // Text color
+                                    fontSize: '14px', // Text size
+                                    fontWeight: 'bold', // Bold text
+                                    borderRadius: 4, // Rounded border
+                                    padding: '8px 12px', // Padding
+                                    border: `1px solid rgba(247, 240, 240, 0)`, // Fully transparent border
+                                    backgroundColor: 'rgba(247, 240, 240, 0)', // Fully transparent background
+                                    // Optional: Shadow (enable if needed)
                                 },
                             },
                         }}
@@ -154,21 +154,20 @@ export default function Header() {
                             }
                         />
                     </Tooltip>
-                    <Box sx={{ mx: 1 }} /> {/* 添加统一间距 */}
+                    <Box sx={{ mx: 1 }} /> {/* Add uniform spacing */}
                     <Tooltip
                         title="Open Azure Portal"
                         slotProps={{
                             tooltip: {
                                 sx: {
-                                    backdropFilter: 'blur(10px)', // 背景模糊效果
-                                    color: 'rgba(112, 114, 145, 0.9)', // 文字颜色
-                                    fontSize: '14px', // 文字大小
-                                    fontWeight: 'bold', // 文字加粗
-                                    borderRadius: 4, // 更圆滑的边框
-                                    padding: '8px 12px', // 内边距
-                                    border: `1px solid rgba(247, 240, 240, 0)`, // 完全透明边框
-                                    backgroundColor: 'rgba(247, 240, 240, 0)', // 完全透明背景
-                                    // boxShadow: "0px 4px 10px rgba(245, 241, 241, 0.80)", // 可选：阴影（如果需要阴影，可以开启）
+                                    backdropFilter: 'blur(10px)',
+                                    color: 'rgba(112, 114, 145, 0.9)',
+                                    fontSize: '14px',
+                                    fontWeight: 'bold',
+                                    borderRadius: 4,
+                                    padding: '8px 12px',
+                                    border: `1px solid rgba(247, 240, 240, 0)`,
+                                    backgroundColor: 'rgba(247, 240, 240, 0)',
                                 },
                             },
                         }}
@@ -177,46 +176,40 @@ export default function Header() {
                             size="large"
                             edge="end"
                             color="inherit"
-                            onClick={handleAzureClick} // 点击时跳转到 Azure
+                            onClick={handleAzureClick} // Click to jump to Azure
                         >
                             <IconBrandAzure stroke={2} />
                         </IconButton>
                     </Tooltip>
-                    <Box sx={{ mx: 1 }} /> {/* 添加统一间距 */}
+                    <Box sx={{ mx: 1 }} /> {/* Add uniform spacing */}
                     <Tooltip
                         title="View More Links"
                         slotProps={{
                             tooltip: {
                                 sx: {
-                                    backdropFilter: 'blur(10px)', // 背景模糊效果
-                                    color: 'rgba(112, 114, 145, 0.9)', // 文字颜色
-                                    fontSize: '14px', // 文字大小
-                                    fontWeight: 'bold', // 文字加粗
-                                    borderRadius: 4, // 更圆滑的边框
-                                    padding: '8px 12px', // 内边距
-                                    border: `1px solid rgba(247, 240, 240, 0)`, // 完全透明边框
-                                    backgroundColor: 'rgba(247, 240, 240, 0)', // 完全透明背景
-                                    // boxShadow: "0px 4px 10px rgba(245, 241, 241, 0.80)", // 可选：阴影（如果需要阴影，可以开启）
+                                    backdropFilter: 'blur(10px)',
+                                    color: 'rgba(112, 114, 145, 0.9)',
+                                    fontSize: '14px',
+                                    fontWeight: 'bold',
+                                    borderRadius: 4,
+                                    padding: '8px 12px',
+                                    border: `1px solid rgba(247, 240, 240, 0)`,
+                                    backgroundColor: 'rgba(247, 240, 240, 0)',
                                 },
                             },
                         }}
                     >
-                        <IconButton
-                            size="large"
-                            edge="end"
-                            color="inherit"
-                            onClick={handleLinksClick} // 点击时跳转到相关链接
-                        >
+                        <IconButton size="large" edge="end" color="inherit" onClick={handleLinksClick}>
                             <IconLinkPlus stroke={2} />
                         </IconButton>
                     </Tooltip>
                 </Box>
 
-                {/* 右侧用户头像和消息图标 */}
+                {/* Right: User avatar and message icon */}
                 <Box display="flex" alignItems="center">
                     {isLoggedIn && (
                         <>
-                            {/* 中间导航链接，仅在用户登录时显示 */}
+                            {/* Middle navigation links, displayed only when the user is logged in */}
                             <List sx={{ display: 'flex', padding: 0 }}>
                                 {midLinks.map(({ title, path }) => (
                                     <ListItem
@@ -224,7 +217,7 @@ export default function Header() {
                                         to={path}
                                         key={path}
                                         sx={navStyles}
-                                        onClick={(event) => event.stopPropagation()} // 阻止冒泡
+                                        onClick={(event) => event.stopPropagation()} // Prevent bubbling
                                     >
                                         {title}
                                     </ListItem>
@@ -233,7 +226,7 @@ export default function Header() {
                         </>
                     )}
 
-                    {/* 分割线 */}
+                    {/* Divider */}
                     <Divider orientation="vertical" sx={{ height: '25px', marginRight: 2 }} />
 
                     {isLoggedIn && (
@@ -257,7 +250,7 @@ export default function Header() {
                                 sx={{
                                     fontWeight: '500',
                                     fontSize: '16px',
-                                    color: headerStyles, // 使用动态颜色
+                                    color: headerStyles,
                                     marginRight: '10px',
                                 }}
                             >
