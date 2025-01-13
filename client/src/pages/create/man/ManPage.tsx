@@ -13,25 +13,25 @@ const ManPage: React.FC = () => {
     const [loading, setLoading] = useState(false)
     const [errors, setErrors] = useState<{ [key: string]: string }>({})
 
-    // 初始化加载
+    // Initialize load
     useEffect(() => {
         setSubscription('1e57c478-0901-4c02-8d35-49db234b78d2')
         fetchGroupList('1e57c478-0901-4c02-8d35-49db234b78d2')
     }, [])
 
-    // 获取组列表
+    // Get group list
     const fetchGroupList = (subscriptionId: string) => {
         agent.Create.getGroup(subscriptionId)
             .then((response) => {
                 const sortedResponse = response.sort(
-                    (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase()) // 忽略大小写排序
+                    (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase()) // Sort ignoring case
                 )
                 setGroupList(sortedResponse)
             })
             .catch((error) => console.error(error))
     }
 
-    // 表单校验
+    // Form validation
     const checkForm = () => {
         const newErrors: { [key: string]: string } = {}
         if (!subscription) newErrors.subscription = 'Subscription cannot be empty'
@@ -41,7 +41,7 @@ const ManPage: React.FC = () => {
         return Object.keys(newErrors).length === 0
     }
 
-    // 提交处理
+    // Submit handler
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault()
         if (!checkForm()) return
@@ -94,7 +94,7 @@ const ManPage: React.FC = () => {
 
                     <FormControl sx={{ width: '100%', marginTop: 2 }}>
                         <Autocomplete
-                            freeSolo={false} // 禁止自定义输入
+                            freeSolo={false} // Disallow custom input
                             options={groupList}
                             value={group}
                             onChange={(_e, newValue) => setGroup(newValue || '')}

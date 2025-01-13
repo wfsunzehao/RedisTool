@@ -42,20 +42,20 @@ const BvtPage: React.FC = () => {
     const [isNotificationOpen, setIsNotificationOpen] = useState(false)
     const { addMessage } = useMessageContext()
 
-    // 初始化
+    // Initialize
     useEffect(() => {
         setSubscription('1e57c478-0901-4c02-8d35-49db234b78d2')
         agent.Create.getGroup('1e57c478-0901-4c02-8d35-49db234b78d2')
             .then((response) => {
                 const sortedResponse = response.sort(
-                    (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase()) // 忽略大小写排序
+                    (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase()) // Sort ignoring case
                 )
                 setGroupList(sortedResponse)
             })
             .catch((error) => console.log(error.response))
     }, [])
 
-    // 校验表单
+    // Validate form
     const CheckForm = () => {
         const newErrors: { [key: string]: string } = {}
         if (!subscription) newErrors.subscription = 'Subscription cannot be empty'
@@ -103,7 +103,7 @@ const BvtPage: React.FC = () => {
         agent.Create.getGroup(subscriptionid)
             .then((response) => {
                 const sortedResponse = response.sort(
-                    (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase()) // 忽略大小写排序
+                    (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase()) // Sort ignoring case
                 )
                 setGroupList(sortedResponse)
             })

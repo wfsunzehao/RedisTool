@@ -5,7 +5,7 @@ import { IconAlt } from '@tabler/icons-react'
 import { IconDeviceDesktopAnalytics } from '@tabler/icons-react'
 import NavPage from '../../layout/NavPage'
 
-// 左侧导航栏的链接
+// Link to the left navigation bar
 const leftLinks = [
     { title: 'Manual', path: '/create/man', icon: <IconHandClick stroke={2} /> },
     { title: 'BVT', path: '/create/bvt', icon: <IconDeviceDesktopAnalytics stroke={2} /> },
@@ -22,7 +22,7 @@ const leftLinks = [
     { title: 'ALT', path: '/create/alt', icon: <IconAlt stroke={2} /> },
 ]
 
-// 主页面组件
+// Homepage component
 const CreatePage: React.FC = () => {
     return (
         <NavPage

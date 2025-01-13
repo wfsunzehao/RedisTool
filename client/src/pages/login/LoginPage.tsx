@@ -35,7 +35,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onClose }) => {
             setIsLoggedIn(true)
             setSuccess('Login successful!')
 
-            // 延迟2秒关闭弹窗
+            // Close the pop -up window for 2 seconds
             setTimeout(() => {
                 onClose()
             }, 1500)

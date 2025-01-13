@@ -13,7 +13,7 @@ const SignUpForm: React.FC = () => {
     const { setCurrentForm } = useAuth()
 
     const handleClose = () => {
-        setCurrentForm('login') // 关闭表单
+        setCurrentForm('login') // Close the form
     }
     const handleRegister = async (event: React.FormEvent) => {
         event.preventDefault()
@@ -43,7 +43,7 @@ const SignUpForm: React.FC = () => {
         >
             <Box
                 sx={{
-                    position: 'relative', // 设置相对定位，确保 X 按钮相对这个容器定位
+                    position: 'relative', // Set relative positioning to ensure X button is positioned relative to this container
                     width: 500,
                     padding: 5,
                     backgroundColor: 'rgba(255, 255, 255, 0.5)',
@@ -175,7 +175,7 @@ const SignUpForm: React.FC = () => {
                     <Button
                         fullWidth
                         variant="contained"
-                        type="submit" // 添加这个属性以使表单提交
+                        type="submit" // Add this attribute to submit the form
                         sx={{
                             backgroundColor: theme.palette.primary.main,
                             color: theme.palette.primary.contrastText,
