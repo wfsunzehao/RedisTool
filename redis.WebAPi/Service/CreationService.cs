@@ -254,8 +254,6 @@ namespace redis.WebAPi.Service
             string formattedDate = DateTime.Now.ToString("MMdd");
 
             _subscriptionResourceService.SetSubscriptionResource(redisReques.Subscription);
-             // 设置 ZonalAllocationPolicy 为 Automatic
-            ZonalAllocationPolicy zonalPolicy = ZonalAllocationPolicy.Automatic;
             if (redisReques.Sku == "All" || redisReques.Sku == "Premium")
             {
                 for (int i = 1; i <= 5; i++)
@@ -266,10 +264,8 @@ namespace redis.WebAPi.Service
                         RegionName = RegionName_1,
                         SkuCapacity = i,
                         NonSSL = true,
-                        // 将 ZonalAllocationPolicy 设置为 Automatic
-                        ZonalAllocationPolicy = zonalPolicy
                     };
-                    //开启zone
+
                     _redisCollection.CreateCache("Verifyperformance-P" + i + "-EUS2E" + "-" + formattedDate, opt, redisReques.Group);
                 }
             }
@@ -283,7 +279,7 @@ namespace redis.WebAPi.Service
                         RegionName = RegionName_1,
                         SkuCapacity = i,
                         NonSSL = true,
-                        ZonalAllocationPolicy = zonalPolicy
+
                     };
                     _redisCollection.CreateCache("Verifyperformance-C" + i + "-EUS2E-Standard" + "-" + formattedDate, opt, redisReques.Group);
                 }

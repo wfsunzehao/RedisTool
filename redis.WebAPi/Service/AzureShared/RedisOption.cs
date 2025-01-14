@@ -37,7 +37,6 @@ namespace redis.WebAPi.Service.AzureShared
 
         public IList<string> Tag { get; set; }
 
-        public ZonalAllocationPolicy ZonalAllocationPolicy { get; set; }
 
     }
 }
