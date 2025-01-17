@@ -16,7 +16,7 @@ interface LinkItem {
 interface NavPageProps {
     links: LinkItem[]
     defaultPath: string
-    alertMessage: string
+    alertMessage?: string
     children?: React.ReactNode
     sidebarWidth?: string
     childrenWidth?: string
@@ -176,23 +176,27 @@ const NavPage: React.FC<NavPageProps> = ({
                         flexGrow: unrestricted ? 1 : 0,
                     }}
                 >
-                    <Alert
-                        severity="warning"
-                        sx={{
-                            width: '600px',
-                            margin: '0 auto',
-                            marginBottom: '16px',
-                            '& .MuiAlert-message': {
-                                fontFamily:
-                                    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                                fontSize: '15px',
-                            },
-                        }}
-                    >
-                        {alertMessage}
-                    </Alert>
+                    {/* Only show the alert box when alertMessage is passed in */}
+                    {alertMessage && (
+                        <Alert
+                            severity="warning"
+                            sx={{
+                                width: '600px',
+                                margin: '0 auto',
+                                marginBottom: '16px',
+                                '& .MuiAlert-message': {
+                                    fontFamily:
+                                        '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                                    fontSize: '15px',
+                                },
+                            }}
+                        >
+                            {alertMessage}
+                        </Alert>
+                    )}
                     <Outlet />
                 </Box>
+
                 {children && (
                     <Box
                         sx={{

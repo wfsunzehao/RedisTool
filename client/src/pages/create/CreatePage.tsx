@@ -24,13 +24,7 @@ const leftLinks = [
 
 // Homepage component
 const CreatePage: React.FC = () => {
-    return (
-        <NavPage
-            links={leftLinks}
-            defaultPath="/create/man"
-            alertMessage="Customers recommend manually creating the cache for bvt tests"
-        />
-    )
+    return <NavPage links={leftLinks} defaultPath="/create/man" />
 }
 
 export default CreatePage

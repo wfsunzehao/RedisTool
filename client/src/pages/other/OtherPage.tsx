@@ -1,21 +1,15 @@
-import React from 'react';
-import NavPage from '../../layout/NavPage';
-import { IconDatabaseImport } from '@tabler/icons-react';
-import { IconStackMiddle } from '@tabler/icons-react';
+import React from 'react'
+import NavPage from '../../layout/NavPage'
+import { IconDatabaseImport } from '@tabler/icons-react'
+import { IconStackMiddle } from '@tabler/icons-react'
 
 const leftLinks = [
-  { title: 'Insert Data', path: '/more/insert', icon: <IconDatabaseImport stroke={2} /> },
-  { title: 'Find Median', path: '/more/median', icon: <IconStackMiddle stroke={2} /> },
-];
+    { title: 'Insert Data', path: '/more/insert', icon: <IconDatabaseImport stroke={2} /> },
+    { title: 'Find Median', path: '/more/median', icon: <IconStackMiddle stroke={2} /> },
+]
 
 const OtherPage: React.FC = () => {
-  return (
-    <NavPage 
-      links={leftLinks} 
-      defaultPath="/more/insert" 
-      alertMessage="You can insert it now!" 
-    />
-  );
-};
+    return <NavPage links={leftLinks} defaultPath="/more/insert" />
+}
 
-export default OtherPage;
+export default OtherPage
