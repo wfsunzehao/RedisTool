@@ -66,3 +66,12 @@
   border-radius: 6px;
   padding: 10px;
 }
+.table-row-light {
+  background: #fafafa;
+}
+.table-row-dark {
+  background: #f5f5f5;
+}
+.ant-table-row:hover {
+  background: #e6f7ff !important;
+}

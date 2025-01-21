@@ -15,10 +15,7 @@ import FormGroup from '@mui/material/FormGroup'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import { useNavigate } from 'react-router-dom'
-import LoadingComponent from '@/common/components/CustomLoading'
-import { Overlay } from '@/common/constants/constants'
 import agent from '@/app/api/agent'
-import axios from 'axios'
 
 const RunBenchmark = () => {
     const [name, setname] = React.useState('')
