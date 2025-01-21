@@ -76,6 +76,11 @@ const DataDisplayPage: React.FC = () => {
       key: 'totalDuration',
     },
     {
+      title: 'TimeUnit',
+      dataIndex: 'timeUnit',
+      key: 'timeUnit',
+    },
+    {
       title: 'Gets RPS',
       dataIndex: 'getsRPS',
       key: 'getsRPS',
@@ -110,6 +115,7 @@ const DataDisplayPage: React.FC = () => {
   return (
     <div style={{ padding: '10px', textAlign: 'center' }}>
       {/* 标题 */}
+      
       <Title level={2} style={{ marginBottom: '20px' }}>
         Data Visualization
       </Title>
@@ -155,10 +161,6 @@ const DataDisplayPage: React.FC = () => {
                 }
                 return null;
               }}
-            />
-            <Legend
-            verticalAlign="top"
-            formatter={() => 'cacheName'}
             />
             <Line type="monotone" dataKey="getsRPS" stroke="#82ca9d" strokeWidth={2} dot={{ r: 5 }} />
           </LineChart>
