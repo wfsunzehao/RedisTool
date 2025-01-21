@@ -11,12 +11,12 @@ interface LinkItem {
     icon?: JSX.Element
     subLinks?: LinkItem[]
     count?: number
+    alert?: string
 }
 
 interface NavPageProps {
     links: LinkItem[]
     defaultPath: string
-    alertMessage?: string
     children?: React.ReactNode
     sidebarWidth?: string
     childrenWidth?: string
@@ -29,7 +29,6 @@ interface NavPageProps {
 const NavPage: React.FC<NavPageProps> = ({
     links,
     defaultPath,
-    alertMessage,
     children,
     sidebarWidth = '250px',
     childrenWidth = '30%',
@@ -52,6 +51,22 @@ const NavPage: React.FC<NavPageProps> = ({
             navigate(defaultPath)
         }
     }, [location.pathname, navigate, defaultPath])
+
+    const currentAlert = React.useMemo(() => {
+        for (const link of links) {
+            if (location.pathname.startsWith(link.path) && link.alert) {
+                return link.alert
+            }
+            if (link.subLinks) {
+                for (const subLink of link.subLinks) {
+                    if (location.pathname.startsWith(subLink.path) && subLink.alert) {
+                        return subLink.alert
+                    }
+                }
+            }
+        }
+        return null
+    }, [links, location.pathname])
 
     const isSelected = (path: string) => currentTab === path.split('/').pop()
 
@@ -177,7 +192,7 @@ const NavPage: React.FC<NavPageProps> = ({
                     }}
                 >
                     {/* Only show the alert box when alertMessage is passed in */}
-                    {alertMessage && (
+                    {currentAlert ? (
                         <Alert
                             severity="warning"
                             sx={{
@@ -191,8 +206,17 @@ const NavPage: React.FC<NavPageProps> = ({
                                 },
                             }}
                         >
-                            {alertMessage}
+                            {currentAlert}
                         </Alert>
+                    ) : (
+                        <Box
+                            sx={{
+                                width: '600px',
+                                margin: '0 auto',
+                                height: '16px',
+                                visibility: 'hidden',
+                            }}
+                        />
                     )}
                     <Outlet />
                 </Box>
