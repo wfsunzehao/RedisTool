@@ -172,7 +172,19 @@ const RunBenchmark = () => {
                                     variant="outlined"
                                     type="number"
                                     value={clients}
-                                    onChange={(e) => setclients(e.target.value)}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        // 确保输入的值为正数且大于0
+                                        if (!value || (parseInt(value) > 0 && /^\d+$/.test(value))) {
+                                            setclients(value);
+                                        }
+                                    }}
+                                    error={clients !== '' && parseInt(clients) <= 0} // 显示错误状态
+                                    helperText={
+                                        clients !== '' && parseInt(clients) <= 0
+                                            ? 'Clients must be a positive number greater than 0.'
+                                            : ''
+                                    } // 错误提示
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -182,7 +194,19 @@ const RunBenchmark = () => {
                                     variant="outlined"
                                     type="number"
                                     value={threads}
-                                    onChange={(e) => setthreads(e.target.value)}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        // 确保输入的值为正数且大于0
+                                        if (!value || (parseInt(value) > 0 && /^\d+$/.test(value))) {
+                                            setthreads(value);
+                                        }
+                                    }}
+                                    error={threads !== '' && parseInt(threads) <= 0} // 显示错误状态
+                                    helperText={
+                                        threads !== '' && parseInt(threads) <= 0
+                                            ? 'threads must be a positive number greater than 0.'
+                                            : ''
+                                    } // 错误提示
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -192,7 +216,19 @@ const RunBenchmark = () => {
                                     variant="outlined"
                                     type="number"
                                     value={size}
-                                    onChange={(e) => setsize(e.target.value)}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        // 确保输入的值为正数且大于0
+                                        if (!value || (parseInt(value) > 0 && /^\d+$/.test(value))) {
+                                            setsize(value);
+                                        }
+                                    }}
+                                    error={size !== '' && parseInt(size) <= 0} // 显示错误状态
+                                    helperText={
+                                        size !== '' && parseInt(size) <= 0
+                                            ? 'threads must be a positive number greater than 0.'
+                                            : ''
+                                    } // 错误提示
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -202,7 +238,19 @@ const RunBenchmark = () => {
                                     variant="outlined"
                                     type="number"
                                     value={requests}
-                                    onChange={(e) => setrequests(e.target.value)}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        // 确保输入的值为正数且大于0
+                                        if (!value || (parseInt(value) > 0 && /^\d+$/.test(value))) {
+                                            setrequests(value);
+                                        }
+                                    }}
+                                    error={requests !== '' && parseInt(requests) <= 0} // 显示错误状态
+                                    helperText={
+                                        requests !== '' && parseInt(requests) <= 0
+                                            ? 'threads must be a positive number greater than 0.'
+                                            : ''
+                                    } // 错误提示
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -212,7 +260,19 @@ const RunBenchmark = () => {
                                     variant="outlined"
                                     type="number"
                                     value={pipeline}
-                                    onChange={(e) => setpipeline(e.target.value)}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        // 确保输入的值为正数且大于0
+                                        if (!value || (parseInt(value) > 0 && /^\d+$/.test(value))) {
+                                            setpipeline(value);
+                                        }
+                                    }}
+                                    error={pipeline !== '' && parseInt(pipeline) <= 0} // 显示错误状态
+                                    helperText={
+                                        pipeline !== '' && parseInt(pipeline) <= 0
+                                            ? 'threads must be a positive number greater than 0.'
+                                            : ''
+                                    } // 错误提示
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -222,7 +282,19 @@ const RunBenchmark = () => {
                                     variant="outlined"
                                     type="number"
                                     value={times}
-                                    onChange={(e) => settimes(e.target.value)}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        // 确保输入的值为正数且大于0
+                                        if (!value || (parseInt(value) > 0 && /^\d+$/.test(value))) {
+                                            settimes(value);
+                                        }
+                                    }}
+                                    error={times !== '' && parseInt(times) <= 0} // 显示错误状态
+                                    helperText={
+                                        times !== '' && parseInt(times) <= 0
+                                            ? 'threads must be a positive number greater than 0.'
+                                            : ''
+                                    } // 错误提示
                                 />
                             </Grid>
                         </Grid>
