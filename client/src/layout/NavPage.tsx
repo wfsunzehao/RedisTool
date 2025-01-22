@@ -75,7 +75,14 @@ const NavPage: React.FC<NavPageProps> = ({
     }
 
     return (
-        <Paper elevation={10} sx={{ height: '100vh', display: 'flex', border: '1px solid #ccc' }}>
+        <Paper
+            elevation={10}
+            sx={{
+                minHeight: '100vh',
+                display: 'flex',
+                border: '1px solid #ccc',
+            }}
+        >
             {/* Left sidebar */}
             <Box
                 sx={{
