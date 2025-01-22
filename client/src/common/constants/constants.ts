@@ -1,3 +1,4 @@
+import { Box, Button, keyframes, ListItem, ListItemText, Paper, styled } from '@mui/material'
 import md5 from 'md5'
 
 // Subscription list
@@ -48,3 +49,16 @@ export const user = {
     username: 'Zhang Xin', // Username
     email: 'v-xinzhang6@microsoft.com', // User email
 }
+
+export const Overlay = styled(Box)({
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000, // Ensure it overlays other elements
+})

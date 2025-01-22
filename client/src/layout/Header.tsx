@@ -23,9 +23,10 @@ import { Switch } from '@nextui-org/react'
 
 import { IconBrandAzure } from '@tabler/icons-react'
 import { IconSun, IconMoon, IconLinkPlus } from '@tabler/icons-react'
-import { loginTextStyles, user } from '../common/constants/constants'
+import { user } from '../common/constants/constants'
 import MessageHandler from './MessageHandler'
 import LogoutMenu from './LogoutMenu'
+import { loginTextStyles } from '@/common/styles/loginTextStyles'
 
 const midLinks = [
     { title: 'Tests', path: '/create' },
