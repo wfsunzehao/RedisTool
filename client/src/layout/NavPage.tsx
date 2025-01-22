@@ -192,32 +192,37 @@ const NavPage: React.FC<NavPageProps> = ({
                     }}
                 >
                     {/* Only show the alert box when alertMessage is passed in */}
-                    {currentAlert ? (
-                        <Alert
-                            severity="warning"
-                            sx={{
-                                width: '600px',
-                                margin: '0 auto',
-                                marginBottom: '16px',
-                                '& .MuiAlert-message': {
-                                    fontFamily:
-                                        '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                                    fontSize: '15px',
-                                },
-                            }}
-                        >
-                            {currentAlert}
-                        </Alert>
-                    ) : (
-                        <Box
-                            sx={{
-                                width: '600px',
-                                margin: '0 auto',
-                                height: '16px',
-                                visibility: 'hidden',
-                            }}
-                        />
-                    )}
+                    <Box
+                        sx={{
+                            width: '600px',
+                            margin: '0 auto',
+                            marginBottom: '16px',
+                            height: '60px', // 设置固定高度，确保显示/隐藏时占位一致
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        {currentAlert ? (
+                            <Alert
+                                severity="warning"
+                                sx={{
+                                    width: '100%',
+                                    '& .MuiAlert-message': {
+                                        fontFamily:
+                                            '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                                        fontSize: '15px',
+                                    },
+                                }}
+                            >
+                                {currentAlert}
+                            </Alert>
+                        ) : (
+                            // 用空内容占位
+                            <Box sx={{ visibility: 'hidden', width: '100%', height: '100%' }} />
+                        )}
+                    </Box>
+
                     <Outlet />
                 </Box>
 

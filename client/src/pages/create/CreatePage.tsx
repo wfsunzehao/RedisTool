@@ -8,7 +8,12 @@ import NavPage from '../../layout/NavPage'
 // Link to the left navigation bar
 const leftLinks = [
     { title: 'Manual', path: '/create/man', icon: <IconHandClick stroke={2} /> },
-    { title: 'BVT', path: '/create/bvt', icon: <IconDeviceDesktopAnalytics stroke={2} /> },
+    {
+        title: 'BVT',
+        path: '/create/bvt',
+        alert: 'Customers recommend manually creating the cache for bvt tests',
+        icon: <IconDeviceDesktopAnalytics stroke={2} />,
+    },
     {
         title: 'Performance',
         path: '/create/perf',
