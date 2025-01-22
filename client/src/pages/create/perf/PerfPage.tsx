@@ -119,16 +119,19 @@ const PerfPage: React.FC = () => {
                     </FormControl>
 
                     <FormControl fullWidth>
-                        <InputLabel id="cacheName-label">Cache Name</InputLabel>
-                        <Select
-                            labelId="cacheName-label"
-                            value={cacheName}
-                            onChange={(e) => setCacheName(e.target.value)}
-                        >
-                            <MenuItem value={cacheName}>{cacheName}</MenuItem>
-                        </Select>
-                    </FormControl>
-
+                    <TextField
+                        select
+                        label="Cache Name"
+                        value={cacheName}
+                        onChange={(e) => setCacheName(e.target.value)}
+                        error={!!errors.cacheName} // 如果有错误信息，显示错误状态
+                        helperText={errors.cacheName} // 显示错误提示信息
+                    >
+                        <MenuItem key={cacheName} value={cacheName}>
+                            {cacheName}
+                        </MenuItem>
+                    </TextField>
+                </FormControl>
                     <FormControl fullWidth>
                         <Autocomplete
                             options={groupList}
@@ -154,15 +157,27 @@ const PerfPage: React.FC = () => {
                     </FormControl>
 
                     <FormControl fullWidth>
-                        <InputLabel id="sku-label">SKU</InputLabel>
-                        <Select labelId="sku-label" value={sku} onChange={(e) => setSku(e.target.value)}>
-                            <MenuItem value="All">All</MenuItem>
-                            <MenuItem value="Basic">Basic</MenuItem>
-                            <MenuItem value="Standard">Standard</MenuItem>
-                            <MenuItem value="Premium">Premium</MenuItem>
-                        </Select>
+                        <TextField
+                            select
+                            label="SKU"
+                            value={sku}
+                            onChange={(e) => setSku(e.target.value)}
+                            error={!!errors.sku} // 如果有错误信息，显示错误状态
+                            helperText={errors.sku} // 显示错误提示信息
+                        >
+                            {[
+                                { value: 'All', label: 'All' },
+                                { value: 'Basic', label: 'Basic' },
+                                { value: 'Standard', label: 'Standard' },
+                                { value: 'Premium', label: 'Premium' },
+                            ].map((option) => (
+                                <MenuItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </MenuItem>
+                            ))}
+                        </TextField>
                     </FormControl>
-
+                    
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
                         <Button sx={{ mx: 1, textTransform: 'none' }} type="submit" variant="contained" color="primary">
                             Submit

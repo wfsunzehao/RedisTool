@@ -77,8 +77,6 @@ const RunBenchmark = () => {
         //常规做法
     }
 
-
-
     return (
         <div>
             <Container maxWidth="xl">
@@ -107,7 +105,7 @@ const RunBenchmark = () => {
                     >
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
-                                <InputLabel>Name of the test</InputLabel>
+                                <InputLabel>Cache Name(e.g : Verifyperformance-P5-EUS2E.redis.cache.windows.net )</InputLabel>
                                 <TextField
                                     fullWidth
                                     variant="outlined"
@@ -128,8 +126,8 @@ const RunBenchmark = () => {
                                 <InputLabel>Region</InputLabel>
                                 <Select fullWidth value={region} onChange={handleChange}>
                                     <MenuItem value="East US 2 EUAP">East US 2 EUAP</MenuItem>
-                                    <MenuItem value="Central US EUAP">Central US EUAP</MenuItem>
-                                    <MenuItem value="East US">East US</MenuItem>
+                                    {/* <MenuItem value="Central US EUAP">Central US EUAP</MenuItem>
+                                    <MenuItem value="East US">East US</MenuItem> */}
                                 </Select>
                             </Grid>
                             <Grid item xs={12}>
@@ -172,15 +170,17 @@ const RunBenchmark = () => {
                                 <TextField
                                     fullWidth
                                     variant="outlined"
+                                    type="number"
                                     value={clients}
                                     onChange={(e) => setclients(e.target.value)}
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <InputLabel>Threads</InputLabel>
+                                <InputLabel>Threads(-t)</InputLabel>
                                 <TextField
                                     fullWidth
                                     variant="outlined"
+                                    type="number"
                                     value={threads}
                                     onChange={(e) => setthreads(e.target.value)}
                                 />
@@ -190,6 +190,7 @@ const RunBenchmark = () => {
                                 <TextField
                                     fullWidth
                                     variant="outlined"
+                                    type="number"
                                     value={size}
                                     onChange={(e) => setsize(e.target.value)}
                                 />
@@ -199,6 +200,7 @@ const RunBenchmark = () => {
                                 <TextField
                                     fullWidth
                                     variant="outlined"
+                                    type="number"
                                     value={requests}
                                     onChange={(e) => setrequests(e.target.value)}
                                 />
@@ -208,6 +210,7 @@ const RunBenchmark = () => {
                                 <TextField
                                     fullWidth
                                     variant="outlined"
+                                    type="number"
                                     value={pipeline}
                                     onChange={(e) => setpipeline(e.target.value)}
                                 />
@@ -217,6 +220,7 @@ const RunBenchmark = () => {
                                 <TextField
                                     fullWidth
                                     variant="outlined"
+                                    type="number"
                                     value={times}
                                     onChange={(e) => settimes(e.target.value)}
                                 />
@@ -224,14 +228,54 @@ const RunBenchmark = () => {
                         </Grid>
                     </Box>
                 </Box>
-                <Box mt={3} display="flex" justifyContent="space-between">
-                    <Button variant="contained" onClick={handleSubmit}>
-                        Submit
-                    </Button>
-                    <Button variant="contained" onClick={handleRoutine}>
-                        Routine
-                    </Button>
-                </Box>
+                <Box mt={3} display="flex" justifyContent="center" gap={80}>
+                <Button
+                    variant="contained"
+                    onClick={handleSubmit}
+                    sx={{
+                        background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                        color: 'white',
+                        fontWeight: 'bold',
+                        borderRadius: '20px',
+                        padding: '10px 60px',
+                        textTransform: 'none',
+                        '&:hover': {
+                            background: 'linear-gradient(45deg, #1565c0, #7b1fa2)',
+                        },
+                    }}
+                >
+                    Submit
+                </Button>
+                <Button
+                    variant="outlined"
+                    onClick={() => {
+                        setname('');
+                        setregion('East US 2 EUAP');
+                        setdescription('');
+                        setprimary('');
+                        setclients('');
+                        setsize('');
+                        setrequests('');
+                        settimes('10');
+                        setpipeline('');
+                        setthreads('');
+                    }}
+                    sx={{
+                        color: '#1976d2',
+                        fontWeight: 'bold',
+                        borderRadius: '20px',
+                        border: '2px solid #1976d2',
+                        padding: '10px 60px',
+                        textTransform: 'none',
+                        '&:hover': {
+                            borderColor: '#1565c0',
+                            color: '#1565c0',
+                        },
+                    }}
+                >
+                    Cancel
+                </Button>
+            </Box>
             </Container>
         </div>
     )
