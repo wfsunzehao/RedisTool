@@ -59,6 +59,8 @@ namespace redis.WebAPi.Service.AzureShared
                 // 3. Start a new benchmark
                 UpdateRunningTestsCount(runningTests - 1); // Update the number of concurrent requests in the file to reduce by 1
                 await _benchmarkService.UpdateBenchmarkStatus(name, 3);
+                
+                //todo:ÅÐ¶ÏSSLºÍNo-SSL
                 var runCommandInput = new RunCommandInput("RunShellScript")
                 {
                     Script = {

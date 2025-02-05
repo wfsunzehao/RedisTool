@@ -22,6 +22,7 @@ const leftLinks = [
             { title: 'Create', path: '/create/perf', count: 1 },
             { title: 'Benchmark', path: '/create/benchmark', count: 2 },
             { title: 'Statistics', path: '/create/statistics', count: 3 },
+            { title: 'Routine', path: '/create/routine', count: 4 },
         ],
     },
     { title: 'ALT', path: '/create/alt', icon: <IconAlt stroke={2} /> },
