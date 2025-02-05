@@ -129,6 +129,7 @@ const LoginForm: React.FC = () => {
                         variant="outlined"
                         sx={{
                             '& .MuiOutlinedInput-root': {
+                                backgroundColor: theme.palette.mode === 'dark' ? '#121212' : 'transparent', // Only change background in dark mode
                                 '& fieldset': {
                                     borderColor: theme.palette.grey[400],
                                 },
@@ -139,11 +140,12 @@ const LoginForm: React.FC = () => {
                                     borderColor: theme.palette.primary.dark,
                                 },
                                 '& input': {
-                                    color: theme.palette.text.primary, // Input text color
+                                    color: theme.palette.mode === 'dark' ? '#fff' : 'inherit', // White text in dark mode, default in light mode
+                                    caretColor: theme.palette.mode === 'dark' ? '#fff' : 'inherit', // Cursor color follows mode
                                 },
                             },
                             '& .MuiInputLabel-root': {
-                                color: theme.palette.mode === 'dark' ? '#000000' : theme.palette.text.secondary, // Label text color
+                                color: theme.palette.mode === 'dark' ? '#fff' : 'inherit', // White label text in dark mode, default in light mode
                             },
                         }}
                         disabled={isLoading}
@@ -160,6 +162,7 @@ const LoginForm: React.FC = () => {
                         variant="outlined"
                         sx={{
                             '& .MuiOutlinedInput-root': {
+                                backgroundColor: theme.palette.mode === 'dark' ? '#121212' : 'transparent', // Only change background in dark mode
                                 '& fieldset': {
                                     borderColor: theme.palette.grey[400],
                                 },
@@ -170,11 +173,12 @@ const LoginForm: React.FC = () => {
                                     borderColor: theme.palette.primary.dark,
                                 },
                                 '& input': {
-                                    color: theme.palette.text.primary, // Input text color
+                                    color: theme.palette.mode === 'dark' ? '#fff' : 'inherit', // White text in dark mode, default in light mode
+                                    caretColor: theme.palette.mode === 'dark' ? '#fff' : 'inherit', // Cursor color follows mode
                                 },
                             },
                             '& .MuiInputLabel-root': {
-                                color: theme.palette.mode === 'dark' ? '#000000' : theme.palette.text.secondary, // label Text color
+                                color: theme.palette.mode === 'dark' ? '#fff' : 'inherit', // White label text in dark mode, default in light mode
                             },
                         }}
                         disabled={isLoading}

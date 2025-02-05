@@ -61,7 +61,10 @@ const ForgotPasswordForm: React.FC = () => {
                     sx={{
                         textAlign: 'center',
                         fontWeight: 'bold',
-                        background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                        background:
+                            theme.palette.mode === 'dark'
+                                ? '#000000'
+                                : `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
                     }}
@@ -74,14 +77,14 @@ const ForgotPasswordForm: React.FC = () => {
                     gutterBottom
                     sx={{
                         textAlign: 'center',
-                        color: theme.palette.text.secondary,
+                        color: theme.palette.mode === 'dark' ? '#000000' : theme.palette.text.secondary,
                     }}
                 >
-                    Remember your password?{' '}
+                    You have an account.{' '}
                     <Link
                         href="#"
                         sx={{
-                            color: theme.palette.primary.main,
+                            color: theme.palette.mode === 'dark' ? '#000000' : theme.palette.primary.main,
                             fontWeight: 'bold',
                             textDecoration: 'none',
                             '&:hover': {
@@ -103,7 +106,7 @@ const ForgotPasswordForm: React.FC = () => {
                         margin="normal"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        type="Username"
+                        type="text"
                         variant="outlined"
                         InputProps={{
                             style: { color: theme.palette.text.primary },
@@ -113,6 +116,7 @@ const ForgotPasswordForm: React.FC = () => {
                         }}
                         sx={{
                             '& .MuiOutlinedInput-root': {
+                                backgroundColor: theme.palette.mode === 'dark' ? '#121212' : 'transparent',
                                 '& fieldset': {
                                     borderColor: theme.palette.grey[400],
                                 },
@@ -143,6 +147,7 @@ const ForgotPasswordForm: React.FC = () => {
                         }}
                         sx={{
                             '& .MuiOutlinedInput-root': {
+                                backgroundColor: theme.palette.mode === 'dark' ? '#121212' : 'transparent',
                                 '& fieldset': {
                                     borderColor: theme.palette.grey[400],
                                 },
@@ -173,6 +178,7 @@ const ForgotPasswordForm: React.FC = () => {
                         }}
                         sx={{
                             '& .MuiOutlinedInput-root': {
+                                backgroundColor: theme.palette.mode === 'dark' ? '#121212' : 'transparent',
                                 '& fieldset': {
                                     borderColor: theme.palette.grey[400],
                                 },
@@ -233,12 +239,12 @@ const ForgotPasswordForm: React.FC = () => {
                     variant="body1"
                     sx={{
                         marginTop: 3,
-                        color: theme.palette.text.secondary,
+                        color: theme.palette.mode === 'dark' ? '#000000' : theme.palette.text.secondary,
                         textAlign: 'center',
                         fontStyle: 'italic',
                     }}
                 >
-                    Enter your <strong>email</strong> to reset password
+                    Enter <strong>email</strong> and <strong>password</strong>
                 </Typography>
             </Box>
         </Box>

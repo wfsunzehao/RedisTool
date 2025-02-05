@@ -1,20 +1,21 @@
 import React, { useState } from 'react'
-import { Box, TextField, Button, Typography, useTheme, IconButton, CircularProgress } from '@mui/material'
-import CloseIcon from '@mui/icons-material/Close'
+import { Box, TextField, Button, Typography, Link, useTheme, CircularProgress } from '@mui/material'
 import { useAuth } from '@/app/context/AuthContext'
 import agent from '@/app/api/agent'
 
 const SignUpForm: React.FC = () => {
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-    const [isLoading, setIsLoading] = useState(false)
-    const [message, setMessage] = useState<{ type: 'error' | 'success'; content: string } | null>(null)
     const theme = useTheme()
     const { setCurrentForm } = useAuth()
+    const [isLoading, setIsLoading] = useState(false)
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [message, setMessage] = useState<{ type: 'error' | 'success'; content: string } | null>(null)
 
-    const handleClose = () => {
-        setCurrentForm('login') // Close the form
+    const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+        event.preventDefault() // Blocking Default Jump Behaviors
+        setCurrentForm('login')
     }
+
     const handleRegister = async (event: React.FormEvent) => {
         event.preventDefault()
         setIsLoading(true)
@@ -43,7 +44,6 @@ const SignUpForm: React.FC = () => {
         >
             <Box
                 sx={{
-                    position: 'relative', // Set relative positioning to ensure X button is positioned relative to this container
                     width: 500,
                     padding: 5,
                     backgroundColor: 'rgba(255, 255, 255, 0.5)',
@@ -54,29 +54,16 @@ const SignUpForm: React.FC = () => {
                     border: `1px solid rgba(255, 255, 255, 0.6)`,
                 }}
             >
-                {/* Close button */}
-                <IconButton
-                    onClick={handleClose}
-                    sx={{
-                        position: 'absolute',
-                        top: '8px',
-                        right: '8px',
-                        color: theme.palette.text.primary,
-                        '&:hover': {
-                            color: theme.palette.error.main,
-                        },
-                    }}
-                >
-                    <CloseIcon />
-                </IconButton>
-
                 <Typography
                     variant="h3"
                     gutterBottom
                     sx={{
                         textAlign: 'center',
                         fontWeight: 'bold',
-                        background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                        background:
+                            theme.palette.mode === 'dark'
+                                ? '#000000'
+                                : `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
                     }}
@@ -84,14 +71,40 @@ const SignUpForm: React.FC = () => {
                     Sign Up
                 </Typography>
 
+                <Typography
+                    variant="body1"
+                    gutterBottom
+                    sx={{
+                        textAlign: 'center',
+                        color: theme.palette.mode === 'dark' ? '#000000' : theme.palette.text.secondary,
+                    }}
+                >
+                    Already have an account?{' '}
+                    <Link
+                        href="#"
+                        sx={{
+                            color: theme.palette.mode === 'dark' ? '#000000' : theme.palette.primary.main,
+                            fontWeight: 'bold',
+                            textDecoration: 'none',
+                            '&:hover': {
+                                textDecoration: 'underline',
+                                color: theme.palette.primary.dark,
+                            },
+                        }}
+                        onClick={handleClick}
+                    >
+                        Sign in
+                    </Link>
+                </Typography>
+
                 <form onSubmit={handleRegister}>
                     <TextField
                         required
                         fullWidth
                         label="Username"
+                        margin="normal"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        margin="normal"
                         type="text"
                         variant="outlined"
                         InputProps={{
@@ -102,6 +115,7 @@ const SignUpForm: React.FC = () => {
                         }}
                         sx={{
                             '& .MuiOutlinedInput-root': {
+                                backgroundColor: theme.palette.mode === 'dark' ? '#121212' : 'transparent',
                                 '& fieldset': {
                                     borderColor: theme.palette.grey[400],
                                 },
@@ -115,6 +129,7 @@ const SignUpForm: React.FC = () => {
                         }}
                         disabled={isLoading}
                     />
+
                     <TextField
                         fullWidth
                         required
@@ -131,6 +146,7 @@ const SignUpForm: React.FC = () => {
                         }}
                         sx={{
                             '& .MuiOutlinedInput-root': {
+                                backgroundColor: theme.palette.mode === 'dark' ? '#121212' : 'transparent',
                                 '& fieldset': {
                                     borderColor: theme.palette.grey[400],
                                 },
@@ -145,37 +161,11 @@ const SignUpForm: React.FC = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         disabled={isLoading}
                     />
-                    {/* <TextField
-                        fullWidth
-                        label="Confirm Password"
-                        margin="normal"
-                        type="password"
-                        variant="outlined"
-                        InputProps={{
-                            style: { color: theme.palette.text.primary },
-                        }}
-                        InputLabelProps={{
-                            style: { color: theme.palette.text.secondary },
-                        }}
-                        sx={{
-                            '& .MuiOutlinedInput-root': {
-                                '& fieldset': {
-                                    borderColor: theme.palette.grey[400],
-                                },
-                                '&:hover fieldset': {
-                                    borderColor: theme.palette.primary.main,
-                                },
-                                '&.Mui-focused fieldset': {
-                                    borderColor: theme.palette.primary.dark,
-                                },
-                            },
-                        }}
-                    /> */}
 
                     <Button
                         fullWidth
                         variant="contained"
-                        type="submit" // Add this attribute to submit the form
+                        type="submit"
                         sx={{
                             backgroundColor: theme.palette.primary.main,
                             color: theme.palette.primary.contrastText,
@@ -195,10 +185,11 @@ const SignUpForm: React.FC = () => {
                                 }}
                             />
                         ) : (
-                            'Sign up'
+                            'Sign Up'
                         )}
                     </Button>
                 </form>
+
                 {message && (
                     <Typography
                         variant="body2"
@@ -216,12 +207,12 @@ const SignUpForm: React.FC = () => {
                     variant="body1"
                     sx={{
                         marginTop: 3,
-                        color: theme.palette.text.secondary,
+                        color: theme.palette.mode === 'dark' ? '#000000' : theme.palette.text.secondary,
                         textAlign: 'center',
                         fontStyle: 'italic',
                     }}
                 >
-                    Enter <strong>Username</strong>, <strong>password</strong> and <strong>confirm password</strong>
+                    Enter <strong>Username</strong> and <strong>Password</strong>
                 </Typography>
             </Box>
         </Box>
