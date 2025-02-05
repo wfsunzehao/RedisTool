@@ -39,15 +39,15 @@ namespace redis.WebAPi.Service.AzureShared
                 // Check whether the VM is running
                 bool isRunning = statuses.Any(status => status.Code == "PowerState/running");
 
-                if (!isRunning)
-                {
-                    await vm1.Value.PowerOnAsync(WaitUntil.Completed);
-                    Console.WriteLine("The VM is being started");
-                }
-                else
-                {
-                    Console.WriteLine("The VM is already running");
-                }
+                //if (!isRunning)
+                //{
+                //    await vm1.Value.PowerOnAsync(WaitUntil.Completed);
+                //    Console.WriteLine("The VM is being started");
+                //}
+                //else
+                //{
+                //    Console.WriteLine("The VM is already running");
+                //}
                 // 2. Check that the number of concurrent requests does not exceed the maximum
                 int runningTests = GetRunningTestsCount();
 
