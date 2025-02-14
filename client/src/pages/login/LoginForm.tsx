@@ -240,7 +240,7 @@ const LoginForm: React.FC = () => {
                         fontStyle: 'italic',
                     }}
                 >
-                    Enter <strong>email</strong> and <strong>password</strong>
+                    Enter <strong>Username </strong> and <strong>password</strong>
                 </Typography>
             </Box>
         </Box>
