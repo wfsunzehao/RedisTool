@@ -24,7 +24,7 @@ namespace Benchmark_API.Controllers
 
         // Receive the front-end parameters, then put them into the database and invoke the VM operation
         [HttpPost]
-        public async Task<IActionResult> Post(RunBenchmarkData model)
+        public async Task<IActionResult> InvokeVMOperation(RunBenchmarkData model)
         {
             try
             {

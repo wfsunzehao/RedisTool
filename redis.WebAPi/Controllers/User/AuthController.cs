@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 using redis.WebAPi.Service;
 using redis.WebAPi.Filters;
+using Microsoft.AspNetCore.Authorization;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -88,6 +89,47 @@ public class AuthController : ControllerBase
 
         // Return success message
         return Ok(new { message = "User registered successfully." });
+    }
+
+    [HttpPost("reset-password")]
+    //[Authorize(Roles = "admin")] // Ensure only admin users can access
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest model)
+    {
+        // Validate input
+        if (string.IsNullOrEmpty(model.Username))
+        {
+            return BadRequest(new { message = "Username is required." });
+        }
+
+        if (string.IsNullOrEmpty(model.NewPassword))
+        {
+            return BadRequest(new { message = "New password is required." });
+        }
+
+        // Validate new password complexity
+        if (!IsValidPassword(model.NewPassword))
+        {
+            return BadRequest(new { message = "Password must be at least 8 characters long and contain both letters and numbers." });
+        }
+
+        // Find user by username
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == model.Username);
+        if (user == null)
+        {
+            return NotFound(new { message = "User not found." });
+        }
+
+        // Hash the new password
+        var (hash, salt) = PasswordHasher.HashPassword(model.NewPassword);
+
+        // Update the user's password
+        user.PasswordHash = hash;
+        user.Salt = salt;
+
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = "Password reset successfully." });
     }
 
     // Change password functionality
