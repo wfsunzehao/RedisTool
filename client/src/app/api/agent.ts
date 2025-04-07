@@ -85,7 +85,7 @@ const Delete = {
 
 const Other = {
     sendInsertJson: (body: object) => request.post(`/StackExchange/AddDataToRedis`, body),
-    sendMedianJson: (body: object) => request.post(`/Median/sendMedianJson`, body),
+    sendMedianJson: (body: object) => axios.post('/Median/sendMedianJson', body, { responseType: 'blob' }),
 }
 
 const Auth = {
@@ -103,6 +103,10 @@ const TestErrors = {
     getValidationError: () => request.get('buggy/validation-error'),
 }
 
+const SignalR = {
+    hubUrl: '/createHub',
+}
+
 const agent = {
     Company,
     Create,
@@ -110,6 +114,7 @@ const agent = {
     Other,
     Auth,
     TestErrors,
+    SignalR,
 }
 
 export default agent
