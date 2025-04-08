@@ -89,6 +89,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     }, [justLoggedOut, navigate])
 
+    useEffect(() => {
+        if (name) {
+            localStorage.setItem('username', name) // 存储到 localStorage
+        } else {
+            localStorage.removeItem('username') // 清除存储
+            setCurrentForm('login') // name 为空时，切换到 login
+        }
+    }, [name])
+
     return (
         <AuthContext.Provider
             value={{
