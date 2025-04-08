@@ -10,7 +10,8 @@ import CircleIcon from '@mui/icons-material/Circle';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import agent from '@/app/api/agent';
-import axios from 'axios';
+import { format } from 'date-fns';
+import { toZonedTime } from 'date-fns-tz';
 
 const vmList = [
     { name: 'P1,P2', status: 'on' },
@@ -103,12 +104,9 @@ const Routine = () => {
         }
 
         setLoading(true);
+        const quotedGroup = `"${group}"`;  // 确保这是一个带引号的字符串
         try {
-            await axios.post(
-                "https://localhost:7179/api/BenchmarkRun/InsertQCommandByGroupName",
-                JSON.stringify(group),
-                { headers: { "Content-Type": "application/json" } }
-            );
+            await agent.Create.InsertQCommandByGroupNameJson(JSON.stringify(group));  // 发送带引号的字符串
             showSnackbar("Insert successful, ready to execute!", "success");
         } catch (error) {
             console.error("Insert failed:", error);
@@ -121,9 +119,7 @@ const Routine = () => {
     const handleRunTasks = async () => {
         setLoading(true);
         try {
-            await axios.post("https://localhost:7179/api/BenchmarkRun/execute-tasks", {}, {
-                headers: { "Content-Type": "application/json" }
-            });
+            agent.Create.executetasksJson();
             showSnackbar("The execution request has been sent, please go to the Statistics page to check the running status", "info");
         } catch (error) {
             console.error("Run tasks failed:", error);
@@ -141,11 +137,10 @@ const Routine = () => {
 
         setLoading(true);
         try {
-            await axios.post(
-                "https://localhost:7179/api/BenchmarkRun/FinalDataTest",
-                selectedDate,
-                { headers: { "Content-Type": "application/json" } }
-            );
+            const newDate = new Date(selectedDate);
+            newDate.setDate(newDate.getDate() + 1);  // 增加一天
+
+            await agent.Create.FinalDataTestJson(newDate);
             showSnackbar("Processing is finished, you can download the results!", "success");
         } catch (error) {
             console.error("Fetch result failed:", error);
@@ -166,10 +161,9 @@ const Routine = () => {
         }
 
         try {
-            const response = await axios.get(
-                `https://localhost:7179/api/BenchmarkRun/GetBenchmarkData?date=${cacheDate}`,
-                { responseType: "blob" }
-            );
+            const response = await agent.Create.GetBenchmarkDataBlob(cacheDate, {
+                responseType: 'blob',  // 在这里设置 responseType 为 blob
+            });
 
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement("a");
