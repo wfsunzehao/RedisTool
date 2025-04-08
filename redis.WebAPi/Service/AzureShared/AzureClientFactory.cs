@@ -1,13 +1,8 @@
 ﻿using Azure.Core;
-using Azure.Core.Pipeline;
 using Azure.Identity;
 using Azure.ResourceManager;
-using Azure.ResourceManager.KeyVault;
-using Azure.ResourceManager.ManagedServiceIdentities;
 using Azure.ResourceManager.Redis;
 using Azure.ResourceManager.Resources;
-using redis.WebAPi.Service.IService;
-using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 
 namespace redis.WebAPi.Service.AzureShared
@@ -56,8 +51,7 @@ namespace redis.WebAPi.Service.AzureShared
                 );
             }
 
-            var sub = armClient.GetSubscriptionResource(new ResourceIdentifier("/subscriptions/" + "1e57c478-0901-4c02-8d35-49db234b78d2")); 
-           
+            var sub = armClient.GetSubscriptionResource(new ResourceIdentifier("/subscriptions/" + "1e57c478-0901-4c02-8d35-49db234b78d2"));
             return armClient;
         }
 
@@ -102,6 +96,12 @@ namespace redis.WebAPi.Service.AzureShared
 
             var armClient = new ArmClient(clientCertificateCredential, subscriptionId, GetArmClientOptions(armEnvironment));
             return Tuple.Create(armClient, (TokenCredential)clientCertificateCredential);
+        }
+
+        public ResourceGroupResource GetGroup(string groupName) 
+        {
+            var group = ArmClient.GetSubscriptionResource(new ResourceIdentifier("/subscriptions/" + "1e57c478-0901-4c02-8d35-49db234b78d2")).GetResourceGroup(groupName);
+            return group;
         }
 
         private static async Task<List<RedisResource>> GetAllRedisResourcesAsync(RedisCollection redisCollection)

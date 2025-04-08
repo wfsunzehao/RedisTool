@@ -34,7 +34,7 @@ const RunBenchmark = () => {
     const handleChange = (event: SelectChangeEvent) => {
         setregion(event.target.value as string)
     }
-
+    
     // 生成时间戳
     const generateTimeStamp = () => {
         const now = new Date();
@@ -52,7 +52,7 @@ const RunBenchmark = () => {
 
         const body = {
             name,
-            primary,
+            pw:primary,
             region,
             description,
             clients,
@@ -61,7 +61,7 @@ const RunBenchmark = () => {
             requests,
             pipeline,
             times,
-            timeStamp
+            // timeStamp
         }
     
         try {

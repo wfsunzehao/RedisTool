@@ -23,10 +23,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 // SignalR service
 builder.Services.AddSignalR();
+builder.Services.AddScoped<ConnectionVMService>();
 // Add CORS policy
 builder.Services.AddCors();
-// 注册 BenchmarkService
-builder.Services.AddScoped<BenchmarkService>();
 // JWT Authentication configuration
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -46,7 +45,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Configure database connection
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddDbContext<BenchmarkDbContext>(options =>
+builder.Services.AddDbContext<BenchmarkContent>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 // Using Autofac as a Dependency Injection Container
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
@@ -58,6 +57,8 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     containerBuilder.RegisterType<TimerService>().InstancePerLifetimeScope();
 
     // Register other services
+    //containerBuilder.RegisterType<BenchmarkQueueProcessor>().As<IHostedService>().InstancePerLifetimeScope();
+    containerBuilder.RegisterType<ConnectionVMService>().InstancePerDependency();
     containerBuilder.RegisterType<AzureClientFactory>().SingleInstance();
     containerBuilder.RegisterType<SubscriptionResourceService>().As<ISubscriptionResourceService>().SingleInstance();
     containerBuilder.RegisterType<RedisCollectionService>().As<IRedisCollection>().SingleInstance();
@@ -65,8 +66,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     containerBuilder.RegisterType<ResourceDeletionService>().As<IResourceDeletionService>().SingleInstance();
     containerBuilder.RegisterType<MedianService>().As<IMedianService>().SingleInstance();
     containerBuilder.RegisterType<CreationService>().As<ICreationService>().SingleInstance();
-    containerBuilder.RegisterType<ConnectionVMService>().As<IConnectionVMService>().SingleInstance();
-    containerBuilder.RegisterType<InsertBenchmarkService>().As<InsertBenchmarkService>().InstancePerDependency();
+    //containerBuilder.RegisterType<ConnectionVMService>().As<IConnectionVMService>().SingleInstance();
 });
 
 var app = builder.Build();
