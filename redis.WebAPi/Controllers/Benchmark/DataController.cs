@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using redis.WebAPi.Filters;
 using redis.WebAPi.Repository.AppDbContext;
 
 namespace Benchmark_API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [ServiceFilter(typeof(AuthFilter))]
     public class DataController : ControllerBase
     {
         private readonly BenchmarkContent _dbContext;

@@ -326,8 +326,8 @@ namespace redis.WebAPi.Service.AzureShared
             int count = values.Count;
             int mid = count / 2;
 
-            if (count % 2 == 0) 
-                return (values[mid - 1] + values[mid]) / 2.0;
+            if (count % 2 != 0) 
+                return values[mid + 1];
             else 
                 return values[mid];
         }
