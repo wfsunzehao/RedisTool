@@ -72,7 +72,27 @@ const Create = {
     sendPerfJson: (body: object) => request.post(`/Creation/CreatePerfCache`, body),
     sendAltJson: (body: object) => request.post(`/Creation/CreateAltCache`, body),
     sendBenchmarkRunJson: (body: object) => request.post('/BenchmarkRun/enqueue', body),
-    // getBenchmarkRunJson: () => request.get('/Parameters')
+    sendGetBenchmarkRequestData: () =>
+        request.get('/Data/GetBenchmarkRequestData')  // 使用 request.get 封装的 GET 请求
+        .then((response) => response)  // 返回响应
+        .catch((error) => {
+            console.error("Error fetching data:", error)
+            throw error  // 捕获并抛出错误
+        }),
+    InsertQCommandByGroupNameJson: (group: string) =>
+        axios.post(
+          'BenchmarkRun/InsertQCommandByGroupName',
+          group,
+          { headers: { "Content-Type": "application/json" } }  // 修正 Content-Type
+        ).then(responseBody),         
+    executetasksJson: () => request.post('BenchmarkRun/execute-tasks', {}),
+    FinalDataTestJson: (data: Date) => request.post('/BenchmarkRun/FinalDataTest', data),
+    GetBenchmarkDataBlob: (date: string, config: object = {}) =>
+        axios.get('BenchmarkRun/GetBenchmarkData', {
+            params: { date },
+            ...config,  // 将传入的 config 合并到默认配置中
+        }),
+            
 }
 
 const Delete = {
@@ -87,6 +107,7 @@ const Other = {
     sendInsertJson: (body: object) => request.post(`/StackExchange/AddDataToRedis`, body),
     sendMedianJson: (body: object) => axios.post('/Median/sendMedianJson', body, { responseType: 'blob' }),
 }
+
 
 const Auth = {
     login: (username: string, password: string) => request.post(`/Auth/login`, { username, password }),

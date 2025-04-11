@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 // Define the type for AuthContext
 interface AuthContextType {
@@ -12,6 +13,8 @@ interface AuthContextType {
     setRole: React.Dispatch<React.SetStateAction<'admin' | 'user'>>
     name: string
     setName: React.Dispatch<React.SetStateAction<string>>
+    justLoggedOut: boolean
+    setJustLoggedOut: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -22,15 +25,70 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [token, setToken] = useState<string | null>(localStorage.getItem('authToken'))
     const [currentForm, setCurrentForm] = useState<'login' | 'signup' | 'forgotPassword'>('login')
     const [role, setRole] = useState<'admin' | 'user'>('user') // Default role is a regular user
-    const [name, setName] = useState<string>(localStorage.getItem('username') || '') // 从 localStorage 读取 name
+    const [name, setName] = useState<string>(localStorage.getItem('username') || '') // 从 localStorage 读name
+    const [justLoggedOut, setJustLoggedOut] = useState<boolean>(false)
+    const navigate = useNavigate()
+
+    const logout = () => {
+        localStorage.removeItem('authToken')
+        localStorage.removeItem('username')
+        setToken(null)
+        setName('')
+        setIsLoggedIn(false)
+        setRole('user')
+        setCurrentForm('login')
+        setJustLoggedOut(true) // 标记为刚登出
+    }
 
     useEffect(() => {
         if (token) {
-            setIsLoggedIn(true) // If a token exists, set to logged in
+            try {
+                const payload = JSON.parse(atob(token.split('.')[1]))
+                const exp = payload.exp
+                const now = Math.floor(Date.now() / 1000)
+                if (exp && now >= exp) {
+                    console.warn('Token expired. Logging out.')
+                    logout()
+                } else {
+                    setIsLoggedIn(true)
+                }
+            } catch (err) {
+                console.error('Failed to decode token:', err)
+                logout()
+            }
+        }
+    }, [])
+
+    useEffect(() => {
+        let timer: NodeJS.Timeout | null = null
+        if (token) {
+            try {
+                const payload = JSON.parse(atob(token.split('.')[1]))
+                const exp = payload.exp
+                const now = Math.floor(Date.now() / 1000)
+                if (exp && now < exp) {
+                    const timeout = (exp - now) * 1000
+                    timer = setTimeout(() => {
+                        console.warn('Token expired (by timeout). Logging out.')
+                        logout()
+                    }, timeout)
+                }
+            } catch {
+                logout()
+            }
+        }
+        return () => {
+            if (timer) clearTimeout(timer)
         }
     }, [token])
 
-    // 监听 `name` 变化，并存入 localStorage
+    useEffect(() => {
+        if (justLoggedOut) {
+            navigate('/') // navigate to /home
+            setJustLoggedOut(false) // clear the justLoggedOut flag
+        }
+    }, [justLoggedOut, navigate])
+
     useEffect(() => {
         if (name) {
             localStorage.setItem('username', name) // 存储到 localStorage
@@ -53,6 +111,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 setRole,
                 name,
                 setName,
+                justLoggedOut,
+                setJustLoggedOut,
             }}
         >
             {children}
