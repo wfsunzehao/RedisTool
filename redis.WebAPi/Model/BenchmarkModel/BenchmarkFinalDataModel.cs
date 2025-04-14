@@ -38,6 +38,9 @@ namespace redis.WebAPi.Model.BenchmarkModel
         public DateTime TimeStamp { get; set; }
         public int ID { get; set; }
 
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
+
         public BenchmarkFinalDataModel(BenchmarkResultData data)
         {
             CacheName = data.CacheName;

@@ -9,6 +9,7 @@ using redis.WebAPi.Model.BenchmarkModel;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using Azure.ResourceManager.Redis;
+using System.Threading.Tasks;
 
 
 
@@ -77,7 +78,7 @@ namespace redis.WebAPi.Service.AzureShared
                 {
                     Name = redis.Data.Name,
                     Threads = 16,
-                    Requests = 1000,
+                    Requests = 1000000,
                     Size = 1024,
                     Pipeline = redis.Data.Name.Contains("P") ? 20:10,
                     pw = redis.GetKeys().Value.PrimaryKey,
@@ -87,11 +88,9 @@ namespace redis.WebAPi.Service.AzureShared
                     Region = "East US 2 EUAP"
                   
                 };
-                if (redis.Data.Name.Contains("Basic"))
-                {
-                    queue.Clients = 1;
-                }
-                else if (redis.Data.Name.Contains("Standard"))
+                if (redis.Data.Name.Contains("Basic")) queue.Clients = 1;
+
+                if (redis.Data.Name.Contains("Standard")) 
                 {
                     if (redis.Data.Name.Contains("C0") || redis.Data.Name.Contains("C1"))
                     {
@@ -102,10 +101,8 @@ namespace redis.WebAPi.Service.AzureShared
                         queue.Clients = 2;
                     }
                 }
-                else
-                {
-                    queue.Clients = 4;
-                }
+                if (redis.Data.Name.Contains("Premium")) queue.Clients = 4;
+
 
                 listQ.Add(queue);
             }
@@ -148,12 +145,15 @@ namespace redis.WebAPi.Service.AzureShared
 
                                 task.Status = 1;
                                 dbContext.BenchmarkQueue.Update(task);
+                                var request = await dbContext.BenchmarkRequest.Where(t=>t.Name == task.Name).FirstAsync();
+                                request.Status = 1;
+                                dbContext.BenchmarkRequest.Update(request);
                                 await dbContext.SaveChangesAsync();
 
                                 string output = await RunTasksForVM(task);
                                 results.Add($"[{vmName}] {output}");
-
-                                _logger.LogInformation($"Task£º{task.Name} Done");
+                                _logger.LogInformation("\n \n\n\n");
+                                _logger.LogInformation($"Task£º{task.Name} Done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                             }
                         }
                         catch (Exception ex)
@@ -185,15 +185,8 @@ namespace redis.WebAPi.Service.AzureShared
              */
             try
             {
-                using (var scope = _serviceProvider.CreateScope()) 
-                {
-                    var dbContext = scope.ServiceProvider.GetRequiredService<BenchmarkContent>();
-                    string output = await ConnectionVMTest(task, dbContext);
-                    task.Status = 3;
-                    dbContext.BenchmarkRequest.Update(task.ToBenchmarkRequestModel());
-                    await dbContext.SaveChangesAsync(); 
-                    return output;
-                }
+                string output = await ConnectionVMTest(task);
+                return output;
                     
             }
             catch (Exception ex) 
@@ -213,7 +206,7 @@ namespace redis.WebAPi.Service.AzureShared
         }
 
         //Connect virtual machines and perform benchmarks (ConnectionVMTest and RunBenchmarkOnVM)
-        public async Task<string> ConnectionVMTest(BenchmarkQueueDataModel request,BenchmarkContent dbContext) 
+        public async Task<string> ConnectionVMTest(BenchmarkQueueDataModel request) 
         {
 
 
@@ -378,6 +371,10 @@ namespace redis.WebAPi.Service.AzureShared
             using (var scope = _serviceProvider.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<BenchmarkContent>();
+
+                var requestModel = await dbContext.BenchmarkRequest.Where(t => t.Name == request.Name).FirstAsync();
+                requestModel.Status = 3;
+                dbContext.BenchmarkRequest.Update(requestModel);
                 var removedData = await dbContext.BenchmarkQueue.FirstOrDefaultAsync(u => u.Name == request.Name);
                 if (removedData != null )
                 {
@@ -386,6 +383,7 @@ namespace redis.WebAPi.Service.AzureShared
                 }
                 dbContext.BenchmarkResultData.Add(savedData);
                 await dbContext.SaveChangesAsync();
+                _logger.LogInformation("Modifing Request,remove, adding result done");
             }
             output = JsonConvert.SerializeObject(savedData);
             return output;
@@ -399,7 +397,7 @@ namespace redis.WebAPi.Service.AzureShared
             var armClient = _client.ArmClient;
             //var subResource = armClient.GetSubscriptionResource(new ResourceIdentifier("/subscriptions/" + "1e57c478-0901-4c02-8d35-49db234b78d2"));
             var subResource = armClient.GetSubscriptionResource(new ResourceIdentifier("/subscriptions/" + "fc2f20f5-602a-4ebd-97e6-4fae3f1f6424"));
-            var vmResource = (await subResource.GetResourceGroupAsync("MemtierbenchmarkTest")).Value.GetVirtualMachines().GetAsync(vmName).Result;
+            var vmResource = (await subResource.GetResourceGroupAsync("Redis_MemtierbenchmarkTest")).Value.GetVirtualMachines().GetAsync(vmName).Result;
           
 
             return vmResource;
@@ -438,8 +436,8 @@ namespace redis.WebAPi.Service.AzureShared
                 return "MemtierBenchmarkM2-Basic-C3C4";
             }
 
-            //if (cacheName.Contains("p1") || cacheName.Contains("p2") || cacheName.Contains("p3") || cacheName.Contains("p4") || cacheName.Contains("p5")) 
-            //    return "MemtierBenchmarkTestP";
+            //if (cacheName.Contains("p1") || cacheName.Contains("p2") || cacheName.Contains("p3") || cacheName.Contains("p4") || cacheName.Contains("p5"))
+            //    return "MemtierBenchmarkTest";
 
             //if ((cacheName.Contains("c0") || cacheName.Contains("c1") || cacheName.Contains("c2") || cacheName.Contains("c3") || cacheName.Contains("c4") || cacheName.Contains("c5") || cacheName.Contains("c6")) && cacheName.Contains("standard"))
             //{

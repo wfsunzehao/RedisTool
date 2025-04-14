@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace redis.WebAPi.Model
 {
@@ -34,6 +35,9 @@ namespace redis.WebAPi.Model
         public string CompressedHistogram { get; set; }
         public DateTime TimeStamp { get; set; }
         public int ID { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
    
 

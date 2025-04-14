@@ -39,6 +39,9 @@ namespace redis.WebAPi.Model.BenchmarkModel
         public int Status { get; set; } // 1 is running, 2 is pending, 3 is successful, 4 is failed
 
         public DateTime TimeStamp { get; set; }
+        
+        [Timestamp] 
+        public byte[] RowVersion { get; set; }
 
 
         public BenchmarkQueueDataModel(BenchmarkRequestModel request)
