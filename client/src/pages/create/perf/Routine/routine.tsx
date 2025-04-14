@@ -12,6 +12,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import agent from '@/app/api/agent';
 import { format } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
+import { handleGenericSubmit } from '@/app/util/util'
 
 const vmList = [
     { name: 'P1,P2', status: 'on' },
@@ -97,59 +98,67 @@ const Routine = () => {
             });
     }, []);
 
-    const handleInsertGroup = async () => {
+    const handleInsertGroup = (event: React.FormEvent) => {
         if (!group) {
-            showSnackbar("Please select Group Name!", "warning");
+            showSnackbar("Please select a Group first!", "warning");
             return;
         }
-
-        setLoading(true);
-        const quotedGroup = `"${group}"`;  // 确保这是一个带引号的字符串
-        try {
-            await agent.Create.InsertQCommandByGroupNameJson(JSON.stringify(group));  // 发送带引号的字符串
-            showSnackbar("Insert successful, ready to execute!", "success");
-        } catch (error) {
-            console.error("Insert failed:", error);
-            showSnackbar("Failed, please check whether the service is running properly!", "error");
-        } finally {
-            setLoading(false);
-        }
+    
+        const data = { subscription, group };
+    
+        handleGenericSubmit(
+            event,
+            data,
+            async (d) => {
+                await agent.Create.InsertQCommandByGroupNameJson(JSON.stringify(d.group));
+                return d;
+            },
+            () => true, // 提前手动校验了，这里直接返回 true
+            setLoading,
+            "Are you sure you want to insert the cache from this group into the queue?"
+        );
     };
-
-    const handleRunTasks = async () => {
-        setLoading(true);
-        try {
-            agent.Create.executetasksJson();
-            showSnackbar("The execution request has been sent, please go to the Statistics page to check the running status", "info");
-        } catch (error) {
-            console.error("Run tasks failed:", error);
-            showSnackbar("Failed, please check whether the service is running properly!", "error");
-        } finally {
-            setLoading(false);
-        }
+    
+    
+    const handleRunTasks = (event: React.FormEvent) => {
+        const data = { subscription, group };
+    
+        handleGenericSubmit(
+            event,
+            data,
+            async (d) => {
+                await agent.Create.executetasksJson();
+                return d;
+            },
+            () => true, 
+            setLoading,
+            "Are you sure you want to start the Routine Test? This will initiate task execution."
+        );
     };
-
-    const handleFetchResult = async () => {
+    
+    const handleFetchResult = (event: React.FormEvent) => {
         if (!selectedDate) {
-            showSnackbar('Please select a date!', 'warning');
+            showSnackbar("Please select a Date first!", "warning");
             return;
         }
-
-        setLoading(true);
-        try {
-            const newDate = new Date(selectedDate);
-            newDate.setDate(newDate.getDate() + 1);  // 增加一天
-
-            await agent.Create.FinalDataTestJson(newDate);
-            showSnackbar("Processing is finished, you can download the results!", "success");
-        } catch (error) {
-            console.error("Fetch result failed:", error);
-            showSnackbar("Failed, please check whether the service is running properly!", "error");
-        } finally {
-            setLoading(false);
-        }
+    
+        const data = { selectedDate };
+    
+        handleGenericSubmit(
+            event,
+            data,
+            async (d) => {
+                const newDate = new Date(d.selectedDate!);
+                newDate.setDate(newDate.getDate() + 1);
+                await agent.Create.FinalDataTestJson(newDate);
+                return d;
+            },
+            () => true,
+            setLoading,
+            "Are you sure you want to collect cache test results for the selected date?"
+        );
     };
-
+    
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setCacheDate(event.target.value);
     };
@@ -286,13 +295,13 @@ const Routine = () => {
                     </Box>
 
                     <Box sx={{ display: 'flex', gap: 2, width: '100%', justifyContent: 'space-between' }}>
-                        <Button variant="contained" sx={{ width: '30%', borderRadius: '8px' }} onClick={handleInsertGroup}>
+                        <Button variant="contained" sx={{ width: '30%', borderRadius: '8px' }} onClick={(e) => handleInsertGroup(e)}>
                             Insert
                         </Button>
-                        <Button variant="contained" sx={{ width: '30%', borderRadius: '8px' }} onClick={handleRunTasks}>
+                        <Button variant="contained" sx={{ width: '30%', borderRadius: '8px' }} onClick={(event) => handleRunTasks(event)}>
                             Run
                         </Button>
-                        <Button variant="contained" sx={{ width: '30%', borderRadius: '8px' }} onClick={handleFetchResult}>
+                        <Button variant="contained" sx={{ width: '30%', borderRadius: '8px' }} onClick={(e) => handleFetchResult(e)}>
                             Result
                         </Button>
                     </Box>

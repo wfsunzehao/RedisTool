@@ -31,37 +31,6 @@ namespace Benchmark_API.Controllers
             public DateTime Time { get; set; }
         }
 
-        [HttpPost("ExecuteAllTasks")]
-        public async Task<IActionResult> ExecuteAllTasks([FromBody] ExecuteAllTasksRequest request)
-        {
-            var groupName = request.GroupName;
-            var time = request.Time;
-
-            // 调用 InsertQCommandByGroupName 接口
-            var insertResult = await InsertQCommandByGroupName(groupName);
-            if (insertResult is not OkResult)
-            {
-                return BadRequest("InsertQCommandByGroupName failed.");
-            }
-
-            // 调用 ExecutePendingTasks 接口
-            var executeResult = await ExecutePendingTasks();
-            if (executeResult is not OkResult)
-            {
-                return BadRequest("ExecutePendingTasks failed.");
-            }
-
-            // 调用 FinalDataTest 接口
-            var finalDataResult = await FinalData(time);
-            if (finalDataResult is not OkResult)
-            {
-                return BadRequest("FinalDataTest failed.");
-            }
-
-            return Ok("All tasks executed successfully.");
-        }
-
-
         [HttpPost("execute-tasks")]
         public async Task<IActionResult> ExecutePendingTasks()
         {

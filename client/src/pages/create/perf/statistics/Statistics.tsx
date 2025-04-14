@@ -35,17 +35,24 @@ const Statistics: React.FC = () => {
     const fetchData = async () => {
         try {
             const response = await agent.Create.sendGetBenchmarkRequestData()
-            // const response = await agent.Create.getBenchmarkRunJson()
-            console.log('Fetched data:', response)
-            setParameters(response.data.reverse())
+            // console.log('Fetched data:', response)
+            setParameters(response.reverse())
         } catch (error) {
-            console.error('Error fetching the parameters!', error)
+            // console.error('Error fetching the parameters!', error)
+            setParameters([]) 
         }
     }
 
     useEffect(() => {
-        fetchData()
+        fetchData() // 首次加载立即获取一次
+    
+        const intervalId = setInterval(() => {
+            fetchData()
+        }, 5000) // 每 5 秒自动拉取一次数据
+    
+        return () => clearInterval(intervalId) // 组件卸载时清除定时器
     }, [])
+    
 
     const handleNavigate = (timeStamp: string) => {
         navigate(`/create/dataDisplayPage/${timeStamp}`);

@@ -72,13 +72,20 @@ const Create = {
     sendPerfJson: (body: object) => request.post(`/Creation/CreatePerfCache`, body),
     sendAltJson: (body: object) => request.post(`/Creation/CreateAltCache`, body),
     sendBenchmarkRunJson: (body: object) => request.post('/BenchmarkRun/enqueue', body),
-    sendGetBenchmarkRequestData: () =>
-        request.get('/Data/GetBenchmarkRequestData')  // 使用 request.get 封装的 GET 请求
-        .then((response) => response)  // 返回响应
-        .catch((error) => {
-            console.error("Error fetching data:", error)
-            throw error  // 捕获并抛出错误
-        }),
+    sendGetBenchmarkRequestData: () => axios.get('/Data/GetBenchmarkRequestData').then((res) => {
+        const data = res?.data
+        if (Array.isArray(data)) {
+            return data
+        }
+        if (Array.isArray(data?.data)) {
+            return data.data
+        }
+        console.warn('Unexpected response format:', data)
+        return []  
+    }).catch((error) => {
+        console.error('Error fetching data:', error)
+        throw error  
+    }),
     InsertQCommandByGroupNameJson: (group: string) =>
         axios.post(
           'BenchmarkRun/InsertQCommandByGroupName',

@@ -61,8 +61,9 @@ const PerfPage: React.FC = () => {
     }
 
     const handleSubmit = (event: React.FormEvent) => {
+        const customMessage = 'Once started, the cache used in Performance will be created!'
         const data: PerfModel = { subscription, group, sku }
-        handleGenericSubmit(event, data, apiPathFunction, validateForm, setLoading)
+        handleGenericSubmit(event, data, apiPathFunction, validateForm, setLoading,customMessage)
     }
 
     const handleCancel = () => {
