@@ -430,10 +430,11 @@ namespace redis.WebAPi.Service.AzureShared
 
             if (cacheName.Contains("c0") && cacheName.Contains("basic")) return "MemtierBenchmarkM1-Basic-C0C1";
             if (cacheName.Contains("c1") && cacheName.Contains("basic")) return "MemtierBenchmarkM1-Basic-C0C1";
-            if ((cacheName.Contains("c2") || cacheName.Contains("c3") || cacheName.Contains("c4") || cacheName.Contains("c5") || cacheName.Contains("c6")) && cacheName.Contains("basic"))
-            {
-                return "MemtierBenchmarkM2-Basic-C3C4";
-            }
+            if (cacheName.Contains("c2") && cacheName.Contains("basic")) return "MemtierBenchmarkM2-Basic-C3C4";
+            if (cacheName.Contains("c3") && cacheName.Contains("basic")) return "MemtierBenchmarkM1-Basic-C0C1";
+            if (cacheName.Contains("c4") && cacheName.Contains("basic")) return "MemtierBenchmarkM2-Basic-C5C6";
+            if (cacheName.Contains("c5") && cacheName.Contains("basic")) return "MemtierBenchmarkM2-Basic-C5C6";
+            if (cacheName.Contains("c6") && cacheName.Contains("basic")) return "MemtierBenchmarkM2-Basic-C5C6";
 
             //if (cacheName.Contains("p1") || cacheName.Contains("p2") || cacheName.Contains("p3") || cacheName.Contains("p4") || cacheName.Contains("p5"))
             //    return "MemtierBenchmarkTest";
