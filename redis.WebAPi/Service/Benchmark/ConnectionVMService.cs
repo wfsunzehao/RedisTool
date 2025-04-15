@@ -343,8 +343,7 @@ namespace redis.WebAPi.Service.AzureShared
             {
                 Script =
             {
-                $"memtier_benchmark -h {cacheName} -a {request.pw} --threads {request.Threads} --clients {request.Clients} -n {request.Requests} --ratio=1:10 --pipeline {request.Pipeline} -d {request.Size} --random-data --key-pattern=S:S --key-minimum=1 --key-maximum=10000 -x 1 --print-percentiles 50,99,99.9,99.99 --json-out-file /home/azureuser/out.json",
-               
+                $"memtier_benchmark -h {cacheName} -p 6380 -a {request.pw} --threads {request.Threads} --clients {request.Clients} -n {request.Requests} --ratio=1:10 --pipeline {request.Pipeline} -d {request.Size} --random-data --key-pattern=S:S --key-minimum=1 --key-maximum=10000 -x 1 --print-percentiles 50,99,99.9,99.99 --json-out-file /home/azureuser/out.json --tls --tls-skip-verify",
             }
 
             };
