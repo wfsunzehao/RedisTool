@@ -16,12 +16,12 @@ import { handleGenericSubmit } from '@/app/util/util'
 
 const vmList = [
     { name: 'P1,P2', status: 'on' },
-    { name: 'P3,P4', status: 'off' },
+    { name: 'P3,P4', status: 'on' },
     { name: 'P5', status: 'on' },
     { name: 'SC0,C1', status: 'on' },
-    { name: 'SC2,C3', status: 'off' },
+    { name: 'SC2,C3', status: 'on' },
     { name: 'SC4,C5,C6', status: 'on' },
-    { name: 'BC0,C1', status: 'off' },
+    { name: 'BC0,C1', status: 'on' },
     { name: 'BC3,C4', status: 'on' },
     { name: 'BC4,C5,C6', status: 'off' },
 ];
@@ -127,7 +127,7 @@ const Routine = () => {
             event,
             data,
             async (d) => {
-                await agent.Create.executetasksJson();
+                agent.Create.executetasksJson();
                 return d;
             },
             () => true, 

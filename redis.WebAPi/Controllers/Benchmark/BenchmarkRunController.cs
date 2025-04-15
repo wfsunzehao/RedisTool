@@ -194,7 +194,7 @@ namespace Benchmark_API.Controllers
                     foreach (var item in results)
                     {
                         sb.AppendLine($"Results from: {item.CacheName}");
-                        var jsonData = JsonSerializer.Serialize(new
+                        var jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(new
                         {
                             TotalDuration = item.TotalDuration,
                             TimeUnit = item.TimeUnit,
@@ -206,7 +206,7 @@ namespace Benchmark_API.Controllers
                             GetsP99_99 = item.GetsP99_99,
                             Compressed_Histogram = item.CompressedHistogram
 
-                        }, new JsonSerializerOptions { WriteIndented = true });
+                        }, Newtonsoft.Json.Formatting.Indented);
                         sb.AppendLine(jsonData);
                         sb.AppendLine();
                     }
