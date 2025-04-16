@@ -13,6 +13,13 @@ import agent from '@/app/api/agent';
 import { format } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
 import { handleGenericSubmit } from '@/app/util/util'
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
+import Fade from '@mui/material/Fade';
+
+
+
+
 
 const vmList = [
     { name: 'P1,P2', status: 'on' },
@@ -58,6 +65,34 @@ const tableData = [
         pipeline: 10,
     },
 ];
+
+const CustomTooltip = styled(({ className, ...props }: any) => (
+    <Tooltip
+        {...props}
+        arrow
+        TransitionComponent={Fade}
+        TransitionProps={{ timeout: 300 }}
+        placement="top"
+        classes={{ popper: className }}
+    />
+))(() => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+        backgroundColor: 'rgba(50, 50, 50, 0.9)',
+        color: '#fff',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+        borderRadius: 8,
+        padding: '10px 14px',
+        fontSize: '13px',
+        maxWidth: 240,
+        lineHeight: 1.6,
+        transition: 'all 0.3s ease',
+    },
+    [`& .${tooltipClasses.arrow}`]: {
+        color: 'rgba(50, 50, 50, 0.9)',
+    },
+}));
+
+
 
 const Routine = () => {
     const [cacheDate, setCacheDate] = useState('');
@@ -295,18 +330,82 @@ const Routine = () => {
                     </Box>
 
                     <Box sx={{ display: 'flex', gap: 2, width: '100%', justifyContent: 'space-between' }}>
-                        <Button variant="contained" sx={{ width: '30%', borderRadius: '8px' }} onClick={(e) => handleInsertGroup(e)}>
+                    <CustomTooltip
+                        title={<Typography variant="body2">The cache from the currently selected Group is inserted into the Benchmark Test queue and is waiting to be tested</Typography>}
+                    >
+                        <Button
+                            variant="contained"
+                            sx={{
+                                width: '30%',
+                                borderRadius: '10px',
+                                background: 'linear-gradient(45deg, #1976d2, #42a5f5)',
+                                color: '#fff',
+                                fontWeight: 600,
+                                boxShadow: '0 3px 6px rgba(0,0,0,0.2)',
+                                transition: 'all 0.3s ease-in-out',
+                                '&:hover': {
+                                    background: 'linear-gradient(45deg, #1565c0, #2196f3)',
+                                    boxShadow: '0 5px 15px rgba(33, 150, 243, 0.4)',
+                                    transform: 'translateY(-1px)',
+                                },
+                            }}
+                            onClick={(e) => handleInsertGroup(e)}
+                        >
                             Insert
                         </Button>
-                        <Button variant="contained" sx={{ width: '30%', borderRadius: '8px' }} onClick={(event) => handleRunTasks(event)}>
+                    </CustomTooltip>
+
+                    <CustomTooltip
+                        title={<Typography variant="body2">Start the Benchmark Test task to test the cache in the Benchmark test queue</Typography>}
+                    >
+                        <Button
+                            variant="contained"
+                            sx={{
+                                width: '30%',
+                                borderRadius: '10px',
+                                background: 'linear-gradient(45deg, #8e24aa, #d81b60)',
+                                color: '#fff',
+                                fontWeight: 600,
+                                boxShadow: '0 3px 6px rgba(0,0,0,0.2)',
+                                transition: 'all 0.3s ease-in-out',
+                                '&:hover': {
+                                    background: 'linear-gradient(45deg, #6a1b9a, #c2185b)',
+                                    boxShadow: '0 5px 15px rgba(216, 27, 96, 0.4)',
+                                    transform: 'translateY(-1px)',
+                                },
+                            }}
+                            onClick={(e) => handleRunTasks(e)}
+                        >
                             Run
                         </Button>
-                        <Button variant="contained" sx={{ width: '30%', borderRadius: '8px' }} onClick={(e) => handleFetchResult(e)}>
+                    </CustomTooltip>
+
+                    <CustomTooltip
+                        title={<Typography variant="body2">Gets test results for the selected date</Typography>}
+                    >
+                        <Button
+                            variant="contained"
+                            sx={{
+                                width: '30%',
+                                borderRadius: '10px',
+                                background: 'linear-gradient(45deg, #388e3c, #66bb6a)',
+                                color: '#fff',
+                                fontWeight: 600,
+                                boxShadow: '0 3px 6px rgba(0,0,0,0.2)',
+                                transition: 'all 0.3s ease-in-out',
+                                '&:hover': {
+                                    background: 'linear-gradient(45deg, #2e7d32, #43a047)',
+                                    boxShadow: '0 5px 15px rgba(102, 187, 106, 0.4)',
+                                    transform: 'translateY(-1px)',
+                                },
+                            }}
+                            onClick={(e) => handleFetchResult(e)}
+                        >
                             Result
                         </Button>
-                    </Box>
+                    </CustomTooltip>
                 </Box>
-
+            </Box>
                 <Box sx={{ width: '100%', maxWidth: 500, display: 'flex', flexDirection: 'column', gap: 2 }}>
                     <Box display="flex" alignItems="center" justifyContent="space-between">
                         <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
@@ -314,16 +413,45 @@ const Routine = () => {
                         </Typography>
                         <TextField
                             id="Get_data"
-                            label="Cache Date"
+                            label="Date format：MMDD"
                             variant="outlined"
                             value={cacheDate}
                             onChange={handleInputChange}
                             sx={{ width: 250 }}
                         />
                     </Box>
-                    <Button variant="contained" sx={{ width: '100%', borderRadius: '8px' }} onClick={fetchAndDownloadTxt}>
-                        查找结果
-                    </Button>
+                        <Tooltip 
+                            title={
+                                <span style={{ fontSize: '1rem', fontWeight: 300 }}>
+                                    Click to download the Benchmark test results for the specified date
+                                </span>
+                            }
+                            arrow 
+                            TransitionComponent={Fade} 
+                            TransitionProps={{ timeout: 300 }} 
+                            placement="top"
+                        >
+                            <Button
+                                variant="contained"
+                                onClick={fetchAndDownloadTxt}
+                                sx={{
+                                    width: '100%',
+                                    borderRadius: '10px',
+                                    background: 'linear-gradient(135deg, #1976d2, #9c27b0)',
+                                    color: '#fff',
+                                    fontWeight: 'bold',
+                                    boxShadow: '0 4px 14px rgba(0,0,0,0.2)',
+                                    transition: 'all 0.3s ease',
+                                    '&:hover': {
+                                        background: 'linear-gradient(135deg, #1565c0, #7b1fa2)',
+                                        transform: 'scale(1.03)',
+                                        boxShadow: '0 6px 18px rgba(0,0,0,0.3)',
+                                    },
+                                }}
+                            >
+                                Download esults
+                            </Button>
+                    </Tooltip>
                 </Box>
             </Box>
 
