@@ -14,7 +14,6 @@ import InsertPage from '@/pages/other/insert/InsertPage'
 import MedianPage from '@/pages/other/median/MedianPage'
 import GroupPage from '@/pages/delete/group/GroupPage'
 import Signal from '@/pages/other/signalR/Signal'
-import RegisterPage from '@/pages/login/RegisterPage'
 import RunBenchmark from '@/pages/create/perf/benchmark/RunBenchmark'
 import Statistics from '@/pages/create/perf/statistics/Statistics'
 import DataDisplayPage from '@/pages/create/perf/data/Dashboard'
@@ -56,7 +55,6 @@ export const router = createBrowserRouter([
                     { path: 'signal', element: <Signal /> },
                 ],
             },
-            { path: 'register', element: <RegisterPage /> },
             { path: 'server-error', element: <ServerError /> },
             { path: 'not-found', element: <NotFound /> }, //404
             { path: '*', element: <Navigate replace to="/not-found" /> },
