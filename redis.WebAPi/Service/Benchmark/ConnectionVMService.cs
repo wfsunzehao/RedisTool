@@ -396,7 +396,7 @@ namespace redis.WebAPi.Service.AzureShared
             var armClient = _client.ArmClient;
             //var subResource = armClient.GetSubscriptionResource(new ResourceIdentifier("/subscriptions/" + "1e57c478-0901-4c02-8d35-49db234b78d2"));
             var subResource = armClient.GetSubscriptionResource(new ResourceIdentifier("/subscriptions/" + "fc2f20f5-602a-4ebd-97e6-4fae3f1f6424"));
-            var vmResource = (await subResource.GetResourceGroupAsync("Redis_MemtierbenchmarkTest")).Value.GetVirtualMachines().GetAsync(vmName).Result;
+            var vmResource = (await subResource.GetResourceGroupAsync("MemtierbenchmarkTest")).Value.GetVirtualMachines().GetAsync(vmName).Result;
           
 
             return vmResource;
