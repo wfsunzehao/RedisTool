@@ -79,7 +79,7 @@ const Statistics: React.FC = () => {
                 variant="contained"
                 color={color} // 传递枚举值
                 onClick={() => handleNavigate(timeStamp)}
-                disabled={disabled}
+                disabled={true}
                 size="small"
                 sx={{
                     textTransform: 'none',

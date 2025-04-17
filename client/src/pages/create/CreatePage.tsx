@@ -23,6 +23,7 @@ const leftLinks = [
             { title: 'Benchmark', path: '/create/benchmark', count: 2 },
             { title: 'Statistics', path: '/create/statistics', count: 3 },
             { title: 'Routine', path: '/create/routine', count: 4 },
+            { title: 'Insertexcel', path: '/create/TxtExcelMerger', count: 5 }
         ],
     },
     { title: 'ALT', path: '/create/alt', icon: <IconAlt stroke={2} /> },

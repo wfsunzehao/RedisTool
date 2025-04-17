@@ -19,6 +19,7 @@ import RunBenchmark from '@/pages/create/perf/benchmark/RunBenchmark'
 import Statistics from '@/pages/create/perf/statistics/Statistics'
 import DataDisplayPage from '@/pages/create/perf/data/Dashboard'
 import Routine from '@/pages/create/perf/Routine/routine'
+import TxtExcelMerger from '@/pages/create/perf/InsertExcel/insertexcel'
 
 export const router = createBrowserRouter([
     {
@@ -38,6 +39,7 @@ export const router = createBrowserRouter([
                     { path: 'dataDisplayPage/:timeStamp', element: <DataDisplayPage /> },
                     { path: 'alt', element: <AltPage /> },
                     { path: 'routine', element: <Routine /> },
+                    { path: 'TxtExcelMerger', element: <TxtExcelMerger /> },
                 ],
             },
             {
