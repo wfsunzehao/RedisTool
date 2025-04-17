@@ -33,6 +33,9 @@
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.8",
     "chart.js": "^4.4.7",
+    "date-fns-tz": "^3.2.0",
+    "exceljs": "^4.4.0",
+    "file-saver": "^2.0.5",
     "formik": "^2.4.6",
     "framer-motion": "^11.11.9",
     "lucide-react": "^0.474.0",
@@ -54,6 +57,7 @@
   "devDependencies": {
     "@eslint/js": "^9.9.0",
     "@types/chart.js": "^2.9.41",
+    "@types/file-saver": "^2.0.7",
     "@types/md5": "^2.3.5",
     "@types/node": "^22.10.2",
     "@types/react": "^18.3.3",
