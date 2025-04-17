@@ -36,11 +36,11 @@ namespace Benchmark_API.Controllers
         }
 
         [HttpPost("execute-tasks")]
-        public async Task<IActionResult> ExecutePendingTasks()
+        public async Task<IActionResult> ExecutePendingTasks(string sub, string group, List<string> vms)
         {
             try
             {
-                await _connectionVMService.ExecuteTasksOnVMs();
+                await _connectionVMService.ExecuteTasksOnVMs(sub,group,vms);
                 string result = "OK";
                 return Ok(result);
             }
