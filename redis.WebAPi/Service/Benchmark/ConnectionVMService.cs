@@ -241,7 +241,7 @@ namespace redis.WebAPi.Service.AzureShared
                 {
                     var dbContext = scope.ServiceProvider.GetRequiredService<BenchmarkContent>();
                     var allData = dbContext.BenchmarkResultData.AsNoTracking()
-                        .Where(d => d.TimeStamp.Date == targetDate.Date)
+                        .Where(d => d.CacheName.Contains(targetDate.Date.Month.ToString() + targetDate.Date.Day.ToString()))
                         .ToList();
 
                     if (!allData.Any()) return;
