@@ -32,14 +32,14 @@ namespace redis.WebAPi.Service.AzureShared
         }
 
 
-        private async Task<Dictionary<String,List<BenchmarkQueueDataModel>>> DistributeTasksIntoLists(
-            Dictionary<string, List<BenchmarkQueueDataModel>> vmTaskLists)
+        private async Task<Dictionary<String,List<BenchmarkQueueDataModel>>> DistributeTasksIntoLists(List<string> vms)
         {
             /*
                 This method obtains the task in the BenchmarkQueue table with state 2 (pending) from the database and assigns it to a different virtual machine (VM) based on the task name.
                 AllocateVMByCacheName Used to assign a VM name based on the task name.
                 Add each task to the vmTaskLists dictionary according to the assigned virtual machine name.
              */
+            Dictionary<string, List<BenchmarkQueueDataModel>> vmTaskLists = new Dictionary<string, List<BenchmarkQueueDataModel>>();
             using (var scope = _serviceProvider.CreateScope())
             {
                 _logger.LogInformation("\n Performing Distribution£¡£¡£¡£¡£¡£¡£¡");
@@ -50,18 +50,17 @@ namespace redis.WebAPi.Service.AzureShared
                     .OrderBy(t => t.Id)  
                     .ToListAsync();
                 _logger.LogInformation("\n Distribution Done£¡£¡£¡£¡");
-                foreach (var task in tasks)
+                foreach (var vm in vms)
                 {
+                    vmTaskLists[vm] = new List<BenchmarkQueueDataModel>();
+                }
 
-                    string vmName = AllocateVMByCacheName(task.Name); 
+                int vmCount = vms.Count;
 
-                    // create a new key if there is no vmName kay
-                    if (!vmTaskLists.ContainsKey(vmName))
-                    {
-                        vmTaskLists[vmName] = new List<BenchmarkQueueDataModel>();
-                    }
-
-                    vmTaskLists[vmName].Add(task);
+                for (int i = 0; i < tasks.Count; i++)
+                {
+                    string targetVm = vms[i % vmCount];
+                    vmTaskLists[targetVm].Add(tasks[i]);
                 }
                 return vmTaskLists;
             }
@@ -109,7 +108,7 @@ namespace redis.WebAPi.Service.AzureShared
             return listQ;
         }
 
-        public async Task  ExecuteTasksOnVMs()
+        public async Task  ExecuteTasksOnVMs(string sub, string group, List<string> vms)
         {
             /*
                 This method gets the list of assigned tasks from DistributeTasksIntoLists.
@@ -118,7 +117,7 @@ namespace redis.WebAPi.Service.AzureShared
                 Exception handling: If the task fails to be executed, set the task status to 4 (failed) and record an error message.
              */
             Dictionary<string, List<BenchmarkQueueDataModel>> vmTaskLists = new Dictionary<string, List<BenchmarkQueueDataModel>>();
-            var dict = await DistributeTasksIntoLists(vmTaskLists);
+            var dict = await DistributeTasksIntoLists(vms);
 
             _logger.LogInformation("Dic: " + string.Join(", ", dict.Select(kv => $"{kv.Key}: [{string.Join(", ", kv.Value)}]")));
 
@@ -150,7 +149,7 @@ namespace redis.WebAPi.Service.AzureShared
                                 dbContext.BenchmarkRequest.Update(request);
                                 await dbContext.SaveChangesAsync();
 
-                                string output = await RunTasksForVM(task);
+                                string output = await RunTasksForVM(sub, group, vmName, task);
                                 results.Add($"[{vmName}] {output}");
                                 _logger.LogInformation("\n \n\n\n");
                                 _logger.LogInformation($"Task£º{task.Name} Done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -177,7 +176,7 @@ namespace redis.WebAPi.Service.AzureShared
             await Task.WhenAll(vmTasks); 
         }
 
-        private async Task<string> RunTasksForVM(BenchmarkQueueDataModel task)
+        private async Task<string> RunTasksForVM(string sub, string group, string vmName,BenchmarkQueueDataModel task)
         {
             /*
                 This method handles the execution of each task. First try running the ConnectionVMTest method to get the benchmark results.
@@ -185,7 +184,7 @@ namespace redis.WebAPi.Service.AzureShared
              */
             try
             {
-                string output = await ConnectionVMTest(task);
+                string output = await ConnectionVMTest(sub,group,vmName,task);
                 return output;
                     
             }
@@ -206,7 +205,7 @@ namespace redis.WebAPi.Service.AzureShared
         }
 
         //Connect virtual machines and perform benchmarks (ConnectionVMTest and RunBenchmarkOnVM)
-        public async Task<string> ConnectionVMTest(BenchmarkQueueDataModel request) 
+        public async Task<string> ConnectionVMTest(string sub, string group,string vmName, BenchmarkQueueDataModel request) 
         {
 
 
@@ -223,7 +222,7 @@ namespace redis.WebAPi.Service.AzureShared
                 cacheName = cacheName.Substring(0, index);
             }
 
-            var vm = GetVMByCacheName(cacheName).Result;
+            var vm = await GetVirtualMachineAsync(sub,group,vmName);
             var output = await RunBenchmarkOnVM(vm, request);
             return output;
 
@@ -391,12 +390,12 @@ namespace redis.WebAPi.Service.AzureShared
 
 
 
-        public async Task<VirtualMachineResource> GetVirtualMachineAsync(string vmName)
+        public async Task<VirtualMachineResource> GetVirtualMachineAsync(string sub , string group, string vmName)
         {
             var armClient = _client.ArmClient;
             //var subResource = armClient.GetSubscriptionResource(new ResourceIdentifier("/subscriptions/" + "1e57c478-0901-4c02-8d35-49db234b78d2"));
-            var subResource = armClient.GetSubscriptionResource(new ResourceIdentifier("/subscriptions/" + "fc2f20f5-602a-4ebd-97e6-4fae3f1f6424"));
-            var vmResource = (await subResource.GetResourceGroupAsync("MemtierbenchmarkTest")).Value.GetVirtualMachines().GetAsync(vmName).Result;
+            var subResource = armClient.GetSubscriptionResource(new ResourceIdentifier("/subscriptions/" + sub));
+            var vmResource = (await subResource.GetResourceGroupAsync(group)).Value.GetVirtualMachines().GetAsync(vmName).Result;
           
 
             return vmResource;
@@ -404,15 +403,9 @@ namespace redis.WebAPi.Service.AzureShared
 
 
 
-        public async Task<VirtualMachineResource> GetVMByCacheName(string cacheName)
-        {
-            _logger.LogInformation("\n Geting VMs !!!!!! ");
-            string vmName = AllocateVMByCacheName(cacheName);
-           
-            return await GetVirtualMachineAsync(vmName);
-        }
 
-        private string AllocateVMByCacheName(string cacheName)
+
+        private string AllocateVMByCacheName(string cacheName,  List<string> vms)
         {
             cacheName = cacheName.ToLower();
 
