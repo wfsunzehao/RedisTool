@@ -6,6 +6,8 @@ using redis.WebAPi.Model.BenchmarkModel;
 using redis.WebAPi.Service.AzureShared;
 using System.Text;
 using System.Text.Json;
+using Azure.Core;
+using Azure.ResourceManager.Compute;
 
 namespace Benchmark_API.Controllers
 {
@@ -15,14 +17,16 @@ namespace Benchmark_API.Controllers
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ConnectionVMService _connectionVMService;
+        private readonly AzureClientFactory _client;
 
 
 
         // Inject BenchmarkDbContext and ConnectionVMService through the constructor
-        public BenchmarkRunController(ConnectionVMService connectionVMService, IServiceProvider serviceProvider  )
+        public BenchmarkRunController(ConnectionVMService connectionVMService, IServiceProvider serviceProvider, AzureClientFactory azure)
         {
             _connectionVMService = connectionVMService;
             _serviceProvider = serviceProvider;
+            _client = azure;
         }
 
         public class ExecuteAllTasksRequest
@@ -39,6 +43,28 @@ namespace Benchmark_API.Controllers
                 await _connectionVMService.ExecuteTasksOnVMs();
                 string result = "OK";
                 return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error executing tasks: {ex.Message}");
+            }
+        }
+
+
+        [HttpPost("getVMs")]
+        public async Task<IActionResult> GetVMs(string sub, string group)
+        {
+            try
+            {
+                var subs =  _client.ArmClient.GetSubscriptionResource(new ResourceIdentifier("/subscriptions/" + sub));
+                var groupResource = await subs.GetResourceGroupAsync(group);
+                var vms = groupResource.Value.GetVirtualMachines();
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+                foreach (var vm in vms) 
+                {
+                    dic.Add(vm.Data.Name, vm.InstanceView().Value.Statuses[1].DisplayStatus);
+                }
+                return Ok(dic);
             }
             catch (Exception ex)
             {
