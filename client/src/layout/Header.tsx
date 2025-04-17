@@ -8,10 +8,8 @@ import {
     ListItem,
     Badge,
     Avatar,
-    Popover,
     Divider,
     Typography,
-    MenuItem,
     Tooltip,
 } from '@mui/material'
 import { NavLink, useNavigate, useLocation } from 'react-router-dom'
@@ -19,7 +17,6 @@ import ChatIcon from '@mui/icons-material/Chat'
 import { useTheme } from '../app/context/ThemeContext'
 import logo from '@/assets/images/wicrecend3.png'
 import { useAuth } from '../app/context/AuthContext'
-import { Switch } from '@nextui-org/react'
 
 import { IconBrandAzure } from '@tabler/icons-react'
 import { IconSun, IconMoon, IconLinkPlus } from '@tabler/icons-react'
@@ -128,32 +125,10 @@ export default function Header() {
                         />
                     </NavLink>
                     <Box sx={{ mx: 1 }} /> {/* Add uniform spacing */}
-                    <Tooltip
-                        title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-                        slotProps={{
-                            tooltip: {
-                                sx: {
-                                    backdropFilter: 'blur(10px)', // Background blur effect
-                                    color: 'rgba(112, 114, 145, 0.9)', // Text color
-                                    fontSize: '14px', // Text size
-                                    fontWeight: 'bold', // Bold text
-                                    borderRadius: 4, // Rounded border
-                                    padding: '8px 12px', // Padding
-                                    border: `1px solid rgba(247, 240, 240, 0)`, // Fully transparent border
-                                    backgroundColor: 'rgba(247, 240, 240, 0)', // Fully transparent background
-                                    // Optional: Shadow (enable if needed)
-                                },
-                            },
-                        }}
-                    >
-                        <Switch
-                            checked={isDarkMode}
-                            onChange={toggleTheme}
-                            size="lg"
-                            thumbIcon={({ isSelected }) =>
-                                isSelected ? <IconMoon stroke={2} /> : <IconSun stroke={2} />
-                            }
-                        />
+                    <Tooltip title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}>
+                        <IconButton onClick={toggleTheme} color="inherit">
+                            {isDarkMode ? <IconMoon stroke={2} /> : <IconSun stroke={2} />}
+                        </IconButton>
                     </Tooltip>
                     <Box sx={{ mx: 1 }} /> {/* Add uniform spacing */}
                     <Tooltip
