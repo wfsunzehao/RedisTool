@@ -7,8 +7,8 @@ interface AuthContextType {
     setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
     token: string | null
     setToken: React.Dispatch<React.SetStateAction<string | null>>
-    currentForm: 'login' | 'signup' | 'forgotPassword'
-    setCurrentForm: React.Dispatch<React.SetStateAction<'login' | 'signup' | 'forgotPassword'>>
+    currentForm: 'login' | 'signup' | 'resetPassword'
+    setCurrentForm: React.Dispatch<React.SetStateAction<'login' | 'signup' | 'resetPassword'>>
     role: 'admin' | 'user'
     setRole: React.Dispatch<React.SetStateAction<'admin' | 'user'>>
     name: string
@@ -23,7 +23,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
     const [token, setToken] = useState<string | null>(localStorage.getItem('authToken'))
-    const [currentForm, setCurrentForm] = useState<'login' | 'signup' | 'forgotPassword'>('login')
+    const [currentForm, setCurrentForm] = useState<'login' | 'signup' | 'resetPassword'>('login')
     const [role, setRole] = useState<'admin' | 'user'>('user') // Default role is a regular user
     const [name, setName] = useState<string>(localStorage.getItem('username') || '') // 从 localStorage 读name
     const [justLoggedOut, setJustLoggedOut] = useState<boolean>(false)

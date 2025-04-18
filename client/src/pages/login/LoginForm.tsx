@@ -38,7 +38,7 @@ const LoginForm: React.FC = () => {
 
     const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault()
-        setCurrentForm('forgotPassword')
+        setCurrentForm('resetPassword')
     }
 
     return (
@@ -199,7 +199,7 @@ const LoginForm: React.FC = () => {
                         }}
                         onClick={handleClick}
                     >
-                        Forgot password?
+                        Reset password?
                     </Link>
 
                     <Button

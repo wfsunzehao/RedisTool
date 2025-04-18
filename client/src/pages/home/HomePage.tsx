@@ -6,8 +6,8 @@ import './HomePage.css'
 import { Hero, images, ImageWrapper, Indicator, IndicatorDot } from './constants'
 import LoginForm from '../login/LoginForm'
 import SignUpForm from '../login/SignUpForm'
-import ForgotPasswordForm from '../login/ForgotPasswordForm'
 import { useAuth } from '../../app/context/AuthContext'
+import ResetPasswordForm from '../login/ResetPasswordForm'
 
 const HomePage: React.FC = () => {
     const theme = useTheme()
@@ -87,8 +87,8 @@ const HomePage: React.FC = () => {
                     {/* Show SignUpForm only when currentForm is 'signup' and role is 'admin' */}
                     {currentForm === 'signup' && role === 'admin' && <SignUpForm />}
 
-                    {/* Show ForgotPasswordForm only when currentForm is 'forgotPassword' and not logged in */}
-                    {currentForm === 'forgotPassword' && !isLoggedIn && <ForgotPasswordForm />}
+                    {/* Show resetPasswordForm only when currentForm is 'resetPassword' and not logged in */}
+                    {currentForm === 'resetPassword' && !isLoggedIn && <ResetPasswordForm />}
                 </Box>
 
                 {/* Image carousel */}

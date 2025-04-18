@@ -72,34 +72,39 @@ const Create = {
     sendPerfJson: (body: object) => request.post(`/Creation/CreatePerfCache`, body),
     sendAltJson: (body: object) => request.post(`/Creation/CreateAltCache`, body),
     sendBenchmarkRunJson: (body: object) => request.post('/BenchmarkRun/enqueue', body),
-    sendGetBenchmarkRequestData: () => axios.get('/Data/GetBenchmarkRequestData').then((res) => {
-        const data = res?.data
-        if (Array.isArray(data)) {
-            return data
-        }
-        if (Array.isArray(data?.data)) {
-            return data.data
-        }
-        console.warn('Unexpected response format:', data)
-        return []  
-    }).catch((error) => {
-        console.error('Error fetching data:', error)
-        throw error  
-    }),
+    sendGetBenchmarkRequestData: () =>
+        axios
+            .get('/Data/GetBenchmarkRequestData')
+            .then((res) => {
+                const data = res?.data
+                if (Array.isArray(data)) {
+                    return data
+                }
+                if (Array.isArray(data?.data)) {
+                    return data.data
+                }
+                console.warn('Unexpected response format:', data)
+                return []
+            })
+            .catch((error) => {
+                console.error('Error fetching data:', error)
+                throw error
+            }),
     InsertQCommandByGroupNameJson: (group: string) =>
-        axios.post(
-          'BenchmarkRun/InsertQCommandByGroupName',
-          group,
-          { headers: { "Content-Type": "application/json" } }  // 修正 Content-Type
-        ).then(responseBody),         
+        axios
+            .post(
+                'BenchmarkRun/InsertQCommandByGroupName',
+                group,
+                { headers: { 'Content-Type': 'application/json' } } // 修正 Content-Type
+            )
+            .then(responseBody),
     executetasksJson: () => request.post('BenchmarkRun/execute-tasks', {}),
     FinalDataTestJson: (data: Date) => request.post('/BenchmarkRun/FinalDataTest', data),
     GetBenchmarkDataBlob: (date: string, config: object = {}) =>
         axios.get('BenchmarkRun/GetBenchmarkData', {
             params: { date },
-            ...config,  // 将传入的 config 合并到默认配置中
+            ...config, // 将传入的 config 合并到默认配置中
         }),
-            
 }
 
 const Delete = {
@@ -115,12 +120,11 @@ const Other = {
     sendMedianJson: (body: object) => axios.post('/Median/sendMedianJson', body, { responseType: 'blob' }),
 }
 
-
 const Auth = {
     login: (username: string, password: string) => request.post(`/Auth/login`, { username, password }),
     register: (username: string, password: string) => request.post(`/Auth/register`, { username, password }),
-    changePassword: (username: string, oldPassword: string, newPassword: string) =>
-        request.post(`/Auth/change-password`, { username, oldPassword, newPassword }),
+    resetPassword: (username: string, newPassword: string) =>
+        request.post(`/Auth/reset-password`, { username, newPassword }),
 }
 
 const TestErrors = {
