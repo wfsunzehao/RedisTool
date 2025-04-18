@@ -18,7 +18,7 @@ namespace Benchmark_API.Controllers
         private readonly IServiceProvider _serviceProvider;
         private readonly ConnectionVMService _connectionVMService;
         private readonly AzureClientFactory _client;
-
+        private static readonly SemaphoreSlim _executeLock = new SemaphoreSlim(1, 1);
 
 
         // Inject BenchmarkDbContext and ConnectionVMService through the constructor
@@ -38,15 +38,29 @@ namespace Benchmark_API.Controllers
         [HttpPost("execute-tasks")]
         public async Task<IActionResult> ExecutePendingTasks(string sub, string group, List<string> vms)
         {
+            var lockAcquired = false;
             try
             {
-                await _connectionVMService.ExecuteTasksOnVMs(sub,group,vms);
-                string result = "OK";
-                return Ok(result);
+                // ≥¢ ‘¡¢º¥ªÒ»°À¯
+                lockAcquired = await _executeLock.WaitAsync(TimeSpan.Zero);
+                if (!lockAcquired)
+                {
+                    return StatusCode(429, "Another task is currently running. Please try again later.");
+                }
+
+                await _connectionVMService.ExecuteTasksOnVMs(sub, group, vms);
+                return Ok("Task executed successfully.");
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Error executing tasks: {ex.Message}");
+            }
+            finally
+            {
+                if (lockAcquired)
+                {
+                    _executeLock.Release();
+                }
             }
         }
 
