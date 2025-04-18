@@ -50,7 +50,7 @@ public class AuthController : ControllerBase
 
         var token = GenerateJwtToken(user);
 
-        return Ok(new { token, role = user.Role, username=user.Username });
+        return Ok(new { token, role = user.Role, username = user.Username });
 
     }
 
@@ -92,9 +92,15 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("reset-password")]
+    [ServiceFilter(typeof(AuthFilter))]
     //[Authorize(Roles = "admin")] // Ensure only admin users can access
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest model)
     {
+        // var userRole = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+        // if (userRole != "admin")
+        // {
+        //     return Forbid("Only admin can reset passwords.");
+        // }
         // Validate input
         if (string.IsNullOrEmpty(model.Username))
         {
