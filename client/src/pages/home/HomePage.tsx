@@ -88,7 +88,7 @@ const HomePage: React.FC = () => {
                     {currentForm === 'signup' && role === 'admin' && <SignUpForm />}
 
                     {/* Show resetPasswordForm only when currentForm is 'resetPassword' and not logged in */}
-                    {currentForm === 'resetPassword' && !isLoggedIn && <ResetPasswordForm />}
+                    {currentForm === 'resetPassword' && role === 'admin' && <ResetPasswordForm />}
                 </Box>
 
                 {/* Image carousel */}

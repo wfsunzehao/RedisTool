@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Box, TextField, Button, Typography, Link, useTheme, CircularProgress } from '@mui/material'
 import { useAuth } from '@/app/context/AuthContext'
 import agent from '@/app/api/agent'
+import CloseIcon from '@mui/icons-material/Close'
+import { IconButton } from '@mui/material'
 
 const SignUpForm: React.FC = () => {
     const theme = useTheme()
@@ -52,8 +54,22 @@ const SignUpForm: React.FC = () => {
                     boxShadow: theme.shadows[6],
                     color: theme.palette.text.primary,
                     border: `1px solid rgba(255, 255, 255, 0.6)`,
+                    position: 'relative',
                 }}
             >
+                <IconButton
+                    sx={{
+                        position: 'absolute',
+                        top: 8,
+                        right: 8,
+                        color: theme.palette.grey[700],
+                    }}
+                    onClick={() => {
+                        setCurrentForm('login')
+                    }}
+                >
+                    <CloseIcon />
+                </IconButton>
                 <Typography
                     variant="h3"
                     gutterBottom
@@ -71,7 +87,7 @@ const SignUpForm: React.FC = () => {
                     Sign Up
                 </Typography>
 
-                <Typography
+                {/* <Typography
                     variant="body1"
                     gutterBottom
                     sx={{
@@ -95,7 +111,7 @@ const SignUpForm: React.FC = () => {
                     >
                         Sign in
                     </Link>
-                </Typography>
+                </Typography> */}
 
                 <form onSubmit={handleRegister}>
                     <TextField
@@ -167,6 +183,7 @@ const SignUpForm: React.FC = () => {
                         variant="contained"
                         type="submit"
                         sx={{
+                            marginTop: '30px',
                             backgroundColor: theme.palette.primary.main,
                             color: theme.palette.primary.contrastText,
                             fontWeight: 'bold',
@@ -212,7 +229,7 @@ const SignUpForm: React.FC = () => {
                         fontStyle: 'italic',
                     }}
                 >
-                    Enter <strong>Username</strong> and <strong>Password</strong>
+                    Admin only: Provide <strong>Username</strong> and <strong>Password</strong>
                 </Typography>
             </Box>
         </Box>

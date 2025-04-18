@@ -184,7 +184,7 @@ const LoginForm: React.FC = () => {
                         disabled={isLoading}
                     />
 
-                    <Link
+                    {/* <Link
                         href="#"
                         variant="body2"
                         sx={{
@@ -200,7 +200,7 @@ const LoginForm: React.FC = () => {
                         onClick={handleClick}
                     >
                         Reset password?
-                    </Link>
+                    </Link> */}
 
                     <Button
                         fullWidth
@@ -208,6 +208,7 @@ const LoginForm: React.FC = () => {
                         disabled={isLoading}
                         variant="contained"
                         sx={{
+                            marginTop: '30px',
                             backgroundColor: theme.palette.primary.main,
                             color: theme.palette.primary.contrastText,
                             fontWeight: 'bold',

@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Box, TextField, Button, Typography, Link, useTheme, CircularProgress } from '@mui/material'
 import { useAuth } from '@/app/context/AuthContext'
 import agent from '@/app/api/agent'
+import CloseIcon from '@mui/icons-material/Close'
+import { IconButton } from '@mui/material'
 
 const ResetPasswordForm: React.FC = () => {
     const theme = useTheme()
@@ -52,8 +54,22 @@ const ResetPasswordForm: React.FC = () => {
                     boxShadow: theme.shadows[6],
                     color: theme.palette.text.primary,
                     border: `1px solid rgba(255, 255, 255, 0.6)`,
+                    position: 'relative',
                 }}
             >
+                <IconButton
+                    sx={{
+                        position: 'absolute',
+                        top: 8,
+                        right: 8,
+                        color: theme.palette.grey[700],
+                    }}
+                    onClick={() => {
+                        setCurrentForm('login')
+                    }}
+                >
+                    <CloseIcon />
+                </IconButton>
                 <Typography
                     variant="h3"
                     gutterBottom

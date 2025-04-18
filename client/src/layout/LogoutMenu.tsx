@@ -29,6 +29,13 @@ const LogoutMenu: React.FC<LogoutMenuProps> = ({ anchorEl, open, onClose }) => {
         setCurrentForm('signup') // Set the current form to signup
     }
 
+    //Reset logic
+    const handleReset = () => {
+        onClose()
+        navigate('/') // Redirect to the registration page
+        setCurrentForm('resetPassword') // Set the current form to Reset
+    }
+
     return (
         <Popover
             id="logout-popover"
@@ -42,6 +49,9 @@ const LogoutMenu: React.FC<LogoutMenuProps> = ({ anchorEl, open, onClose }) => {
 
             {/* Only admin roles can see the register option */}
             {role === 'admin' && <MenuItem onClick={handleRegister}>Register</MenuItem>}
+
+            {/* Only admin roles can see the register option */}
+            {role === 'admin' && <MenuItem onClick={handleReset}>Reset</MenuItem>}
         </Popover>
     )
 }
