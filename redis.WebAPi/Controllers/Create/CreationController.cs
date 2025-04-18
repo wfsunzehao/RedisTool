@@ -13,9 +13,47 @@ namespace redis.WebAPi.Controllers
     {
         private readonly ICreationService _creationService;
 
-        public CreationController( ICreationService creationService)
+        // 锁字典，按方法名称动态管理锁
+        private static readonly Dictionary<string, SemaphoreSlim> _locks = new Dictionary<string, SemaphoreSlim>
+    {
+        { "CreateManualCache", new SemaphoreSlim(1, 1) },
+        { "CreateBVTCache", new SemaphoreSlim(1, 1) },
+        { "CreatePerfCache", new SemaphoreSlim(1, 1) },
+        { "CreateAltCache", new SemaphoreSlim(1, 1) },
+        { "CreateP0P1Cache", new SemaphoreSlim(1, 1) }
+    };
+
+        public CreationController(ICreationService creationService)
         {
-            _creationService = creationService;   
+            _creationService = creationService;
+        }
+
+        private async Task<IActionResult> ExecuteWithLock(string methodName, Func<Task> action)
+        {
+            var lockObject = _locks.GetValueOrDefault(methodName);
+            if (lockObject == null)
+            {
+                return BadRequest("Invalid method name for locking.");
+            }
+            var lockAcquired = lockObject.Wait(0);
+            if (!lockAcquired)
+            {
+                return Conflict($"[{methodName}] is in processing, please retry later。");
+            }
+
+            try
+            {
+                await action(); 
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error occurred: {ex.Message}");
+            }
+            finally
+            {
+                lockObject.Release();
+            }
         }
 
         [HttpPost()]
@@ -33,11 +71,11 @@ namespace redis.WebAPi.Controllers
         }
 
         [HttpPost("CreateBVTCache")]
-        public async Task<IActionResult> CreateBVTCache([FromBody] RedisRequestModel redisRequest)
+        public Task<IActionResult> CreateBVTCache([FromBody] RedisRequestModel redisRequest)
         {
-            await _creationService.CreateBVTCache(redisRequest);
-            return Ok();
+            return ExecuteWithLock("CreateBVTCache", () => _creationService.CreateBVTCache(redisRequest));
         }
+
 
         [HttpPost("CreateBVTCacheByCase")]
         public async Task<IActionResult> CreateBVTCacheByCase([FromBody] RedisRequestModel redisRequest)
@@ -47,31 +85,22 @@ namespace redis.WebAPi.Controllers
         }
 
         [HttpPost("CreatePerfCache")]
-        public async Task<IActionResult> CreatePerfCache([FromBody] PerfRequestModel redisRequest)
+        public Task<IActionResult> CreatePerfCache([FromBody] PerfRequestModel redisRequest)
         {
-            await _creationService.CreatePerfCache(redisRequest);
-            return Ok();
+            return ExecuteWithLock("CreatePerfCache", () => _creationService.CreatePerfCache(redisRequest));
         }
 
         [HttpPost("CreateAltCache")]
-        public async Task<IActionResult> CreateAltCache([FromBody] PerfRequestModel redisRequest)
+        public Task<IActionResult> CreateAltCache([FromBody] PerfRequestModel redisRequest)
         {
-            await _creationService.CreateAltCache(redisRequest);
-            return Ok();
+            return ExecuteWithLock("CreateAltCache", () => _creationService.CreateAltCache(redisRequest));
         }
 
         [HttpPost("CreateP0P1Cache")]
-        public async Task<IActionResult> CreateP0P1Cache([FromBody] P0P1RequestModel redisRequest)
+        public Task<IActionResult> CreateP0P1Cache([FromBody] P0P1RequestModel redisRequest)
         {
-            await _creationService.CreateP0P1Cache(redisRequest);
-            return Ok();
+            return ExecuteWithLock("CreateP0P1Cache", () => _creationService.CreateP0P1Cache(redisRequest));
         }
 
-        //[HttpPost("VMConnection")]
-        //public async Task<IActionResult> VMConnection()
-        //{
-        //    return Ok(await _connectionVMService.ConnectionVM());
-
-        //}
     }
 }
