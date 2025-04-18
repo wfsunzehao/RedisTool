@@ -137,7 +137,7 @@ const ResetPasswordForm: React.FC = () => {
                         type="submit"
                         disabled={isLoading}
                         sx={{
-                            mt: 2,
+                            marginTop: '30px',
                             backgroundColor: theme.palette.primary.main,
                             color: theme.palette.primary.contrastText,
                             fontWeight: 'bold',
@@ -190,7 +190,7 @@ const ResetPasswordForm: React.FC = () => {
                         color: theme.palette.mode === 'dark' ? '#000000' : theme.palette.text.secondary,
                     }}
                 >
-                    Back to{' '}
+                    {/* Back to{' '}
                     <Link
                         href="#"
                         onClick={handleClick}
@@ -204,7 +204,7 @@ const ResetPasswordForm: React.FC = () => {
                         }}
                     >
                         Sign In
-                    </Link>
+                    </Link> */}
                 </Typography>
             </Box>
         </Box>

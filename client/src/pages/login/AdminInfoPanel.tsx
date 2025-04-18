@@ -24,7 +24,7 @@ const AdminInfoPanel: React.FC = () => {
             <Typography variant="h6" gutterBottom>
                 Admin
             </Typography>
-            <Typography variant="body1">📧: frankzhoua@wicresoft.com</Typography>
+            <Typography variant="body1">📧: xxx@wicresoft.com</Typography>
         </Box>
     )
 }

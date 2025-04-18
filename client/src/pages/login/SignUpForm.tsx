@@ -221,12 +221,12 @@ const SignUpForm: React.FC = () => {
                 )}
 
                 <Typography
-                    variant="body1"
+                    variant="body2"
                     sx={{
-                        marginTop: 3,
-                        color: theme.palette.mode === 'dark' ? '#000000' : theme.palette.text.secondary,
+                        mt: 3,
                         textAlign: 'center',
                         fontStyle: 'italic',
+                        color: theme.palette.mode === 'dark' ? '#000000' : theme.palette.text.secondary,
                     }}
                 >
                     Admin only: Provide <strong>Username</strong> and <strong>Password</strong>
