@@ -3,6 +3,7 @@ import { Box, TextField, Button, Typography, Link, useTheme, CircularProgress } 
 import { useAuth } from '../../app/context/AuthContext'
 import agent from '../../app/api/agent'
 import { useNavigate } from 'react-router-dom'
+import AdminInfoPanel from './AdminInfoPanel' // 引入 AdminInfoPanel
 
 const LoginForm: React.FC = () => {
     const theme = useTheme()
@@ -12,6 +13,8 @@ const LoginForm: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [message, setMessage] = useState<{ type: 'error' | 'success'; content: string } | null>(null)
     const { setIsLoggedIn, setToken, setCurrentForm, role, setRole, setName } = useAuth()
+
+    const [showAdminPanel, setShowAdminPanel] = useState(false)
 
     const handleLogin = async (event: React.FormEvent) => {
         event.preventDefault()
@@ -52,6 +55,7 @@ const LoginForm: React.FC = () => {
         >
             <Box
                 sx={{
+                    position: 'relative',
                     width: 500,
                     padding: 5,
                     backgroundColor: 'rgba(255, 255, 255, 0.5)',
@@ -99,6 +103,8 @@ const LoginForm: React.FC = () => {
                                 color: theme.palette.primary.dark,
                             },
                         }}
+                        onMouseEnter={() => setShowAdminPanel(true)} // 鼠标悬浮时显示 AdminInfoPanel
+                        onMouseLeave={() => setShowAdminPanel(false)} // 鼠标离开时隐藏 AdminInfoPanel
                     >
                         Contact the administrator
                     </Link>
@@ -184,24 +190,6 @@ const LoginForm: React.FC = () => {
                         disabled={isLoading}
                     />
 
-                    {/* <Link
-                        href="#"
-                        variant="body2"
-                        sx={{
-                            display: 'block',
-                            marginBottom: 3,
-                            textAlign: 'right',
-                            color: theme.palette.mode === 'dark' ? '#000000' : theme.palette.text.secondary,
-                            '&:hover': {
-                                textDecoration: 'underline',
-                                color: theme.palette.primary.main,
-                            },
-                        }}
-                        onClick={handleClick}
-                    >
-                        Reset password?
-                    </Link> */}
-
                     <Button
                         fullWidth
                         type="submit"
@@ -244,6 +232,20 @@ const LoginForm: React.FC = () => {
                     Enter <strong>Username </strong> and <strong>password</strong>
                 </Typography>
             </Box>
+
+            {showAdminPanel && (
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        right: 0,
+                        transform: 'translateY(-50%)',
+                        zIndex: 11, // Ensure AdminInfoPanel is above everything else
+                    }}
+                >
+                    <AdminInfoPanel /> {/* 显示管理员信息面板 */}
+                </Box>
+            )}
         </Box>
     )
 }
