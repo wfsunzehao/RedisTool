@@ -29,7 +29,7 @@ const LoginForm: React.FC = () => {
             setIsLoggedIn(true)
 
             setMessage({ type: 'success', content: 'Login successful!' })
-            navigate('/create')
+            navigate('/tests')
         } catch (error) {
             const errorMessage =
                 (error as { data: { message: string } })?.data?.message || 'Invalid username or password.'

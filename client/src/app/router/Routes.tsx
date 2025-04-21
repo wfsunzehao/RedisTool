@@ -19,6 +19,7 @@ import Statistics from '@/pages/create/perf/statistics/Statistics'
 import DataDisplayPage from '@/pages/create/perf/data/Dashboard'
 import Routine from '@/pages/create/perf/Routine/routine'
 import TxtExcelMerger from '@/pages/create/perf/InsertExcel/insertexcel'
+import ProtectedRoute from './ProtectedRoute'
 
 export const router = createBrowserRouter([
     {
@@ -26,37 +27,45 @@ export const router = createBrowserRouter([
         element: <App />,
         children: [
             { path: '', element: <HomePage /> },
+
+            // Protected group
             {
-                path: 'tests',
-                element: <CreatePage />,
+                element: <ProtectedRoute />,
                 children: [
-                    { path: 'bvt', element: <BvtPage /> },
-                    { path: 'man', element: <ManPage /> },
-                    { path: 'perf', element: <PerfPage /> },
-                    { path: 'benchmark', element: <RunBenchmark /> },
-                    { path: 'statistics', element: <Statistics /> },
-                    { path: 'dataDisplayPage/:timeStamp', element: <DataDisplayPage /> },
-                    { path: 'alt', element: <AltPage /> },
-                    { path: 'routine', element: <Routine /> },
-                    { path: 'TxtExcelMerger', element: <TxtExcelMerger /> },
+                    {
+                        path: 'tests',
+                        element: <CreatePage />,
+                        children: [
+                            { path: 'bvt', element: <BvtPage /> },
+                            { path: 'man', element: <ManPage /> },
+                            { path: 'perf', element: <PerfPage /> },
+                            { path: 'benchmark', element: <RunBenchmark /> },
+                            { path: 'statistics', element: <Statistics /> },
+                            { path: 'dataDisplayPage/:timeStamp', element: <DataDisplayPage /> },
+                            { path: 'alt', element: <AltPage /> },
+                            { path: 'routine', element: <Routine /> },
+                            { path: 'TxtExcelMerger', element: <TxtExcelMerger /> },
+                        ],
+                    },
+                    {
+                        path: 'delete',
+                        element: <DeletePage />,
+                        children: [{ path: 'group', element: <GroupPage /> }],
+                    },
+                    {
+                        path: 'tools',
+                        element: <OtherPage />,
+                        children: [
+                            { path: 'insert', element: <InsertPage /> },
+                            { path: 'median', element: <MedianPage /> },
+                            { path: 'signal', element: <Signal /> },
+                        ],
+                    },
                 ],
             },
-            {
-                path: 'delete',
-                element: <DeletePage />,
-                children: [{ path: 'group', element: <GroupPage /> }],
-            },
-            {
-                path: 'tools',
-                element: <OtherPage />,
-                children: [
-                    { path: 'insert', element: <InsertPage /> },
-                    { path: 'median', element: <MedianPage /> },
-                    { path: 'signal', element: <Signal /> },
-                ],
-            },
+
             { path: 'server-error', element: <ServerError /> },
-            { path: 'not-found', element: <NotFound /> }, //404
+            { path: 'not-found', element: <NotFound /> },
             { path: '*', element: <Navigate replace to="/not-found" /> },
         ],
     },
