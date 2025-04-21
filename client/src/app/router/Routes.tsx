@@ -20,6 +20,7 @@ import DataDisplayPage from '@/pages/create/perf/data/Dashboard'
 import Routine from '@/pages/create/perf/Routine/routine'
 import TxtExcelMerger from '@/pages/create/perf/InsertExcel/insertexcel'
 import ProtectedRoute from './ProtectedRoute'
+import ComparePage from '@/pages/other/compare/ComparePage'
 
 export const router = createBrowserRouter([
     {
@@ -58,6 +59,7 @@ export const router = createBrowserRouter([
                         children: [
                             { path: 'insert', element: <InsertPage /> },
                             { path: 'median', element: <MedianPage /> },
+                            { path: 'compare', element: <ComparePage /> },
                             { path: 'signal', element: <Signal /> },
                         ],
                     },

@@ -18,8 +18,8 @@ const leftLinks = [
     },
     {
         title: 'Compare Testplan',
-        path: '/tools/median',
-        alert: 'Find the median of all excel in this path',
+        path: '/tools/compare',
+        alert: '',
         icon: <IconStackMiddle stroke={2} />,
     },
 ]
