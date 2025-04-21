@@ -212,7 +212,9 @@ const BvtPage: React.FC = () => {
                                     value={selectedNames}
                                     onChange={handleSelectChange}
                                     input={<OutlinedInput label="Case" />}
-                                    renderValue={(selected) => selected.join(', ')}
+                                    renderValue={(selected) =>
+                                        selected.length > 2 ? `Select  ${selected.length} ` : selected.join(', ')
+                                    }
                                 >
                                     {BVTTestCaseNames.map((name) => (
                                         <MenuItem key={name} value={name}>

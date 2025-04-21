@@ -27,7 +27,7 @@ export const router = createBrowserRouter([
         children: [
             { path: '', element: <HomePage /> },
             {
-                path: 'create',
+                path: 'tests',
                 element: <CreatePage />,
                 children: [
                     { path: 'bvt', element: <BvtPage /> },
@@ -47,7 +47,7 @@ export const router = createBrowserRouter([
                 children: [{ path: 'group', element: <GroupPage /> }],
             },
             {
-                path: 'more',
+                path: 'tools',
                 element: <OtherPage />,
                 children: [
                     { path: 'insert', element: <InsertPage /> },

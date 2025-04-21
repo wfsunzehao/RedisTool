@@ -26,9 +26,9 @@ import LogoutMenu from './LogoutMenu'
 import { loginTextStyles } from '@/common/styles/loginTextStyles'
 
 const midLinks = [
-    { title: 'Tests', path: '/create' },
+    { title: 'Tests', path: '/tests' },
     { title: 'Actions', path: '/delete' },
-    { title: 'Tools', path: '/more' },
+    { title: 'Tools', path: '/tools' },
 ]
 
 const navStyles = (theme: any) => ({
