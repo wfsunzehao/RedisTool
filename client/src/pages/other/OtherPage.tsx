@@ -1,6 +1,6 @@
 import React from 'react'
 import NavPage from '../../layout/NavPage'
-import { IconDatabaseImport } from '@tabler/icons-react'
+import { IconDatabaseImport, IconListCheck } from '@tabler/icons-react'
 import { IconStackMiddle } from '@tabler/icons-react'
 
 const leftLinks = [
@@ -21,6 +21,12 @@ const leftLinks = [
         path: '/tools/compare',
         alert: '',
         icon: <IconStackMiddle stroke={2} />,
+    },
+    {
+        title: 'Testplan Diff',
+        path: '/tools/check',
+        alert: '',
+        icon: <IconListCheck stroke={2} />,
     },
 ]
 

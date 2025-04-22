@@ -21,6 +21,7 @@ import Routine from '@/pages/create/perf/Routine/routine'
 import TxtExcelMerger from '@/pages/create/perf/InsertExcel/insertexcel'
 import ProtectedRoute from './ProtectedRoute'
 import ComparePage from '@/pages/other/compare/ComparePage'
+import CheckPage from '@/pages/other/check/CheckPage'
 
 export const router = createBrowserRouter([
     {
@@ -60,6 +61,7 @@ export const router = createBrowserRouter([
                             { path: 'insert', element: <InsertPage /> },
                             { path: 'median', element: <MedianPage /> },
                             { path: 'compare', element: <ComparePage /> },
+                            { path: 'check', element: <CheckPage /> },
                             { path: 'signal', element: <Signal /> },
                         ],
                     },

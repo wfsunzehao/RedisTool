@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { IconChartLine } from '@tabler/icons-react'
 import { IconHandClick } from '@tabler/icons-react'
 import { IconAlt } from '@tabler/icons-react'
 import { IconDeviceDesktopAnalytics } from '@tabler/icons-react'
 import NavPage from '../../layout/NavPage'
+import { useLocation } from 'react-router-dom'
 
 // Link to the left navigation bar
 const leftLinks = [
@@ -31,7 +32,17 @@ const leftLinks = [
 
 // Homepage component
 const CreatePage: React.FC = () => {
-    return <NavPage links={leftLinks} defaultPath="/tests/man" />
+    const location = useLocation()
+
+    const contentWidth = useMemo(() => {
+        const customWidths: Record<string, string> = {
+            '/tests/benchmark': '100%',
+            '/tests/statistics': '100%',
+        }
+        return customWidths[location.pathname] || '40%'
+    }, [location.pathname]) //
+
+    return <NavPage links={leftLinks} defaultPath="/tests/man" contentWidth={contentWidth} />
 }
 
 export default CreatePage
