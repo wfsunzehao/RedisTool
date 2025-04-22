@@ -22,8 +22,8 @@ const leftLinks = [
         subLinks: [
             { title: 'Create', path: '/tests/perf', count: 1 },
             { title: 'InsertSingleTask', path: '/tests/benchmark', count: 2 },
-            { title: 'Statistics', path: '/tests/statistics', count: 3 },
-            { title: 'ExecutionTask', path: '/tests/routine', count: 4 },
+            { title: 'ExecutionTask', path: '/tests/routine', count: 3 },
+            { title: 'Statistics', path: '/tests/statistics', count: 4 },
             { title: 'Insertexcel', path: '/tests/TxtExcelMerger', count: 5 },
         ],
     },
