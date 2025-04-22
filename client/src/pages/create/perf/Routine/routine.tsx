@@ -145,8 +145,7 @@ const Routine = () => {
     // 🔁 获取组选项
     const fetchSecondSelectionOptions = async (subId: string) => {
       try {
-        const res = await fetch(`https://localhost:7179/api/Subscription/${subId}`);
-        const data = await res.json();
+        const data = await agent.Create.getGroupOptions(subId);
         setSecondSelectionOptions(data);
       } catch (err) {
         console.error('Error fetching group list:', err);
@@ -166,25 +165,7 @@ const Routine = () => {
         try {
             setLoadingVMs(true); // 开始加载
             setSelectedVMs([]); // 清空已选
-            const url = `https://localhost:7179/api/BenchmarkRun/getVMs?sub=${encodeURIComponent(subId)}&group=${encodeURIComponent(groupName)}`;
-            const res = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'accept': '*/*'
-            },
-            body: '' // POST 方法需要 body，即使为空
-            });
-            // 检查状态码和内容类型
-            if (!res.ok) {
-                throw new Error(`HTTP error! Status: ${res.status}`);
-            }
-        
-            const contentType = res.headers.get('content-type');
-            if (!contentType || !contentType.includes('application/json')) {
-                throw new Error('Invalid content type received from API');
-            }
-        
-            const data = await res.json();
+            const data = await agent.Create.getVmList(subId, groupName);
             setVmMap(data);
         } catch (err) {
             console.error('Error fetching VM list:', err);
@@ -215,28 +196,16 @@ const Routine = () => {
     //📤 提交选中 VM 的方法
     const handleSubmit = async () => {
         try {
-          const payload = {
-            sub: firstSelection,
-            group: secondSelection,
-            vms: selectedVMs
-          };
-      
-          const res = await fetch('https://localhost:7179/api/BenchmarkRun/runSelectedVMs', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-      
-          if (!res.ok) {
-            throw new Error(`Submission failed: ${res.status}`);
-          }
-      
-          alert('提交成功！');
+            await agent.Create.submitSelectedVMs({
+                sub: firstSelection,
+                group: secondSelection,
+                vms: selectedVMs,
+            });
+            alert('Submission successful!');
         } catch (err) {
-          console.error('Error submitting selected VMs:', err);
-          alert('提交失败');
+            alert('Submission failed!');
         }
-      };
+    };
       
     // 🔔 全局提示
     const showSnackbar = (msg: string, severity: typeof snackbarSeverity = 'info') => {
@@ -266,12 +235,12 @@ const Routine = () => {
     };
   
     const handleRunTasks = (e: React.FormEvent) => {
-      const data = { subscription, group };
+      const data = { subscription, secondSelection };
       handleGenericSubmit(
         e,
         data,
         async (d) => {
-            await agent.Create.executetasksJson(subscription,group,selectedVMs);
+            agent.Create.executetasksJson(subscription,secondSelection,selectedVMs);
             return d;
         },
         () => true,

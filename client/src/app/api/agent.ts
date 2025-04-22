@@ -106,6 +106,47 @@ const Create = {
             params: { date },
             ...config, // 将传入的 config 合并到默认配置中
         }),
+    getGroupOptions: (subscriptionId: string) =>
+        axios
+            .get(`/Subscription/${subscriptionId}`)
+            .then((res) => res.data)
+            .catch((err) => {
+                console.error('Error fetching group list:', err);
+                throw err;
+            }),
+
+    getVmList: (subId: string, groupName: string) =>
+        axios
+            .post(`/BenchmarkRun/getVMs?sub=${encodeURIComponent(subId)}&group=${encodeURIComponent(groupName)}`, '', {
+                headers: {
+                    accept: '*/*',
+                },
+            })
+            .then((res) => {
+                const contentType = res.headers['content-type'];
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Invalid content type received from API');
+                }
+                return res.data;
+            })
+            .catch((err) => {
+                console.error('Error fetching VM list:', err);
+                throw err;
+            }),
+
+    submitSelectedVMs: (payload: { sub: string; group: string; vms: string[] }) =>
+        axios
+            .post('/BenchmarkRun/runSelectedVMs', payload, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then((res) => res.data)
+            .catch((err) => {
+                console.error('Error submitting selected VMs:', err);
+                throw err;
+            }),
+    
 }
 
 const Delete = {

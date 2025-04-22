@@ -73,10 +73,6 @@ const RunBenchmark = () => {
         }
     }
 
-    const handleRoutine = () => {
-        //常规做法
-    }
-
     return (
         <div>
             <Container maxWidth="xl">
@@ -101,6 +97,8 @@ const RunBenchmark = () => {
                             //maxHeight: '90vh',
                             overflowY: 'auto',
                             paddingRight: '16px',
+
+                            
                         }}
                     >
                         <Grid container spacing={3}>
