@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
+import {
+  Box,
+  Typography,
+  Button,
+  Stack,
+  Alert,
+  Divider,
+} from '@mui/material';
 import { Upload, FileText, Download } from 'lucide-react';
 
 const TxtExcelMerger: React.FC = () => {
@@ -53,7 +61,9 @@ const TxtExcelMerger: React.FC = () => {
       const fileName = lines[0].trim();
       const jsonStr = lines.slice(1).join('\n');
 
-      const matchedKey = Object.keys(fileNameStartRowMap).find(key => fileName.includes(key));
+      const matchedKey = Object.keys(fileNameStartRowMap).find(key =>
+        fileName.includes(key)
+      );
       if (!matchedKey) {
         newLog.push(`❌ Unrecognized file name: ${fileName}`);
         continue;
@@ -63,7 +73,6 @@ const TxtExcelMerger: React.FC = () => {
 
       try {
         const data = JSON.parse(jsonStr);
-
         const values = [
           data.GetsRPS,
           data.TotalDuration,
@@ -89,87 +98,109 @@ const TxtExcelMerger: React.FC = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto mt-12 p-10 rounded-2xl shadow-2xl bg-white border border-gray-300 space-y-8">
-      <h1 className="text-4xl font-extrabold text-center text-gray-800">📊 Benchmark Result Integration Tool</h1>
-
-      {/* TXT Upload */}
-      <div className="space-y-3">
-        <label className="block font-medium text-gray-700 flex items-center gap-2 text-lg">
-          <Upload className="w-6 h-6 text-blue-500" />
-          Upload `.txt` Benchmark Result File
-        </label>
-        <div className="flex gap-4 items-center">
-          <button
-            onClick={() => document.getElementById('txt-input')?.click()}
-            className="px-5 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition transform hover:scale-105"
-          >
-            Select TXT File
-          </button>
-          <span className="text-md text-gray-600">
-            {txtFile ? txtFile.name : 'No file selected'}
-          </span>
-        </div>
-        <input
-          id="txt-input"
-          type="file"
-          accept=".txt"
-          className="hidden"
-          onChange={e => setTxtFile(e.target.files?.[0] || null)}
-        />
-      </div>
-
-      {/* Excel Upload */}
-      <div className="space-y-3">
-        <label className="block font-medium text-gray-700 flex items-center gap-2 text-lg">
-          <FileText className="w-6 h-6 text-green-500" />
-          Upload `.xlsx` Excel Template
-        </label>
-        <div className="flex gap-4 items-center">
-          <button
-            onClick={() => document.getElementById('xlsx-input')?.click()}
-            className="px-5 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 transition transform hover:scale-105"
-          >
-            Select Excel File
-          </button>
-          <span className="text-md text-gray-600">
-            {xlsxFile ? xlsxFile.name : 'No file selected'}
-          </span>
-        </div>
-        <input
-          id="xlsx-input"
-          type="file"
-          accept=".xlsx"
-          className="hidden"
-          onChange={e => setXlsxFile(e.target.files?.[0] || null)}
-        />
-      </div>
-
-      {/* Merge Button */}
-      <button
-        onClick={handleMerge}
-        className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-4 rounded-lg flex justify-center items-center gap-2 transition transform hover:scale-105"
+    <Box
+      sx={{
+        minHeight: '100vh',
+        px: 4,
+        py: 8,
+        backgroundColor: '#fff', // 或者 theme.palette.background.default,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+      {/* 标题 */}
+      <Typography
+        variant="h3"
+        fontWeight="bold"
+        color="primary"
+        mb={6}
+        sx={{ textAlign: 'center', whiteSpace: 'nowrap' }}
       >
-        <Download className="w-6 h-6" />
-        Merge and Download Excel
-      </button>
+        📊 Benchmark Result Integration Tool
+      </Typography>
 
-      {/* Log Output */}
+      {/* 上传区域 */}
+      <Stack spacing={5} width="100%" maxWidth={700}>
+        {/* TXT 上传 */}
+        <Box>
+          <Typography variant="h6" mb={1} display="flex" alignItems="center" gap={1}>
+            <Upload size={20} />
+            Upload `.txt` Benchmark Result File
+          </Typography>
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <Button variant="contained" component="label" color="primary" sx={{ fontWeight: 600 }}>
+              Select TXT File
+              <input
+                type="file"
+                accept=".txt"
+                hidden
+                onChange={e => setTxtFile(e.target.files?.[0] || null)}
+              />
+            </Button>
+            <Typography variant="body2">
+              {txtFile ? txtFile.name : 'No file selected'}
+            </Typography>
+          </Stack>
+        </Box>
+
+        {/* Excel 上传 */}
+        <Box>
+          <Typography variant="h6" mb={1} display="flex" alignItems="center" gap={1}>
+            <FileText size={20} />
+            Upload `.xlsx` Excel Template
+          </Typography>
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <Button variant="contained" component="label" color="success" sx={{ fontWeight: 600 }}>
+              Select Excel File
+              <input
+                type="file"
+                accept=".xlsx"
+                hidden
+                onChange={e => setXlsxFile(e.target.files?.[0] || null)}
+              />
+            </Button>
+            <Typography variant="body2">
+              {xlsxFile ? xlsxFile.name : 'No file selected'}
+            </Typography>
+          </Stack>
+        </Box>
+      </Stack>
+
+      {/* 合并按钮 */}
+      <Box mt={6}>
+        <Button
+          variant="contained"
+          color="secondary"
+          size="large"
+          onClick={handleMerge}
+          startIcon={<Download />}
+          sx={{ px: 5, py: 2, fontWeight: 'bold', borderRadius: 2 }}
+        >
+          Merge and Download Excel
+        </Button>
+      </Box>
+
+      {/* 日志显示 */}
       {log.length > 0 && (
-        <div className="bg-gray-50 border border-gray-200 rounded-md p-5 space-y-2">
-          <h2 className="text-lg font-semibold text-gray-700">📋 Merge Log</h2>
-          {log.map((entry, i) => (
-            <div
-              key={i}
-              className={`text-sm px-3 py-2 rounded-lg shadow-sm ${
-                entry.includes('✅') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-              }`}
-            >
-              {entry}
-            </div>
-          ))}
-        </div>
+        <Box mt={6} width="100%" maxWidth={700}>
+          <Divider sx={{ mb: 2 }} />
+          <Typography variant="h6" gutterBottom>
+            📋 Merge Log
+          </Typography>
+          <Stack spacing={1}>
+            {log.map((entry, idx) => (
+              <Alert
+                key={idx}
+                severity={entry.includes('✅') ? 'success' : 'error'}
+              >
+                {entry}
+              </Alert>
+            ))}
+          </Stack>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 };
 

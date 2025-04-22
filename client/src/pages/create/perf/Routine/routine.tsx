@@ -1,37 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Typography, Box, Grid, TextField, Table, TableBody, TableCell, TableContainer,
+    Typography, Box, TextField, Table, TableBody, TableCell, TableContainer,
     TableHead, TableRow, Paper, Button, Backdrop, CircularProgress, Alert,
     FormControl, Autocomplete, Snackbar
 } from '@mui/material';
-import { Card, CardContent } from '@mui/material';
-import ComputerIcon from '@mui/icons-material/Computer';
-import CircleIcon from '@mui/icons-material/Circle';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import agent from '@/app/api/agent';
-import { format } from 'date-fns';
-import { toZonedTime } from 'date-fns-tz';
 import { handleGenericSubmit } from '@/app/util/util'
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { styled } from '@mui/material/styles';
 import Fade from '@mui/material/Fade';
+import axios from 'axios';
+import { Select, MenuItem, InputLabel, List, ListItem, ListItemText,ListItemIcon,Checkbox } from '@mui/material';
+import { SelectChangeEvent } from '@mui/material/Select';
+import ComputerIcon from '@mui/icons-material/Computer';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-
-
-
-
-const vmList = [
-    { name: 'P1,P2', status: 'on' },
-    { name: 'P3,P4', status: 'on' },
-    { name: 'P5', status: 'on' },
-    { name: 'SC0,C1', status: 'on' },
-    { name: 'SC2,C3', status: 'on' },
-    { name: 'SC4,C5,C6', status: 'on' },
-    { name: 'BC0,C1', status: 'on' },
-    { name: 'BC3,C4', status: 'on' },
-    { name: 'BC4,C5,C6', status: 'off' },
-];
 
 const tableData = [
     {
@@ -93,135 +79,248 @@ const CustomTooltip = styled(({ className, ...props }: any) => (
 }));
 
 
-
 const Routine = () => {
-    const [cacheDate, setCacheDate] = useState('');
+    // ✅ 订阅与组相关状态
+    const [subscription, setSubscription] = useState('');
     const [group, setGroup] = useState('');
     const [groupList, setGroupList] = useState<string[]>([]);
-    const [errors, setErrors] = useState<{ [key: string]: string }>({});
-    const [subscription, setSubscription] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [firstSelection, setFirstSelection] = useState('fc2f20f5-602a-4ebd-97e6-4fae3f1f6424');
+    const [secondSelection, setSecondSelection] = useState(""); 
+    const [secondSelectionOptions, setSecondSelectionOptions] = useState<string[]>([]);
+    const [vmMap, setVmMap] = useState<Record<string, string>>({});
+    const [selectedVMs, setSelectedVMs] = useState<string[]>([]);
+  
+    // ✅ 表单与输入
+    const [cacheDate, setCacheDate] = useState('');
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-
-    // Snackbar 状态
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  
+    // ✅ 状态与提示
+    const [loading, setLoading] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error' | 'info' | 'warning'>('info');
+    const [loadingVMs, setLoadingVMs] = useState(false);
 
-    const showSnackbar = (message: string, severity: 'success' | 'error' | 'info' | 'warning' = 'info') => {
-        setSnackbarMessage(message);
-        setSnackbarSeverity(severity);
-        setSnackbarOpen(true);
-    };
 
-    const handleSnackbarClose = () => {
-        setSnackbarOpen(false);
-    };
-
+  
+    // 🔄 初始化订阅和组列表
     useEffect(() => {
-        setSubscription('1e57c478-0901-4c02-8d35-49db234b78d2');
-        agent.Create.getGroup('1e57c478-0901-4c02-8d35-49db234b78d2')
-            .then((response) => {
-                const sortedResponse = response.sort(
-                    (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase())
-                );
-                setGroupList(sortedResponse);
-            })
-            .catch((error) => {
-                console.log(error.response);
-                showSnackbar('Failed to load the Group list', 'error');
-            });
+      const defaultSub = '1e57c478-0901-4c02-8d35-49db234b78d2';
+      setSubscription(defaultSub);
+      agent.Create.getGroup(defaultSub)
+        .then((res) => {
+          const sorted = res.sort((a: string, b: string) => a.localeCompare(b));
+          setGroupList(sorted);
+        })
+        .catch((err) => {
+          console.error(err);
+          showSnackbar('Failed to load the Group list', 'error');
+        });
     }, []);
-
-    const handleInsertGroup = (event: React.FormEvent) => {
-        if (!group) {
-            showSnackbar("Please select a Group first!", "warning");
-            return;
+  
+    // 🔄 订阅选择变化时更新组列表
+    useEffect(() => {
+        if (firstSelection) {
+          fetchSecondSelectionOptions(firstSelection);
+          
+          // 设置默认 group，并触发 VM 获取
+          let defaultGroup = '';
+          if (firstSelection === 'fc2f20f5-602a-4ebd-97e6-4fae3f1f6424') {
+            defaultGroup = 'MemtierbenchmarkTest';
+          } else if (firstSelection === '1e57c478-0901-4c02-8d35-49db234b78d2') {
+            defaultGroup = 'Redis_MemtierbenchmarkTest';
+          }
+      
+          if (defaultGroup) {
+            setSecondSelection(defaultGroup);
+            fetchVmList(firstSelection, defaultGroup);
+          } else {
+            setSecondSelection('');
+            setVmMap({});
+          }
         }
-    
-        const data = { subscription, group };
-    
-        handleGenericSubmit(
-            event,
-            data,
-            async (d) => {
-                await agent.Create.InsertQCommandByGroupNameJson(JSON.stringify(d.group));
-                return d;
-            },
-            () => true, // 提前手动校验了，这里直接返回 true
-            setLoading,
-            "Are you sure you want to insert the cache from this group into the queue?"
-        );
+      }, [firstSelection]);
+  
+    // 🔁 获取组选项
+    const fetchSecondSelectionOptions = async (subId: string) => {
+      try {
+        const res = await fetch(`https://localhost:7179/api/Subscription/${subId}`);
+        const data = await res.json();
+        setSecondSelectionOptions(data);
+      } catch (err) {
+        console.error('Error fetching group list:', err);
+      }
     };
-    
-    
-    const handleRunTasks = (event: React.FormEvent) => {
-        const data = { subscription, group };
-    
-        handleGenericSubmit(
-            event,
-            data,
-            async (d) => {
-                agent.Create.executetasksJson();
-                return d;
-            },
-            () => true, 
-            setLoading,
-            "Are you sure you want to start the Routine Test? This will initiate task execution."
-        );
-    };
-    
-    const handleFetchResult = (event: React.FormEvent) => {
-        if (!selectedDate) {
-            showSnackbar("Please select a Date first!", "warning");
-            return;
+  
+    // 🔁 处理组选择变化并获取 VM 列表
+    const handleGroupSelectionChange = async (e: SelectChangeEvent) => {
+        const selectedGroup = e.target.value;
+        setSecondSelection(selectedGroup);
+        if (firstSelection && selectedGroup) {
+        await fetchVmList(firstSelection, selectedGroup);
         }
-    
-        const data = { selectedDate };
-    
-        handleGenericSubmit(
-            event,
-            data,
-            async (d) => {
-                const newDate = new Date(d.selectedDate!);
-                newDate.setDate(newDate.getDate() + 1);
-                await agent.Create.FinalDataTestJson(newDate);
-                return d;
-            },
-            () => true,
-            setLoading,
-            "Are you sure you want to collect cache test results for the selected date?"
-        );
     };
-    
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setCacheDate(event.target.value);
-    };
-
-    const fetchAndDownloadTxt = async () => {
-        if (!cacheDate) {
-            showSnackbar("Please enter Cache Date!", "warning");
-            return;
-        }
-
+      // 🔁 获取 VM 列表（VM名 => 状态）
+    const fetchVmList = async (subId: string, groupName: string) => {
         try {
-            const response = await agent.Create.GetBenchmarkDataBlob(cacheDate, {
-                responseType: 'blob',  // 在这里设置 responseType 为 blob
+            setLoadingVMs(true); // 开始加载
+            setSelectedVMs([]); // 清空已选
+            const url = `https://localhost:7179/api/BenchmarkRun/getVMs?sub=${encodeURIComponent(subId)}&group=${encodeURIComponent(groupName)}`;
+            const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'accept': '*/*'
+            },
+            body: '' // POST 方法需要 body，即使为空
             });
-
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement("a");
-            link.href = url;
-            link.setAttribute("download", `BenchmarkData_${cacheDate}.txt`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            showSnackbar("Download success!", "success");
-        } catch (error) {
-            console.error("Error downloading the file:", error);
-            showSnackbar("Download failed, please check whether the service is running properly!", "error");
+            // 检查状态码和内容类型
+            if (!res.ok) {
+                throw new Error(`HTTP error! Status: ${res.status}`);
+            }
+        
+            const contentType = res.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error('Invalid content type received from API');
+            }
+        
+            const data = await res.json();
+            setVmMap(data);
+        } catch (err) {
+            console.error('Error fetching VM list:', err);
+        }finally {
+            setLoadingVMs(false); // 请求结束，关闭加载动画
         }
+    };
+
+    //✅ 多选点击逻辑
+    const handleVmToggle = (vmName: string) => {
+        setSelectedVMs((prev) =>
+          prev.includes(vmName)
+            ? prev.filter((name) => name !== vmName)
+            : [...prev, vmName]
+        );
+    };
+    // 🔍 根据状态渲染图标和颜色
+    const renderStatusIcon = (status: string) => {
+        if (status.toLowerCase().includes('deallocated')) {
+        return <HighlightOffIcon color="disabled" />;
+        }
+        if (status.toLowerCase().includes('running')) {
+        return <CheckCircleIcon color="success" />;
+        }
+        return <ComputerIcon color="primary" />;
+    };
+
+    //📤 提交选中 VM 的方法
+    const handleSubmit = async () => {
+        try {
+          const payload = {
+            sub: firstSelection,
+            group: secondSelection,
+            vms: selectedVMs
+          };
+      
+          const res = await fetch('https://localhost:7179/api/BenchmarkRun/runSelectedVMs', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+      
+          if (!res.ok) {
+            throw new Error(`Submission failed: ${res.status}`);
+          }
+      
+          alert('提交成功！');
+        } catch (err) {
+          console.error('Error submitting selected VMs:', err);
+          alert('提交失败');
+        }
+      };
+      
+    // 🔔 全局提示
+    const showSnackbar = (msg: string, severity: typeof snackbarSeverity = 'info') => {
+      setSnackbarMessage(msg);
+      setSnackbarSeverity(severity);
+      setSnackbarOpen(true);
+    };
+  
+    const handleSnackbarClose = () => setSnackbarOpen(false);
+  
+    // ✅ 通用请求提交封装调用
+    const handleInsertGroup = (e: React.FormEvent) => {
+      if (!group) return showSnackbar("Please select a Group first!", "warning");
+  
+      const data = { subscription, group };
+      handleGenericSubmit(
+        e,
+        data,
+        async (d) => {
+          await agent.Create.InsertQCommandByGroupNameJson(JSON.stringify(d.group));
+          return d;
+        },
+        () => true,
+        setLoading,
+        "Are you sure you want to insert the cache from this group into the queue?"
+      );
+    };
+  
+    const handleRunTasks = (e: React.FormEvent) => {
+      const data = { subscription, group };
+      handleGenericSubmit(
+        e,
+        data,
+        async (d) => {
+            await agent.Create.executetasksJson(subscription,group,selectedVMs);
+            return d;
+        },
+        () => true,
+        setLoading,
+        "Are you sure you want to start the Routine Test? This will initiate task execution."
+      );
+    };
+  
+    const handleFetchResult = (e: React.FormEvent) => {
+      if (!selectedDate) return showSnackbar("Please select a Date first!", "warning");
+  
+      const data = { selectedDate };
+      handleGenericSubmit(
+        e,
+        data,
+        async (d) => {
+          const newDate = new Date(d.selectedDate!);
+          newDate.setDate(newDate.getDate() + 1);
+          await agent.Create.FinalDataTestJson(newDate);
+          return d;
+        },
+        () => true,
+        setLoading,
+        "Are you sure you want to collect cache test results for the selected date?"
+      );
+    };
+  
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setCacheDate(e.target.value);
+    };
+  
+    // 📦 下载测试数据
+    const fetchAndDownloadTxt = async () => {
+      if (!cacheDate) return showSnackbar("Please enter Cache Date!", "warning");
+  
+      try {
+        const res = await agent.Create.GetBenchmarkDataBlob(cacheDate, { responseType: 'blob' });
+        const url = URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `BenchmarkData_${cacheDate}.txt`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        showSnackbar("Download success!", "success");
+      } catch (err) {
+        console.error("Error downloading the file:", err);
+        showSnackbar("Download failed, please check whether the service is running properly!", "error");
+      }
     };
 
     return (
@@ -241,17 +340,6 @@ const Routine = () => {
                 >
                     Routine Test
                 </Typography>
-                <Grid container spacing={3} justifyContent="center" mt={2}>
-                    {vmList.map((vm) => (
-                        <Grid item xs={4} key={vm.name}>
-                            <Box display="flex" alignItems="center" justifyContent="center" gap={1}>
-                                <ComputerIcon sx={{ fontSize: 40, color: '#1976d2' }} />
-                                <Typography variant="h6">{vm.name}</Typography>
-                                <CircleIcon sx={{ fontSize: 20, color: vm.status === 'on' ? 'green' : 'red' }} />
-                            </Box>
-                        </Grid>
-                    ))}
-                </Grid>
             </Box>
 
             <Box mt={5} display="flex" justifyContent="flex-start" width="50vw" sx={{ marginLeft: '-50px', overflowX: 'auto' }}>
@@ -290,11 +378,81 @@ const Routine = () => {
                 </TableContainer>
             </Box>
 
+            <Box sx={{ maxWidth: 600, mx: 'auto' }}>
+                {/* 🔹 Sub 选择（左文字 + 右选择框） */}
+                <Box display="flex" alignItems="center" gap={2} mt={2}>
+                    <Typography variant="body1" sx={{ fontWeight: 'bold', minWidth: 180 }}>
+                    Select Subscription :
+                    </Typography>
+                    <FormControl sx={{ flex: 1 }}>
+                    <Select
+                        value={firstSelection}
+                        onChange={(e) => setFirstSelection(e.target.value)}
+                    >
+                        <MenuItem value="1e57c478-0901-4c02-8d35-49db234b78d2">
+                        Cache Team - Vendor CTI Testing 2
+                        </MenuItem>
+                        <MenuItem value="fc2f20f5-602a-4ebd-97e6-4fae3f1f6424">
+                        CacheTeam - Redis Perf and Stress Resources
+                        </MenuItem>
+                    </Select>
+                    </FormControl>
+                </Box>
+
+                {/* 🔸 Group 选择（左文字 + 右选择框） */}
+                <Box display="flex" alignItems="center" gap={2} mt={2}>
+                    <Typography variant="body1" sx={{ fontWeight: 'bold', minWidth: 180 }}>
+                    Select Resource group:
+                    </Typography>
+                    <FormControl sx={{ flex: 1 }}>
+                    {/* <InputLabel>选择 Group</InputLabel> */}
+                    <Select
+                        value={secondSelection}
+                        onChange={handleGroupSelectionChange}
+                    >
+                        {secondSelectionOptions.map((option, index) => (
+                        <MenuItem key={index} value={option}>
+                            {option}
+                        </MenuItem>
+                        ))}
+                    </Select>
+                    </FormControl>
+                </Box>
+
+                {/* 🔻 VM 列表展示区（保持不变） */}
+                {loadingVMs ? (
+                    <Box display="flex" justifyContent="center" mt={3}>
+                    <CircularProgress />
+                    </Box>
+                ) : (
+                    Object.keys(vmMap).length > 0 && (
+                    <Box mt={2}>
+                        <Typography variant="h6">VM Status:</Typography>
+                        <List>
+                        {Object.entries(vmMap).map(([vmName, status]) => (
+                            <ListItem key={vmName} onClick={() => handleVmToggle(vmName)}>
+                            <Checkbox
+                                edge="start"
+                                checked={selectedVMs.includes(vmName)}
+                                tabIndex={-1}
+                                disableRipple
+                            />
+                            <ListItemIcon>{renderStatusIcon(status)}</ListItemIcon>
+                            <ListItemText primary={vmName} secondary={status} />
+                            </ListItem>
+                        ))}
+                        </List>
+                    </Box>
+                    )
+                )}
+                </Box>
+
+
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 3, gap: 3 }}>
                 <Box sx={{ width: '100%', maxWidth: 500, display: 'flex', flexDirection: 'column', gap: 2 }}>
                     <Box display="flex" alignItems="center" justifyContent="space-between">
                         <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                            Select Group:
+                        Select the target cache resource group:
                         </Typography>
                         <FormControl variant="outlined" sx={{ width: 250 }}>
                             <Autocomplete

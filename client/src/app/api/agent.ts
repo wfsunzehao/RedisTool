@@ -98,7 +98,8 @@ const Create = {
                 { headers: { 'Content-Type': 'application/json' } } // 修正 Content-Type
             )
             .then(responseBody),
-    executetasksJson: () => request.post('BenchmarkRun/execute-tasks', {}),
+    executetasksJson: (sub: string, group: string, vmList: string[]) =>
+        request.post(`BenchmarkRun/execute-tasks?sub=${sub}&group=${group}`, vmList),
     FinalDataTestJson: (data: Date) => request.post('/BenchmarkRun/FinalDataTest', data),
     GetBenchmarkDataBlob: (date: string, config: object = {}) =>
         axios.get('BenchmarkRun/GetBenchmarkData', {
