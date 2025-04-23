@@ -77,13 +77,13 @@ namespace redis.WebAPi.Service.AzureShared
                 {
                     Name = redis.Data.Name,
                     Threads = 16,
-                    Requests = 1000,
+                    Requests = 1000000,
                     Size = 1024,
                     Pipeline = redis.Data.Name.Contains("P") ? 20:10,
                     pw = redis.GetKeys().Value.PrimaryKey,
                     Status =2,
                     TimeStamp = DateTime.Now,
-                    Times = 5,
+                    Times = 10,
                     Region = "East US 2 EUAP"
                   
                 };
@@ -147,6 +147,7 @@ namespace redis.WebAPi.Service.AzureShared
                                 var request = await dbContext.BenchmarkRequest.Where(t=>t.Name == task.Name).FirstAsync();
                                 request.Status = 1;
                                 dbContext.BenchmarkRequest.Update(request);
+                                _logger.LogInformation("ExecuteTasksOnVMs");
                                 await dbContext.SaveChangesAsync();
 
                                 string output = await RunTasksForVM(sub, group, vmName, task);
@@ -162,6 +163,7 @@ namespace redis.WebAPi.Service.AzureShared
                             {
                                 var dbContext = scope.ServiceProvider.GetRequiredService<BenchmarkContent>();
                                 dbContext.BenchmarkQueue.Update(task);
+                                _logger.LogInformation("ExecuteTasksOnVMs2");
                                 await dbContext.SaveChangesAsync();
                             }
                             _logger.LogError($"Perform task: {task.Name} got error : {ex.Message}");
@@ -184,7 +186,10 @@ namespace redis.WebAPi.Service.AzureShared
              */
             try
             {
+                _logger.LogInformation("RunTasksForVM ok");
                 string output = await ConnectionVMTest(sub,group,vmName,task);
+                
+
                 return output;
                     
             }
@@ -197,6 +202,7 @@ namespace redis.WebAPi.Service.AzureShared
                 {
                     var dbContext = scope.ServiceProvider.GetRequiredService<BenchmarkContent>();
                     dbContext.BenchmarkRequest.Update(task.ToBenchmarkRequestModel());
+                    _logger.LogInformation("RunTasksForVM 2");
                     await dbContext.SaveChangesAsync();
                 }
                 return ex.Message; 
@@ -292,6 +298,7 @@ namespace redis.WebAPi.Service.AzureShared
                     if (medianResults.Any())
                     {
                         dbContext.BenchmarkFinalData.AddRange(medianResults);
+
                         await dbContext.SaveChangesAsync();  
                     }
                 }
@@ -377,9 +384,12 @@ namespace redis.WebAPi.Service.AzureShared
                 if (removedData != null )
                 {
                     dbContext.BenchmarkQueue.Remove(removedData);
+                    _logger.LogInformation("RunBenchmarkOnVM1");
                     await dbContext.SaveChangesAsync();
+
                 }
                 dbContext.BenchmarkResultData.Add(savedData);
+                _logger.LogInformation("RunBenchmarkOnVM2");
                 await dbContext.SaveChangesAsync();
                 _logger.LogInformation("Modifing Request,remove, adding result done");
             }
