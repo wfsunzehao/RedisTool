@@ -96,10 +96,33 @@ namespace Benchmark_API.Controllers
                 using (var scope = _serviceProvider.CreateScope()) 
                 {
                     var dbContext = scope.ServiceProvider.GetService<BenchmarkContent>();
-                    dbContext.BenchmarkQueue.RemoveRange();
+                    var allQueueItems = dbContext.BenchmarkQueue.ToList();
+                    dbContext.BenchmarkQueue.RemoveRange(allQueueItems);
                     dbContext.SaveChanges();
                 }
                 
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error executing tasks: {ex.Message}");
+            }
+        }
+
+
+        [HttpPost("FlushRequest")]
+        public async Task<IActionResult> FlushRequest()
+        {
+            try
+            {
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var dbContext = scope.ServiceProvider.GetService<BenchmarkContent>();
+                    var allRequestItems = dbContext.BenchmarkRequest.ToList();
+                    dbContext.BenchmarkRequest.RemoveRange(allRequestItems);
+                    dbContext.SaveChanges();
+                }
+
                 return Ok();
             }
             catch (Exception ex)
