@@ -16,6 +16,7 @@ import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import { useNavigate } from 'react-router-dom'
 import agent from '@/app/api/agent'
+import { handleGenericSubmit } from '@/app/util/util'
 
 const RunBenchmark = () => {
     const [name, setname] = React.useState('')
@@ -41,37 +42,41 @@ const RunBenchmark = () => {
         return now.toISOString().replace(/[-:.TZ]/g, '');
     };
 
-    const handleSubmit = async () => {
-        if (!name || !primary || !clients || !size || !requests || !threads) {
-            alert('Please fill out all required fields.');
-            return;
-          }
-
-        setLoading(true);
-        const timeStamp = generateTimeStamp();
-
-        const body = {
-            name,
-            pw:primary,
-            region,
-            description,
-            clients,
-            threads,
-            size,
-            requests,
-            pipeline,
-            times,
-            // timeStamp
-        }
-    
-        try {
-            const response = await agent.Create.sendBenchmarkRunJson(body)
-            console.log('Submission successful:', response)
-            navigate('/create/Statistics');
-        } catch (error) {
-            console.error('Error submitting data:', error)
-        }
+    const handleSubmit = (e: React.FormEvent) => {
+        handleGenericSubmit(
+            e,
+            {
+                name,
+                pw: primary,
+                region,
+                description,
+                clients,
+                threads,
+                size,
+                requests,
+                pipeline,
+                times,
+            },
+            agent.Create.sendBenchmarkRunJson,
+            () => {
+                if (!name || !primary || !clients || !size || !requests || !threads) {
+                    swal('Validation Error', 'Please fill out all required fields.', 'error')
+                    return false
+                }
+                return true
+            },
+            setLoading,
+            'Once started, the test will be inserted into the Queue and begin to execute!'
+        )
+        .then(() => {
+            // 成功提示
+        })
+        .catch((err) => {
+            console.error('Benchmark run failed:', err)
+            // 错误提示也已在封装函数里处理
+        })
     }
+    
 
     return (
         <div>

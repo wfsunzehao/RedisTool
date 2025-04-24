@@ -146,6 +146,15 @@ const Create = {
                 console.error('Error submitting selected VMs:', err);
                 throw err;
             }),
+    FlushQueue: () =>
+        axios
+            .post('BenchmarkRun/FlushQueue')
+            .then(response => response.data)
+            .catch(error => {
+                console.error('FlushQueue error:', error)
+                throw error
+            }),
+            
     
 }
 

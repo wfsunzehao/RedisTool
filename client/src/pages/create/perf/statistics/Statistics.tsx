@@ -14,6 +14,9 @@ import {
 } from '@mui/material'
 import axios from 'axios'
 import agent from '@/app/api/agent'
+import { Grid } from '@mui/material'
+import { handleGenericSubmit } from '@/app/util/util'
+
 
 interface Parameter {
     name: string
@@ -31,7 +34,10 @@ interface Parameter {
 const Statistics: React.FC = () => {
     const [parameters, setParameters] = useState<Parameter[]>([])
     const navigate = useNavigate()
+    const [loading, setLoading] = useState(false)
 
+
+    
     const fetchData = async () => {
         try {
             const response = await agent.Create.sendGetBenchmarkRequestData()
@@ -53,6 +59,16 @@ const Statistics: React.FC = () => {
         return () => clearInterval(intervalId) // 组件卸载时清除定时器
     }, [])
     
+    const handleFlushQueue = async (event: React.FormEvent) => {
+        await handleGenericSubmit(
+            event,
+            {}, 
+            () => agent.Create.FlushQueue(), 
+            () => true, 
+            setLoading,
+            'Are you sure you want to flush the benchmark queue?' // 确认文本
+        )
+    }
 
     const handleNavigate = (timeStamp: string) => {
         navigate(`/create/dataDisplayPage/${timeStamp}`);
@@ -68,9 +84,9 @@ const Statistics: React.FC = () => {
             }
         > = {
             '3': { label: 'Successful', color: 'success', disabled: false },
-            '2': { label: 'In Progress', color: 'inherit', disabled: true },
-            '1': { label: 'Running', color: 'inherit', disabled: true },
-            '4': { label: 'Error', color: 'error', disabled: true },
+            '2': { label: 'Pending', color: 'inherit', disabled: true },
+            '1': { label: 'Running', color: 'secondary', disabled: true },
+            '4': { label: 'Failed', color: 'error', disabled: true },
         }
 
         const { label, color, disabled } = statusMap[status]
@@ -102,20 +118,37 @@ const Statistics: React.FC = () => {
 
     return (
         <Box sx={{ padding: '20px', marginLeft: '5%', minHeight: '60vh', overflow: 'auto' }}>
-            <Typography
-                variant="h3"
-                gutterBottom
-                align="center"
-                sx={{
-                    fontWeight: 'bold',
-                    background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    fontSize: '30px',
-                }}
-            >
-                Statistics
-            </Typography>
+           <Box sx={{ marginBottom: 2 }}>
+            <Grid container alignItems="center">
+                <Grid item xs={4} />
+                <Grid item xs={4}>
+                    <Typography
+                        variant="h3"
+                        align="center"
+                        sx={{
+                            fontWeight: 'bold',
+                            background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            fontSize: '30px',
+                        }}
+                    >
+                        Statistics
+                    </Typography>
+                </Grid>
+                <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'flex-end', pr: 2 }}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleFlushQueue}
+                        disabled={loading}
+                        sx={{ height: '40px', textTransform: 'none' }}
+                    >
+                        Flush Queue
+                    </Button>
+                </Grid>
+            </Grid>
+        </Box>
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
