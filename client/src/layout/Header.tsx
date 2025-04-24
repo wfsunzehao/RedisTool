@@ -125,8 +125,24 @@ export default function Header() {
                         />
                     </NavLink>
                     <Box sx={{ mx: 1 }} /> {/* Add uniform spacing */}
-                    <Tooltip title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}>
-                        <IconButton onClick={toggleTheme} color="inherit">
+                    <Tooltip
+                        title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                        slotProps={{
+                            tooltip: {
+                                sx: {
+                                    backdropFilter: 'blur(10px)',
+                                    color: 'rgba(112, 114, 145, 0.9)',
+                                    fontSize: '14px',
+                                    fontWeight: 'bold',
+                                    borderRadius: 4,
+                                    padding: '8px 12px',
+                                    border: `1px solid rgba(247, 240, 240, 0)`,
+                                    backgroundColor: 'rgba(247, 240, 240, 0)',
+                                },
+                            },
+                        }}
+                    >
+                        <IconButton onClick={toggleTheme} color="inherit" size="large" edge="end">
                             {isDarkMode ? <IconMoon stroke={2} /> : <IconSun stroke={2} />}
                         </IconButton>
                     </Tooltip>
