@@ -8,11 +8,13 @@ using System.Text;
 using System.Text.Json;
 using Azure.Core;
 using Azure.ResourceManager.Compute;
+using redis.WebAPi.Filters;
 
 namespace Benchmark_API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [ServiceFilter(typeof(AuthFilter))]
     public class BenchmarkRunController : ControllerBase
     {
         private readonly IServiceProvider _serviceProvider;

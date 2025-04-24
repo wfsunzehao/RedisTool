@@ -41,7 +41,7 @@ namespace redis.WebAPi.Model.BenchmarkModel
         public DateTime TimeStamp { get; set; }
         
         [Timestamp] 
-        public byte[] RowVersion { get; set; }
+        public byte[]? RowVersion { get; set; }
 
 
         public BenchmarkQueueDataModel(BenchmarkRequestModel request)
