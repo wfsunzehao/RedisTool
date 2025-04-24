@@ -5,21 +5,21 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using redis.WebAPi.Model.UserModels;
-using redis.WebAPi.Repository.AppDbContext;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 using redis.WebAPi.Service;
 using redis.WebAPi.Filters;
 using Microsoft.AspNetCore.Authorization;
+using redis.WebAPi.Repository;
 
 [Route("api/[controller]")]
 [ApiController]
 public class AuthController : ControllerBase
 {
-    private readonly ApplicationDbContext _context;
+    private readonly DBContent _context;
     private readonly IConfiguration _configuration;
 
-    public AuthController(ApplicationDbContext context, IConfiguration configuration)
+    public AuthController(DBContent context, IConfiguration configuration)
     {
         _context = context;
         _configuration = configuration;

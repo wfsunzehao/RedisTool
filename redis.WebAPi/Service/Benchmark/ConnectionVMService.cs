@@ -2,7 +2,6 @@ using Azure.Core;
 using Azure.ResourceManager.Compute.Models;
 using Azure;
 using Azure.ResourceManager.Compute;
-using redis.WebAPi.Repository.AppDbContext;
 using Microsoft.EntityFrameworkCore;
 using redis.WebAPi.Model;
 using redis.WebAPi.Model.BenchmarkModel;
@@ -10,6 +9,7 @@ using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using Azure.ResourceManager.Redis;
 using System.Threading.Tasks;
+using redis.WebAPi.Repository;
 
 
 
@@ -23,7 +23,7 @@ namespace redis.WebAPi.Service.AzureShared
         private readonly IServiceProvider _serviceProvider;
 
 
-        public ConnectionVMService(AzureClientFactory client, ILogger<ConnectionVMService> logger, IServiceProvider serviceProvider, BenchmarkContent dbContext)
+        public ConnectionVMService(AzureClientFactory client, ILogger<ConnectionVMService> logger, IServiceProvider serviceProvider, DBContent dbContext)
         {
             //_dbContext = dbContext;
             _client = client;
@@ -43,7 +43,7 @@ namespace redis.WebAPi.Service.AzureShared
             using (var scope = _serviceProvider.CreateScope())
             {
                 _logger.LogInformation("\n Performing Distribution£¡£¡£¡£¡£¡£¡£¡");
-                var dbContext = scope.ServiceProvider.GetRequiredService<BenchmarkContent>();
+                var dbContext = scope.ServiceProvider.GetRequiredService<DBContent>();
 
                 var tasks = await dbContext.BenchmarkQueue
                     .Where(t => t.Status == 2)  
@@ -139,7 +139,7 @@ namespace redis.WebAPi.Service.AzureShared
                         {
                             using (var scope = _serviceProvider.CreateScope())
                             {
-                                var dbContext = scope.ServiceProvider.GetRequiredService<BenchmarkContent>();
+                                var dbContext = scope.ServiceProvider.GetRequiredService<DBContent>();
                                 _logger.LogInformation($"Current processor£º{task.Name}, processor id£º{Thread.CurrentThread.ManagedThreadId}");
 
                                 task.Status = 1;
@@ -161,7 +161,7 @@ namespace redis.WebAPi.Service.AzureShared
                             task.Status = 4;
                             using (var scope = _serviceProvider.CreateScope())
                             {
-                                var dbContext = scope.ServiceProvider.GetRequiredService<BenchmarkContent>();
+                                var dbContext = scope.ServiceProvider.GetRequiredService<DBContent>();
                                 dbContext.BenchmarkQueue.Update(task);
                                 _logger.LogInformation("ExecuteTasksOnVMs2");
                                 await dbContext.SaveChangesAsync();
@@ -200,7 +200,7 @@ namespace redis.WebAPi.Service.AzureShared
                 task.Status = 4; 
                 using (var scope = _serviceProvider.CreateScope())
                 {
-                    var dbContext = scope.ServiceProvider.GetRequiredService<BenchmarkContent>();
+                    var dbContext = scope.ServiceProvider.GetRequiredService<DBContent>();
                     dbContext.BenchmarkRequest.Update(task.ToBenchmarkRequestModel());
                     _logger.LogInformation("RunTasksForVM 2");
                     await dbContext.SaveChangesAsync();
@@ -244,7 +244,7 @@ namespace redis.WebAPi.Service.AzureShared
             {
                 using (var scope = _serviceProvider.CreateScope())
                 {
-                    var dbContext = scope.ServiceProvider.GetRequiredService<BenchmarkContent>();
+                    var dbContext = scope.ServiceProvider.GetRequiredService<DBContent>();
                     var allData = dbContext.BenchmarkResultData.AsNoTracking()
                         .Where(d => d.CacheName.Contains(targetDate.Date.Month.ToString() + targetDate.Date.Day.ToString()))
                         .ToList();
@@ -375,7 +375,7 @@ namespace redis.WebAPi.Service.AzureShared
 
             using (var scope = _serviceProvider.CreateScope())
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<BenchmarkContent>();
+                var dbContext = scope.ServiceProvider.GetRequiredService<DBContent>();
 
                 var requestModel = await dbContext.BenchmarkRequest.Where(t => t.Name == request.Name).FirstAsync();
                 requestModel.Status = 3;

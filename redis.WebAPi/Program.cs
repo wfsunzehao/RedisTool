@@ -7,11 +7,10 @@ using System.Text;
 using redis.WebAPi.Service.IService;
 using redis.WebAPi.Service.AzureShared;
 using redis.WebAPi.Service;
-using redis.WebAPi.Repository.AppDbContext;
 using redis.WebAPI.Service;
 using redis.WebAPi.Filters;
 using redis.WebAPi.Hubs;
-using redis.WebAPi.Service.Benchmark;
+using redis.WebAPi.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,9 +42,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 // Configure database connection
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddDbContext<BenchmarkContent>(options =>
+builder.Services.AddDbContext<DBContent>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 // Using Autofac as a Dependency Injection Container
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());

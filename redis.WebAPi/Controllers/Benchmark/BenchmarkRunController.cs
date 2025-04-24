@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using redis.WebAPi.Repository.AppDbContext; 
 using redis.WebAPi.Model;
 using Microsoft.EntityFrameworkCore;
 using redis.WebAPi.Model.BenchmarkModel;
@@ -9,6 +8,7 @@ using System.Text.Json;
 using Azure.Core;
 using Azure.ResourceManager.Compute;
 using redis.WebAPi.Filters;
+using redis.WebAPi.Repository;
 
 namespace Benchmark_API.Controllers
 {
@@ -95,7 +95,7 @@ namespace Benchmark_API.Controllers
             {
                 using (var scope = _serviceProvider.CreateScope()) 
                 {
-                    var dbContext = scope.ServiceProvider.GetService<BenchmarkContent>();
+                    var dbContext = scope.ServiceProvider.GetService<DBContent>();
                     var allQueueItems = dbContext.BenchmarkQueue.ToList();
                     dbContext.BenchmarkQueue.RemoveRange(allQueueItems);
                     dbContext.SaveChanges();
@@ -117,7 +117,7 @@ namespace Benchmark_API.Controllers
             {
                 using (var scope = _serviceProvider.CreateScope())
                 {
-                    var dbContext = scope.ServiceProvider.GetService<BenchmarkContent>();
+                    var dbContext = scope.ServiceProvider.GetService<DBContent>();
                     var allRequestItems = dbContext.BenchmarkRequest.ToList();
                     dbContext.BenchmarkRequest.RemoveRange(allRequestItems);
                     dbContext.SaveChanges();
@@ -155,7 +155,7 @@ namespace Benchmark_API.Controllers
                 {
                     using (var scope = _serviceProvider.CreateScope())
                     {
-                        var dbContext = scope.ServiceProvider.GetService<BenchmarkContent>();
+                        var dbContext = scope.ServiceProvider.GetService<DBContent>();
                         for (int i = 1; i <= item.Times; i++)
                         { 
                             var newItem = new BenchmarkQueueDataModel 
@@ -199,7 +199,7 @@ namespace Benchmark_API.Controllers
             {
                 using (var scope = _serviceProvider.CreateScope())
                 {
-                    var dbContext = scope.ServiceProvider.GetService<BenchmarkContent>();
+                    var dbContext = scope.ServiceProvider.GetService<DBContent>();
                     for (int i = 1; i <= benchmarkRequest.Times; i++)
                     {
                         var benchmarkTask = new BenchmarkRequestModel
@@ -245,7 +245,7 @@ namespace Benchmark_API.Controllers
 
                 using (var scope = _serviceProvider.CreateScope())
                 {
-                    var dbContext = scope.ServiceProvider.GetService<BenchmarkContent>();
+                    var dbContext = scope.ServiceProvider.GetService<DBContent>();
 
                     var results = await dbContext.BenchmarkFinalData
                         .Where(b => b.CacheName.Contains(date))

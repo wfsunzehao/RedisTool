@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "youjun.NETDemo.WebAPi": {
+    "AzureRedisTestingTool": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
