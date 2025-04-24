@@ -77,7 +77,7 @@ const Statistics: React.FC = () => {
             () => agent.Create.FlushRequest(), 
             () => true, 
             setLoadingRequest,
-            'Are you sure you want to flush the benchmark queue?' // 确认文本
+            'Are you sure you want to flush the benchmark Request?' // 确认文本
         )
     }
 
