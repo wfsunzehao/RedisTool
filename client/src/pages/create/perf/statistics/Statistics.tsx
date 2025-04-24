@@ -34,7 +34,8 @@ interface Parameter {
 const Statistics: React.FC = () => {
     const [parameters, setParameters] = useState<Parameter[]>([])
     const navigate = useNavigate()
-    const [loading, setLoading] = useState(false)
+    const [loadingQueue, setLoadingQueue] = useState(false);
+    const [loadingRequest, setLoadingRequest] = useState(false);
 
 
     
@@ -65,7 +66,17 @@ const Statistics: React.FC = () => {
             {}, 
             () => agent.Create.FlushQueue(), 
             () => true, 
-            setLoading,
+            setLoadingQueue,
+            'Are you sure you want to flush the benchmark queue?' // 确认文本
+        )
+    }
+    const handleFlushRequest = async (event: React.FormEvent) => {
+        await handleGenericSubmit(
+            event,
+            {}, 
+            () => agent.Create.FlushRequest(), 
+            () => true, 
+            setLoadingRequest,
             'Are you sure you want to flush the benchmark queue?' // 确认文本
         )
     }
@@ -119,36 +130,48 @@ const Statistics: React.FC = () => {
     return (
         <Box sx={{ padding: '20px', marginLeft: '5%', minHeight: '60vh', overflow: 'auto' }}>
            <Box sx={{ marginBottom: 2 }}>
-            <Grid container alignItems="center">
-                <Grid item xs={4} />
-                <Grid item xs={4}>
-                    <Typography
-                        variant="h3"
-                        align="center"
-                        sx={{
-                            fontWeight: 'bold',
-                            background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
-                            fontSize: '30px',
-                        }}
-                    >
-                        Statistics
-                    </Typography>
-                </Grid>
-                <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'flex-end', pr: 2 }}>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleFlushQueue}
-                        disabled={loading}
-                        sx={{ height: '40px', textTransform: 'none' }}
-                    >
-                        Flush Queue
-                    </Button>
-                </Grid>
-            </Grid>
-        </Box>
+    <Grid container alignItems="center">
+    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Typography
+                variant="h3"
+                align="center"
+                sx={{
+                    fontWeight: 'bold',
+                    background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    fontSize: '30px',
+                    width: '100%',
+                }}
+            >
+                Statistics
+            </Typography>
+        </Grid>
+        <Grid item xs={6} />
+        <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'flex-end', pr: 2 }}>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={handleFlushQueue}
+                disabled={loadingQueue}
+                sx={{ height: '40px', textTransform: 'none', marginRight: 2 }}
+            >
+                Flush Queue
+            </Button>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={handleFlushRequest}
+                disabled={loadingRequest}
+                sx={{ height: '40px', textTransform: 'none' }}
+            >
+                Flush Request
+            </Button>
+        </Grid>
+        
+    </Grid>
+</Box>
+
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>

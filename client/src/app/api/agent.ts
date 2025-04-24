@@ -154,6 +154,14 @@ const Create = {
                 console.error('FlushQueue error:', error)
                 throw error
             }),
+    FlushRequest: () =>
+        axios
+            .post('BenchmarkRun/FlushRequest')
+            .then(response => response.data)
+            .catch(error => {
+                console.error('FlushRequest error:', error)
+                throw error
+            }),
             
     
 }
