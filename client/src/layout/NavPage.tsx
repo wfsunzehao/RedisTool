@@ -24,6 +24,7 @@ interface NavPageProps {
     marginLeft?: string
     flexDirection?: 'row' | 'column'
     unrestrictedChildren?: boolean // New property: whether to remove size restrictions for children
+    fullWidthContent?: boolean
 }
 
 const NavPage: React.FC<NavPageProps> = ({
@@ -33,9 +34,10 @@ const NavPage: React.FC<NavPageProps> = ({
     sidebarWidth = '250px',
     childrenWidth = '30%',
     contentWidth = '40%',
-    marginLeft = '200px',
+    marginLeft = '250px',
     flexDirection = 'column',
     unrestrictedChildren = false, // Default to restrict children size
+    fullWidthContent = false,
 }) => {
     const location = useLocation()
     const navigate = useNavigate()
@@ -193,9 +195,9 @@ const NavPage: React.FC<NavPageProps> = ({
             >
                 <Box
                     sx={{
-                        width: unrestricted ? '100%' : contentWidth, // Dynamically adjust width
+                        width: unrestricted ? '100%' : contentWidth, // Dynamically adjust
                         padding: '20px',
-                        flexGrow: unrestricted ? 1 : 0,
+                        flexGrow: fullWidthContent || unrestricted ? 1 : 0,
                     }}
                 >
                     {/* Only show the alert box when alertMessage is passed in */}
