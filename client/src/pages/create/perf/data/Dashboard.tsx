@@ -202,7 +202,7 @@ const DataDisplayPage: React.FC = () => {
           borderRadius: '12px',
           overflow: 'hidden',
         }}
-        rowClassName={(record, index) =>
+        rowClassName={(_, index) =>
           index % 2 === 0 ? 'table-row-light' : 'table-row-dark'
         }
       />
